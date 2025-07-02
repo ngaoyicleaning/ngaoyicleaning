@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonials | Ngaoyi Cleaning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #0056b3;
+            --accent-color: #4da3ff;
+            --light-color: #f0f8ff;
+            --dark-color: #001f3f;
+            --text-color: #333;
+            --white: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--white);
+            padding-top: 85px; /* To offset fixed header */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            height: 85px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: 45px;
+            margin-right: 12px;
+            border-radius: 50%;
+        }
+        
+        .logo span {
+            color: var(--dark-color);
+        }
+        
+        .nav-links {
+            display: flex;
+        }
+        
+        .nav-links li {
+            margin-left: 35px;
+        }
+        
+        .nav-links a {
+            font-weight: 600;
+            transition: color 0.3s ease;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            text-decoration: none;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 10px auto;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .testimonial-card .quote {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .quote::before {
+            content: '“';
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            line-height: 0;
+            margin-right: 5px;
+            vertical-align: -0.4em;
+        }
+
+        .client {
+            display: flex;
+            align-items: center;
+        }
+
+        .client-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 3px solid var(--accent-color);
+        }
+
+        .client-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .client-info h4 {
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .client-info p {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--white);
+            padding: 60px 0 20px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            position: relative;
+            color: var(--white);
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-color);
+            margin-top: 10px;
+        }
+        
+        .footer-col p, .footer-links a {
+            color: #ccc;
+        }
+        
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { transition: color 0.3s ease, padding-left 0.3s ease; text-decoration: none; }
+        .footer-links a:hover { color: var(--primary-color); padding-left: 5px; }
+        
+        .social-links { display: flex; margin-top: 20px; }
+        .social-links a {
+            display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%; margin-right: 10px; color: var(--white);
+            transition: all 0.3s ease; text-decoration: none;
+        }
+        .social-links a:hover { background: var(--primary-color); transform: translateY(-3px); }
+        
+        .copyright {
+            text-align: center; padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px; color: #aaa;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu { display: block; }
+            .nav-links {
+                position: fixed; top: 85px; left: -100%; width: 100%;
+                height: calc(100vh - 85px); background: var(--white);
+                flex-direction: column; align-items: center; padding-top: 40px;
+                transition: all 0.5s ease;
+            }
+            .nav-links.active { left: 0; }
+            .nav-links li { margin: 20px 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <img src="https://placehold.co/60x60/007BFF/FFFFFF?text=N&font=segoe-ui" alt="Ngaoyi Cleaning Logo" class="logo-img">
+                    Ngaoyi<span>Cleaning</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="testimonials.html" class="active">Testimonials</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="quote">
+                        <p>Ngaoyi Cleaning transformed my home! The team was professional, thorough, and left every surface sparkling. I highly recommend their weekly service.</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson" onerror="this.onerror=null;this.src='https://placehold.co/60x60/007BFF/FFFFFF?text=S';">
+                        </div>
+                        <div class="client-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Homeowner, Weltevreden Park</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="quote">
+                        <p>Our office has never looked better. The cleaning staff is reliable, punctual, and does an exceptional job every time. Worth every rand!</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen" onerror="this.onerror=null;this.src='https://placehold.co/60x60/007BFF/FFFFFF?text=M';">
+                        </div>
+                        <div class="client-info">
+                            <h4>Michael Chen</h4>
+                            <p>Office Manager, Constantia Kloof</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="quote">
+                        <p>I booked a move-out clean and was so impressed. They were incredibly detailed and the landlord was very happy. It made the moving process so much less stressful.</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emily Rodriguez" onerror="this.onerror=null;this.src='https://placehold.co/60x60/007BFF/FFFFFF?text=E';">
+                        </div>
+                        <div class="client-info">
+                            <h4>Emily Naidoo</h4>
+                            <p>Former Tenant, Little Falls</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="quote">
+                        <p>Fantastic service from start to finish. The booking was easy, and the cleaning team was friendly and efficient. My apartment feels brand new.</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">
+                            <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="David Miller" onerror="this.onerror=null;this.src='https://placehold.co/60x60/007BFF/FFFFFF?text=D';">
+                        </div>
+                        <div class="client-info">
+                            <h4>David Miller</h4>
+                            <p>Apartment Resident, Radiokop</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="testimonial-card">
+                    <div class="quote">
+                        <p>The add-on laundry service is a lifesaver! I come home to a clean house and freshly folded laundry. It's an amazing convenience.</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">
+                            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Jessica Williams" onerror="this.onerror=null;this.src='https://placehold.co/60x60/007BFF/FFFFFF?text=J';">
+                        </div>
+                        <div class="client-info">
+                            <h4>Jessica Williams</h4>
+                            <p>Regular Client, Strubens Valley</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="testimonial-card">
+                    <div class="quote">
+                        <p>We use Ngaoyi Cleaning for our small business and the difference is night and day. A clean environment makes for happy staff and clients. Highly professional.</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">
+                            <img src="https://randomuser.me/api/portraits/men/7.jpg" alt="Bongani Zulu" onerror="this.onerror=null;this.src='https://placehold.co/60x60/007BFF/FFFFFF?text=B';">
+                        </div>
+                        <div class="client-info">
+                            <h4>Bongani Zulu</h4>
+                            <p>Small Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>Ngaoyi<span>Cleaning</span></h3>
+                    <p>Your trusted partner for professional cleaning services. We are committed to quality, reliability, and customer satisfaction.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="testimonials.html">Testimonials</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <p>123 Clean Street, Roodepoort<br>Gauteng, South Africa</p>
+                    <p>Email: info@ngaoyicleaning.com</p>
+                    <p>Phone: (011) 123-4567</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe for cleaning tips and exclusive offers.</p>
+                    <form>
+                        <input type="email" placeholder="Your Email" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; margin-bottom: 10px;">
+                        <button type="submit" class="btn" style="width: 100%;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Ngaoyi Cleaning. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
