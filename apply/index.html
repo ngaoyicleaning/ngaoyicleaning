@@ -6,7 +6,6 @@
     <title>Cleaner Application - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your existing CSS remains the same */
         :root {
             --primary: #2c7fb8;
             --primary-light: #5fa8d3;
@@ -178,6 +177,11 @@
             margin-bottom: 15px;
         }
 
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: var(--accent);
+        }
+
         .file-list {
             margin-top: 15px;
         }
@@ -326,7 +330,6 @@
 
         <!-- Application Form -->
         <form id="applicationForm" class="application-form">
-            <!-- Your form sections remain the same -->
             <!-- Personal Information -->
             <div class="form-section">
                 <div class="section-header">
@@ -426,15 +429,14 @@
                     <h3>Document Upload</h3>
                 </div>
 
-                <div class="file-upload-area" onclick="document.getElementById('fileUpload').click()">
+                <div class="file-upload-area" id="fileDropZone">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <h4>Upload Your Documents</h4>
-                    <p>Click to upload ID copy, CV, certificates, or references</p>
+                    <p>Click to upload or drag and drop files here</p>
                     <small>Supported formats: PDF, JPG, PNG (Max 5MB each)</small>
+                    <input type="file" id="fileUpload" name="documents" multiple style="display: none;" 
+                           accept=".pdf,.jpg,.jpeg,.png">
                 </div>
-
-                <input type="file" id="fileUpload" name="documents" multiple style="display: none;" 
-                       accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(this)">
 
                 <div class="file-list" id="fileList">
                     <!-- File items will be added here -->
@@ -492,24 +494,60 @@
     <script>
         // File handling
         let selectedFiles = [];
+        const fileDropZone = document.getElementById('fileDropZone');
+        const fileInput = document.getElementById('fileUpload');
         
-        function handleFileSelect(input) {
-            const fileList = document.getElementById('fileList');
-            
-            for (let file of input.files) {
+        // Click to upload
+        fileDropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // Drag and drop functionality
+        fileDropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileDropZone.classList.add('dragover');
+        });
+        
+        fileDropZone.addEventListener('dragleave', () => {
+            fileDropZone.classList.remove('dragover');
+        });
+        
+        fileDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileDropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        
+        function handleFiles(fileList) {
+            for (let file of fileList) {
+                // Check file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File "${file.name}" is too large. Maximum size is 5MB.`);
+                    continue;
+                }
+                
                 // Check if file already exists
                 if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
                     selectedFiles.push(file);
                 }
             }
-            
             updateFileList();
         }
-
+        
         function updateFileList() {
             const fileList = document.getElementById('fileList');
             fileList.innerHTML = '';
-
+            
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '<p style="color: var(--gray); text-align: center;">No files selected</p>';
+                return;
+            }
+            
             selectedFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
@@ -527,12 +565,12 @@
                 fileList.appendChild(fileItem);
             });
         }
-
+        
         function removeFile(index) {
             selectedFiles.splice(index, 1);
             updateFileList();
         }
-
+        
         // Form submission
         document.getElementById('applicationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -563,12 +601,12 @@
                 }
             }
         });
-
+        
         // Form validation
         function validateForm() {
             const requiredFields = document.querySelectorAll('[required]');
             let isValid = true;
-
+            
             requiredFields.forEach(field => {
                 if (!field.value.trim()) {
                     field.style.borderColor = 'var(--danger)';
@@ -577,14 +615,14 @@
                     field.style.borderColor = 'var(--light-gray)';
                 }
             });
-
+            
             if (!isValid) {
                 alert('Please fill in all required fields.');
             }
-
+            
             return isValid;
         }
-
+        
         // Submit application to Google Apps Script
         async function submitApplication() {
             const formData = new FormData();
@@ -592,7 +630,7 @@
             // Add form data
             const formElements = document.getElementById('applicationForm').elements;
             for (let element of formElements) {
-                if (element.name && element.type !== 'file') {
+                if (element.name && element.type !== 'file' && element.type !== 'submit') {
                     formData.append(element.name, element.value);
                 }
             }
@@ -602,13 +640,17 @@
                 formData.append('files', file);
             }
             
-            // Replace with your Google Apps Script Web App URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxr8bbq1CWMMgn7us8HkU1vQjwxfZI-Yf0QFSp04CJ56JteflH6vlQNAwSzJZjRC6dy/exec';
+            // Replace with your actual Google Apps Script Web App URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby6Bw4ymLra08yzW-xicMdt7rzm2O0HeUuPbh-RQYLXxeF_BS4zaxAfYhCnmZlcy1um_A/exec';
             
             const response = await fetch(scriptURL, {
                 method: 'POST',
                 body: formData
             });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
             const result = await response.json();
             
@@ -618,6 +660,9 @@
             
             return result;
         }
+        
+        // Initialize file list
+        updateFileList();
     </script>
 </body>
 </html>
