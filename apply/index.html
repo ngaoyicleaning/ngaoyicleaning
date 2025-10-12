@@ -6,6 +6,7 @@
     <title>Cleaner Application - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Your existing CSS remains the same */
         :root {
             --primary: #2c7fb8;
             --primary-light: #5fa8d3;
@@ -34,69 +35,12 @@
             color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
-        }
-
-        /* Navigation */
-        .navbar {
-            background: white;
-            box-shadow: var(--shadow);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .nav-logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
+            padding: 20px;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         .header {
@@ -133,25 +77,6 @@
             margin-bottom: 10px;
         }
 
-        /* Breadcrumb */
-        .breadcrumb {
-            background: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-
-        .breadcrumb a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        /* Application Form */
         .application-form {
             background: white;
             padding: 40px;
@@ -307,7 +232,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Success Message */
         .success-message {
             text-align: center;
             padding: 50px 30px;
@@ -346,18 +270,20 @@
             margin: 0 auto 15px;
         }
 
+        .error-message {
+            display: none;
+            background: #ffe6e6;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 50px;
         }
 
         @media (max-width: 768px) {
@@ -368,45 +294,11 @@
             .form-grid {
                 grid-template-columns: 1fr;
             }
-
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="https://yourdomain.com" class="nav-logo">
-                <div class="nav-logo-icon">
-                    <i class="fas fa-broom"></i>
-                </div>
-                <span>Ngaoyi Cleaning</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="https://yourdomain.com">Home</a></li>
-                <li><a href="https://yourdomain.com/services">Services</a></li>
-                <li><a href="https://yourdomain.com/about">About</a></li>
-                <li><a href="https://yourdomain.com/contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <div class="container">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <a href="https://yourdomain.com">Home</a> &gt; 
-            <a href="https://yourdomain.com/careers">Careers</a> &gt; 
-            <span>Cleaner Application</span>
-        </div>
-
         <!-- Header -->
         <div class="header">
             <div class="logo">
@@ -420,6 +312,12 @@
             </div>
         </div>
 
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorText">There was an error submitting your application. Please try again.</span>
+        </div>
+
         <!-- Loading Indicator -->
         <div id="loadingIndicator" class="loading">
             <div class="loading-spinner"></div>
@@ -428,6 +326,7 @@
 
         <!-- Application Form -->
         <form id="applicationForm" class="application-form">
+            <!-- Your form sections remain the same -->
             <!-- Personal Information -->
             <div class="form-section">
                 <div class="section-header">
@@ -584,22 +483,11 @@
             <p style="font-weight: 600; color: var(--primary);">
                 Next steps: Phone interview → Practical demonstration → Background check
             </p>
-            <div style="margin-top: 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="location.reload()">
-                    <i class="fas fa-plus"></i> Submit Another Application
-                </button>
-                <a href="https://yourdomain.com" class="btn" style="background: var(--light-gray); color: var(--dark);">
-                    <i class="fas fa-home"></i> Return to Homepage
-                </a>
-            </div>
+            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 25px;">
+                <i class="fas fa-plus"></i> Submit Another Application
+            </button>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2024 Ngaoyi Cleaning. All rights reserved.</p>
-        <p>Email: careers@ngaoyicleaning.co.za | Phone: (XXX) XXX-XXXX</p>
-    </footer>
 
     <script>
         // File handling
@@ -607,11 +495,22 @@
         
         function handleFileSelect(input) {
             const fileList = document.getElementById('fileList');
+            
+            for (let file of input.files) {
+                // Check if file already exists
+                if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    selectedFiles.push(file);
+                }
+            }
+            
+            updateFileList();
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
             fileList.innerHTML = '';
 
-            for (let file of input.files) {
-                selectedFiles.push(file);
-                
+            selectedFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
                 fileItem.innerHTML = `
@@ -621,25 +520,17 @@
                             ${(file.size / 1024 / 1024).toFixed(2)} MB
                         </div>
                     </div>
-                    <div class="file-remove" onclick="removeFile(this, '${file.name}')">
+                    <div class="file-remove" onclick="removeFile(${index})">
                         <i class="fas fa-times"></i>
                     </div>
                 `;
                 fileList.appendChild(fileItem);
-            }
+            });
         }
 
-        function removeFile(element, fileName) {
-            const fileItem = element.parentElement;
-            fileItem.remove();
-            
-            // Remove from selectedFiles array
-            selectedFiles = selectedFiles.filter(file => file.name !== fileName);
-            
-            // Update the file input
-            const dataTransfer = new DataTransfer();
-            selectedFiles.forEach(file => dataTransfer.items.add(file));
-            document.getElementById('fileUpload').files = dataTransfer.files;
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
         }
 
         // Form submission
@@ -650,6 +541,7 @@
                 // Show loading indicator
                 document.getElementById('loadingIndicator').style.display = 'block';
                 document.getElementById('applicationForm').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'none';
                 
                 try {
                     await submitApplication();
@@ -659,7 +551,11 @@
                     document.getElementById('successMessage').style.display = 'block';
                 } catch (error) {
                     console.error('Error submitting application:', error);
-                    alert('There was an error submitting your application. Please try again or contact us directly.');
+                    
+                    // Show error message
+                    document.getElementById('errorText').textContent = 
+                        'There was an error submitting your application: ' + error.message;
+                    document.getElementById('errorMessage').style.display = 'block';
                     
                     // Show form again
                     document.getElementById('loadingIndicator').style.display = 'none';
@@ -706,18 +602,21 @@
                 formData.append('files', file);
             }
             
-            // Submit to Google Apps Script
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby0hFtDya4EY-cdXLgKNWADEgL1BoYo-XYd_d95V-FQYyfFfey6cZevG1xz8gf_aZQ/exec';
+            // Replace with your Google Apps Script Web App URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyqP_lL6l8KHmypCrg0LnxMDXrt1MzqH1qVTBD2VTpPqsk3HwNhqHxJzY_1QRI5J869/exec';
+            
             const response = await fetch(scriptURL, {
                 method: 'POST',
                 body: formData
             });
             
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            const result = await response.json();
+            
+            if (result.result === 'error') {
+                throw new Error(result.message);
             }
             
-            return response;
+            return result;
         }
     </script>
 </body>
