@@ -3,24 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cleaner Application - Ngaoyi Cleaning</title>
+    <title>Apply Now - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your existing CSS remains the same */
         :root {
             --primary: #2c7fb8;
             --primary-light: #5fa8d3;
             --secondary: #7fcdbb;
-            --accent: #edf8b1;
             --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
             --light: #f8f9fa;
             --dark: #253237;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
         }
 
         * {
@@ -35,19 +28,20 @@
             color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 600px;
+            text-align: center;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 30px;
+        .card {
             background: white;
+            padding: 50px 40px;
             border-radius: 15px;
             box-shadow: var(--shadow);
         }
@@ -57,245 +51,39 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
         }
 
-        .header h1 {
+        h1 {
             color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .application-form {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--light-gray);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .section-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-
-        .section-header h3 {
-            color: var(--primary);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .required::after {
-            content: " *";
-            color: var(--danger);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .file-upload-area {
-            border: 2px dashed var(--light-gray);
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
-            transition: var(--transition);
-            cursor: pointer;
             margin-bottom: 15px;
-        }
-
-        .file-upload-area:hover {
-            border-color: var(--primary);
-            background: var(--light);
-        }
-
-        .file-upload-area i {
-            font-size: 2.5rem;
-            color: var(--gray);
-            margin-bottom: 15px;
-        }
-
-        .file-upload-area.dragover {
-            border-color: var(--primary);
-            background: var(--accent);
-        }
-
-        .file-list {
-            margin-top: 15px;
-        }
-
-        .file-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 15px;
-            background: var(--light);
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
-
-        .file-remove {
-            color: var(--danger);
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #20c997);
-            color: white;
-        }
-
-        .btn-block {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .success-message {
-            text-align: center;
-            padding: 50px 30px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            display: none;
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--success), #20c997);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
+            font-size: 2.2rem;
         }
 
         .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
+            margin: 30px 0;
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--light-gray);
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
             border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        .error-message {
-            display: none;
-            background: #ffe6e6;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .debug-info {
-            display: none;
-            background: #e6f7ff;
-            border: 1px solid var(--primary);
-            color: var(--dark);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-family: monospace;
-            font-size: 0.9rem;
+            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -303,397 +91,76 @@
             100% { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
-            .application-form {
-                padding: 25px;
-            }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 35px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(44, 127, 184, 0.3);
+        }
+
+        .back-link {
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
+        <div class="card">
             <div class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-broom"></i>
                 </div>
                 <div>
-                    <h1>Join Our Cleaning Team</h1>
-                    <p>Ngaoyi Cleaning - Career Application</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Debug Info -->
-        <div id="debugInfo" class="debug-info"></div>
-
-        <!-- Error Message -->
-        <div id="errorMessage" class="error-message">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span id="errorText">There was an error submitting your application. Please try again.</span>
-        </div>
-
-        <!-- Loading Indicator -->
-        <div id="loadingIndicator" class="loading">
-            <div class="loading-spinner"></div>
-            <p>Submitting your application...</p>
-        </div>
-
-        <!-- Application Form -->
-        <form id="applicationForm" class="application-form">
-            <!-- Your form sections remain the same -->
-            <!-- Personal Information -->
-            <div class="form-section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h3>Personal Information</h3>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="fullName" class="form-label required">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="idNumber" class="form-label required">ID Number</label>
-                        <input type="text" id="idNumber" name="idNumber" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone" class="form-label required">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="address" class="form-label required">Residential Address</label>
-                    <textarea id="address" name="address" class="form-control" required></textarea>
+                    <h1>Redirecting to Application</h1>
+                    <p>Ngaoyi Cleaning Careers</p>
                 </div>
             </div>
 
-            <!-- Experience -->
-            <div class="form-section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <h3>Experience & Availability</h3>
-                </div>
-
-                <div class="form-group">
-                    <label for="experience" class="form-label required">Cleaning Experience</label>
-                    <select id="experience" name="experience" class="form-control" required>
-                        <option value="">Select experience level</option>
-                        <option value="none">No experience (training provided)</option>
-                        <option value="less-1">Less than 1 year</option>
-                        <option value="1-3">1-3 years</option>
-                        <option value="3-plus">3+ years</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="workFrequency" class="form-label required">Preferred Work Frequency</label>
-                    <select id="workFrequency" name="workFrequency" class="form-control" required>
-                        <option value="">Select work frequency</option>
-                        <option value="full-time">Full Time</option>
-                        <option value="part-time">Part Time</option>
-                        <option value="weekends">Weekends Only</option>
-                        <option value="flexible">Flexible</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="availability" class="form-label required">Availability</label>
-                    <select id="availability" name="availability" class="form-control" required>
-                        <option value="">Select availability</option>
-                        <option value="immediate">Immediate</option>
-                        <option value="1-week">Within 1 week</option>
-                        <option value="2-weeks">Within 2 weeks</option>
-                        <option value="1-month">Within 1 month</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="transport" class="form-label required">Transportation</label>
-                    <select id="transport" name="transport" class="form-control" required>
-                        <option value="">Select transportation</option>
-                        <option value="own-car">Own Car</option>
-                        <option value="public-transport">Public Transport</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Taking you to our secure application form...</p>
             </div>
 
-            <!-- Documents Upload -->
-            <div class="form-section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-file-upload"></i>
-                    </div>
-                    <h3>Document Upload</h3>
-                </div>
+            <p>If you are not redirected automatically, click the button below:</p>
 
-                <div class="file-upload-area" id="fileDropZone">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h4>Upload Your Documents</h4>
-                    <p>Click to upload or drag and drop files here</p>
-                    <small>Supported formats: PDF, JPG, PNG (Max 5MB each)</small>
-                    <input type="file" id="fileUpload" name="documents" multiple style="display: none;" 
-                           accept=".pdf,.jpg,.jpeg,.png">
-                </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScIcAcm8iFYpY_hDvcL2wo6Qkj2yaRwxwN2oNS9WC3rXRMadw/viewform?usp=header" class="btn">
+                <i class="fas fa-external-link-alt"></i>
+                Go to Application Form
+            </a>
 
-                <div class="file-list" id="fileList">
-                    <!-- File items will be added here -->
-                </div>
-
-                <div class="form-note" style="font-size: 0.9rem; color: var(--gray);">
-                    <strong>Note:</strong> Files will be securely uploaded to Google Drive in a folder with your name.
-                </div>
+            <div class="back-link">
+                <a href="/">&larr; Back to Homepage</a>
             </div>
-
-            <!-- Additional Information -->
-            <div class="form-section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-comment"></i>
-                    </div>
-                    <h3>Additional Information</h3>
-                </div>
-
-                <div class="form-group">
-                    <label for="whyInterested" class="form-label required">Why do you want to join Ngaoyi Cleaning?</label>
-                    <textarea id="whyInterested" name="whyInterested" class="form-control" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="references" class="form-label">References</label>
-                    <textarea id="references" name="references" class="form-control" placeholder="Name, Relationship, Contact Number, Years Known"></textarea>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-success btn-block">
-                <i class="fas fa-paper-plane"></i> Submit Application
-            </button>
-        </form>
-
-        <!-- Success Message -->
-        <div id="successMessage" class="success-message">
-            <div class="success-icon">
-                <i class="fas fa-check"></i>
-            </div>
-            <h2 style="color: var(--success); margin-bottom: 15px;">Application Submitted!</h2>
-            <p style="color: var(--gray); margin-bottom: 25px;">
-                Thank you for applying to join the Ngaoyi Cleaning team. We will review your application and contact you within 3 business days.
-            </p>
-            <p style="font-weight: 600; color: var(--primary);">
-                Next steps: Phone interview → Practical demonstration → Background check
-            </p>
-            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 25px;">
-                <i class="fas fa-plus"></i> Submit Another Application
-            </button>
         </div>
     </div>
 
     <script>
-        // File handling
-        let selectedFiles = [];
-        const fileDropZone = document.getElementById('fileDropZone');
-        const fileInput = document.getElementById('fileUpload');
-        
-        // Click to upload
-        fileDropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        // Drag and drop functionality
-        fileDropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileDropZone.classList.add('dragover');
-        });
-        
-        fileDropZone.addEventListener('dragleave', () => {
-            fileDropZone.classList.remove('dragover');
-        });
-        
-        fileDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileDropZone.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-        
-        // File input change
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-        
-        function handleFiles(fileList) {
-            for (let file of fileList) {
-                // Check file size (5MB limit)
-                if (file.size > 5 * 1024 * 1024) {
-                    alert(`File "${file.name}" is too large. Maximum size is 5MB.`);
-                    continue;
-                }
-                
-                // Check if file already exists
-                if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-                    selectedFiles.push(file);
-                }
-            }
-            updateFileList();
-        }
-        
-        function updateFileList() {
-            const fileList = document.getElementById('fileList');
-            fileList.innerHTML = '';
-            
-            if (selectedFiles.length === 0) {
-                fileList.innerHTML = '<p style="color: var(--gray); text-align: center;">No files selected</p>';
-                return;
-            }
-            
-            selectedFiles.forEach((file, index) => {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-                fileItem.innerHTML = `
-                    <div>
-                        <strong>${file.name}</strong>
-                        <div style="font-size: 0.8rem; color: var(--gray);">
-                            ${(file.size / 1024 / 1024).toFixed(2)} MB
-                        </div>
-                    </div>
-                    <div class="file-remove" onclick="removeFile(${index})">
-                        <i class="fas fa-times"></i>
-                    </div>
-                `;
-                fileList.appendChild(fileItem);
-            });
-        }
-        
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            updateFileList();
-        }
-        
-        // Form submission
-        document.getElementById('applicationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            if (validateForm()) {
-                // Show loading indicator
-                document.getElementById('loadingIndicator').style.display = 'block';
-                document.getElementById('applicationForm').style.display = 'none';
-                document.getElementById('errorMessage').style.display = 'none';
-                document.getElementById('debugInfo').style.display = 'none';
-                
-                try {
-                    await submitApplication();
-                    
-                    // Show success message
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    document.getElementById('successMessage').style.display = 'block';
-                } catch (error) {
-                    console.error('Error submitting application:', error);
-                    
-                    // Show error message
-                    document.getElementById('errorText').textContent = 
-                        'There was an error submitting your application: ' + error.message;
-                    document.getElementById('errorMessage').style.display = 'block';
-                    
-                    // Show debug info
-                    document.getElementById('debugInfo').textContent = 
-                        'Debug Info:\nError: ' + error.message + '\n' +
-                        'Selected Files: ' + selectedFiles.length + '\n' +
-                        'Form Fields: ' + document.querySelectorAll('input, select, textarea').length;
-                    document.getElementById('debugInfo').style.display = 'block';
-                    
-                    // Show form again
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    document.getElementById('applicationForm').style.display = 'block';
-                }
-            }
-        });
-        
-        // Form validation
-        function validateForm() {
-            const requiredFields = document.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.style.borderColor = 'var(--danger)';
-                    isValid = false;
-                } else {
-                    field.style.borderColor = 'var(--light-gray)';
-                }
-            });
-            
-            if (!isValid) {
-                alert('Please fill in all required fields.');
-            }
-            
-            return isValid;
-        }
-        
-        // Submit application to Google Apps Script
-        async function submitApplication() {
-            const formData = new FormData();
-            
-            // Add form data
-            const formElements = document.getElementById('applicationForm').elements;
-            for (let element of formElements) {
-                if (element.name && element.type !== 'file' && element.type !== 'submit') {
-                    formData.append(element.name, element.value);
-                }
-            }
-            
-            // Add files
-            for (let file of selectedFiles) {
-                formData.append('files', file);
-            }
-            
-            // Replace with your actual Google Apps Script Web App URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyq8N2aCHBKP2UUpKve_SM72y0_CC69PXr6STNnDd6HqGfJxbf68wFTGrK1Sv0dWcETQw/exec';
-            
-            console.log('Submitting to:', scriptURL);
-            console.log('Form data entries:', Array.from(formData.entries()).map(([key, value]) => 
-                key + ': ' + (value instanceof File ? value.name + ' (' + value.size + ' bytes)' : value)
-            ));
-            
-            const response = await fetch(scriptURL, {
-                method: 'POST',
-                body: formData
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const result = await response.json();
-            console.log('Response:', result);
-            
-            if (result.result === 'error') {
-                throw new Error(result.message);
-            }
-            
-            return result;
-        }
-        
-        // Initialize file list
-        updateFileList();
+        // Auto-redirect after 3 seconds
+        setTimeout(function() {
+            window.location.href = 'YOUR_GOOGLE_FORM_URL_HERE';
+        }, 3000);
     </script>
 </body>
 </html>
