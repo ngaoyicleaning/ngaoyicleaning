@@ -461,6 +461,41 @@
             width: 0%;
         }
         
+        /* Connection Test Styles */
+        .connection-test {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .connection-status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .connection-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .connection-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .connection-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-4 {
                 grid-template-columns: 1fr;
@@ -508,6 +543,15 @@
 </head>
 <body>
     <div class="container">
+        <!-- Connection Test Section - ADDED -->
+        <div id="connectionTestSection" class="connection-test">
+            <h3><i class="fas fa-plug"></i> System Connection Test</h3>
+            <div id="connectionStatus"></div>
+            <button class="btn btn-secondary" onclick="testConnection()" style="margin-top: 10px;">
+                <i class="fas fa-sync-alt"></i> Test Connection
+            </button>
+        </div>
+        
         <div class="header">
             <div class="logo-section">
                 <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" 
@@ -964,7 +1008,7 @@
 
     <script>
         // Configuration - UPDATE THIS WITH YOUR GAS WEB APP URL
-        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbztmV1uN8P9vp6w1CAzVNlI_Ab6qTnE7gDh-MXbG3sssgG-9HHnSxwWEs4PehsnzhwI/exec';
+        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyMvCp46n5vKXKFYflWId7Gp-uvTC0QC7eScqy3vu0MoYTCat88J3NrxY3NXU31wPlI/exec';
         
         let currentAdminUser = null;
         let currentJobs = [];
@@ -987,7 +1031,74 @@
             
             // Set service prices
             setupServicePrices();
+            
+            // Test connection on load
+            setTimeout(testConnection, 1000);
         });
+
+        // ==================== CONNECTION TEST FUNCTION ====================
+        async function testConnection() {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.innerHTML = '<div class="connection-warning">Testing connection to server...</div>';
+            
+            try {
+                console.log('🔧 Testing connection to:', GAS_WEB_APP_URL);
+                
+                // Test 1: GET request
+                const getResponse = await fetch(GAS_WEB_APP_URL);
+                const getResult = await getResponse.json();
+                console.log('GET test result:', getResult);
+                
+                // Test 2: POST request
+                const postResponse = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'testConnection'
+                    })
+                });
+                
+                const postResult = await postResponse.json();
+                console.log('POST test result:', postResult);
+                
+                if (postResult.success) {
+                    statusDiv.innerHTML = `
+                        <div class="connection-success">
+                            <i class="fas fa-check-circle"></i> Connection Successful!
+                            <br><small>${postResult.message || 'Server is responding correctly'}</small>
+                            <br><small>Timestamp: ${postResult.timestamp}</small>
+                        </div>
+                    `;
+                    return true;
+                } else {
+                    throw new Error(postResult.error || 'Unknown server error');
+                }
+                
+            } catch (error) {
+                console.error('❌ Connection failed:', error);
+                statusDiv.innerHTML = `
+                    <div class="connection-error">
+                        <i class="fas fa-exclamation-triangle"></i> Connection Failed
+                        <br><small>Error: ${error.message}</small>
+                        <br><small>URL: ${GAS_WEB_APP_URL}</small>
+                        <br><br>
+                        <strong>Troubleshooting Steps:</strong>
+                        <ol style="text-align: left; margin: 10px 0;">
+                            <li>Verify the Google Apps Script is deployed as Web App</li>
+                            <li>Check that "Execute as" is set to "Me"</li>
+                            <li>Ensure "Who has access" is set to "Anyone"</li>
+                            <li>Test the URL directly in your browser</li>
+                        </ol>
+                        <button class="btn btn-secondary" onclick="window.open('${GAS_WEB_APP_URL}', '_blank')" style="margin-top: 10px;">
+                            <i class="fas fa-external-link-alt"></i> Test URL in New Tab
+                        </button>
+                    </div>
+                `;
+                return false;
+            }
+        }
 
         function updateCurrentTime() {
             const now = new Date();
