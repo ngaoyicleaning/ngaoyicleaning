@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngaoyi Cleaning - Professional Management Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2E8B57;
+            --primary-dark: #1F6B45;
+            --secondary: #FF6B35;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .company-info h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .company-info p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .current-time {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--light);
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 18px 35px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary);
+            background: white;
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1em;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 139, 87, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(46, 139, 87, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #218838);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #e0a800);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+        }
+        
+        /* Dashboard Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        
+        .dashboard-section {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 16px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: var(--dark);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .rating-stars {
+            color: #FFD700;
+            font-size: 1.2em;
+        }
+        
+        .cleaner-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .cleaner-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+        
+        .cleaner-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .cleaner-name {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .cleaner-rating {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .cleaner-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            color: var(--gray);
+        }
+        
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .admin-panel {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .login-form {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .search-results {
+            margin-top: 25px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .result-item {
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .result-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 3px 15px rgba(46, 139, 87, 0.1);
+        }
+        
+        .status-message {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .invoice-preview {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                min-width: 100%;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .company-info h1 {
+                font-size: 2em;
+            }
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" 
+                     alt="Ngaoyi Cleaning" class="logo">
+                <div class="company-info">
+                    <h1>Ngaoyi Cleaning</h1>
+                    <p>Professional Cleaning Management System</p>
+                </div>
+            </div>
+            <div class="current-time" id="currentTime">
+                <i class="fas fa-clock"></i> Loading...
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="cleaner">
+                <i class="fas fa-broom"></i> Cleaner Portal
+            </div>
+            <div class="tab" data-tab="admin">
+                <i class="fas fa-cogs"></i> Admin Portal
+            </div>
+            <div class="tab" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </div>
+            <div class="tab" data-tab="invoices">
+                <i class="fas fa-receipt"></i> Invoices
+            </div>
+        </div>
+        
+        <!-- Cleaner Portal Tab -->
+        <div class="tab-content active" id="cleaner-tab">
+            <h2 class="section-title">
+                <i class="fas fa-broom"></i> Cleaner Portal
+            </h2>
+            <p>Enter your cleaner number to view assignments and submit checklists.</p>
+            
+            <div class="admin-panel">
+                <div class="input-group">
+                    <label for="cleanerNumber">
+                        <i class="fas fa-id-card"></i> Your Cleaner Number *
+                    </label>
+                    <input type="text" id="cleanerNumber" placeholder="NCC0001" required>
+                    <small>Enter your unique cleaner number (e.g., NCC0001, CLN001)</small>
+                </div>
+                
+                <button class="btn pulse" onclick="loadCleanerJobs()">
+                    <i class="fas fa-sync-alt"></i> Load My Assignments
+                </button>
+            </div>
+            
+            <div id="cleanerJobs" style="display: none;">
+                <div class="dashboard-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-check"></i> Your Schedule
+                    </h3>
+                    <div id="jobsSummary"></div>
+                </div>
+                
+                <div id="jobsList">
+                    <!-- Jobs will be loaded here -->
+                </div>
+            </div>
+            
+            <div id="checklistSection" style="display: none;">
+                <!-- Checklist will be loaded here -->
+            </div>
+            
+            <div id="cleanerStatusMessage" class="status-message"></div>
+        </div>
+        
+        <!-- Admin Portal Tab -->
+        <div class="tab-content" id="admin-tab">
+            <div id="adminLoginSection">
+                <div class="login-form">
+                    <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" 
+                         alt="Ngaoyi Cleaning" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 20px;">
+                    <h2>Admin Authentication</h2>
+                    <p>Access required for system management</p>
+                    
+                    <div class="input-group">
+                        <label for="adminUsername">
+                            <i class="fas fa-user"></i> Username
+                        </label>
+                        <input type="text" id="adminUsername" placeholder="Enter admin username">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="adminPassword">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password">
+                    </div>
+                    
+                    <button class="btn" onclick="adminLogin()">
+                        <i class="fas fa-sign-in-alt"></i> Login to Admin Portal
+                    </button>
+                    
+                    <div id="adminLoginMessage" class="status-message" style="display: none; margin-top: 20px;"></div>
+                    
+                    <div style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; font-size: 0.9em;">
+                        <strong>Default Credentials:</strong><br>
+                        Username: <code>admin1</code><br>
+                        Password: <code>admin1</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="adminPanel" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs"></i> Admin Management Portal
+                </h2>
+                <p>Welcome, <span id="adminUserName"></span>! 
+                   <a href="#" onclick="adminLogout()" style="color: var(--danger); margin-left: 15px;">
+                       <i class="fas fa-sign-out-alt"></i> Logout
+                   </a>
+                </p>
+                
+                <div class="tabs">
+                    <div class="tab active" data-tab="management">
+                        <i class="fas fa-users-cog"></i> Management
+                    </div>
+                    <div class="tab" data-tab="assignments">
+                        <i class="fas fa-tasks"></i> Assignments
+                    </div>
+                    <div class="tab" data-tab="search">
+                        <i class="fas fa-search"></i> Search
+                    </div>
+                </div>
+                
+                <!-- Management Sub-tab -->
+                <div class="tab-content active" id="management-tab">
+                    <div class="admin-panel">
+                        <h3 class="section-title">
+                            <i class="fas fa-user-plus"></i> Cleaner Management
+                        </h3>
+                        <div class="grid-3">
+                            <div>
+                                <label>Full Name *</label>
+                                <input type="text" id="newCleanerName" placeholder="Sarah Johnson">
+                            </div>
+                            <div>
+                                <label>Phone</label>
+                                <input type="text" id="newCleanerPhone" placeholder="+27 72 123 4567">
+                            </div>
+                            <div>
+                                <label>Email</label>
+                                <input type="email" id="newCleanerEmail" placeholder="sarah@email.com">
+                            </div>
+                        </div>
+                        <button class="btn" onclick="generateCleanerNumber()">
+                            <i class="fas fa-id-card"></i> Generate Cleaner Number
+                        </button>
+                        <div id="newCleanerResult" style="margin-top: 15px;"></div>
+                    </div>
+                    
+                    <div class="admin-panel">
+                        <h3 class="section-title">
+                            <i class="fas fa-home"></i> Customer Management
+                        </h3>
+                        <div class="grid-2">
+                            <div>
+                                <label>Full Name *</label>
+                                <input type="text" id="newCustomerName" placeholder="John Smith">
+                            </div>
+                            <div>
+                                <label>Phone</label>
+                                <input type="text" id="newCustomerPhone" placeholder="+27 83 987 6543">
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div>
+                                <label>Email</label>
+                                <input type="email" id="newCustomerEmail" placeholder="john@email.com">
+                            </div>
+                            <div>
+                                <label>Address *</label>
+                                <input type="text" id="newCustomerAddress" placeholder="123 Main Street, Johannesburg">
+                            </div>
+                        </div>
+                        <div>
+                            <label>Preferences</label>
+                            <textarea id="newCustomerPreferences" placeholder="Eco-friendly products, pet-friendly..."></textarea>
+                        </div>
+                        <button class="btn" onclick="generateCustomerNumber()">
+                            <i class="fas fa-address-card"></i> Generate Customer Number
+                        </button>
+                        <div id="newCustomerResult" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+                
+                <!-- Assignments Sub-tab -->
+                <div class="tab-content" id="assignments-tab">
+                    <div class="admin-panel">
+                        <h3 class="section-title">
+                            <i class="fas fa-calendar-plus"></i> Create New Assignment
+                        </h3>
+                        <div class="grid-3">
+                            <div>
+                                <label>Cleaner Number *</label>
+                                <input type="text" id="assignCleaner" placeholder="NCC0001">
+                            </div>
+                            <div>
+                                <label>Customer Number *</label>
+                                <input type="text" id="assignCustomer" placeholder="CUST0001">
+                            </div>
+                            <div>
+                                <label>Service Type *</label>
+                                <select id="assignService">
+                                    <option value="1-bed-standard">1-Bed Standard</option>
+                                    <option value="2-bed-standard">2-Bed Standard</option>
+                                    <option value="3-bed-standard">3-Bed Standard</option>
+                                    <option value="3-bed-premium">3-Bed Premium</option>
+                                    <option value="1-bed-deep">1-Bed Deep Clean</option>
+                                    <option value="2-bed-deep">2-Bed Deep Clean</option>
+                                    <option value="3-bed-deep">3-Bed Deep Clean</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div>
+                                <label>Schedule Date *</label>
+                                <input type="date" id="assignDate">
+                            </div>
+                            <div>
+                                <label>Special Instructions</label>
+                                <input type="text" id="assignInstructions" placeholder="Focus on kitchen, pet in house...">
+                            </div>
+                        </div>
+                        <button class="btn" onclick="createAssignment()">
+                            <i class="fas fa-save"></i> Create Assignment
+                        </button>
+                        <div id="assignmentResult" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+                
+                <!-- Search Sub-tab -->
+                <div class="tab-content" id="search-tab">
+                    <div class="admin-panel">
+                        <h3 class="section-title">
+                            <i class="fas fa-search"></i> Database Search
+                        </h3>
+                        <div class="grid-3">
+                            <div>
+                                <label>Search Type</label>
+                                <select id="searchType">
+                                    <option value="cleaners">Cleaners</option>
+                                    <option value="customers">Customers</option>
+                                    <option value="assignments">Assignments</option>
+                                    <option value="completions">Completed Jobs</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Search Term</label>
+                                <input type="text" id="searchTerm" placeholder="Enter name, number, or keyword">
+                            </div>
+                            <div>
+                                <label>&nbsp;</label>
+                                <button class="btn" onclick="searchRecords()">
+                                    <i class="fas fa-search"></i> Search Database
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="searchResults" class="search-results">
+                            <!-- Results will appear here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="adminStatusMessage" class="status-message"></div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div class="tab-content" id="dashboard-tab">
+            <div id="dashboardLoginSection" style="display: none;">
+                <div class="login-form">
+                    <h2>Dashboard Access</h2>
+                    <p>Admin login required to view analytics</p>
+                    <button class="btn" onclick="showAdminLogin()">
+                        <i class="fas fa-sign-in-alt"></i> Go to Admin Login
+                    </button>
+                </div>
+            </div>
+            
+            <div id="dashboardContent" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i> Performance Dashboard
+                </h2>
+                
+                <div class="filter-bar">
+                    <div class="grid-4">
+                        <div>
+                            <label>Rating Filter</label>
+                            <select id="ratingFilter" onchange="loadDashboardData()">
+                                <option value="">All Ratings</option>
+                                <option value="4.5">4.5+ Stars</option>
+                                <option value="4.0">4.0+ Stars</option>
+                                <option value="3.5">3.5+ Stars</option>
+                                <option value="3.0">3.0+ Stars</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Date Range</label>
+                            <select id="dateRange" onchange="loadDashboardData()">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                                <option value="365">Last Year</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Service Type</label>
+                            <select id="serviceFilter" onchange="loadDashboardData()">
+                                <option value="">All Services</option>
+                                <option value="1-bed-standard">1-Bed Standard</option>
+                                <option value="2-bed-standard">2-Bed Standard</option>
+                                <option value="3-bed-standard">3-Bed Standard</option>
+                                <option value="deep-clean">Deep Clean</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>&nbsp;</label>
+                            <button class="btn" onclick="loadDashboardData()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid" id="dashboardStats">
+                    <!-- Stats will be loaded here -->
+                </div>
+                
+                <div class="grid-2">
+                    <div class="dashboard-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-star"></i> Cleaner Ratings
+                        </h3>
+                        <div id="cleanerRatingsList">
+                            <!-- Cleaner ratings will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-pie"></i> Service Distribution
+                        </h3>
+                        <div id="serviceDistribution">
+                            <!-- Service distribution will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-history"></i> Recent Activities
+                    </h3>
+                    <div id="recentActivities">
+                        <!-- Recent activities will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Invoices Tab -->
+        <div class="tab-content" id="invoices-tab">
+            <div id="invoicesLoginSection" style="display: none;">
+                <div class="login-form">
+                    <h2>Invoice Management</h2>
+                    <p>Admin login required to manage invoices</p>
+                    <button class="btn" onclick="showAdminLogin()">
+                        <i class="fas fa-sign-in-alt"></i> Go to Admin Login
+                    </button>
+                </div>
+            </div>
+            
+            <div id="invoicesContent" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-receipt"></i> Invoice Management
+                </h2>
+                
+                <div class="admin-panel">
+                    <h3 class="section-title">
+                        <i class="fas fa-file-invoice-dollar"></i> Generate New Invoice
+                    </h3>
+                    <div class="grid-3">
+                        <div>
+                            <label>Customer Number *</label>
+                            <input type="text" id="invoiceCustomer" placeholder="CUST0001">
+                        </div>
+                        <div>
+                            <label>Cleaner Number</label>
+                            <input type="text" id="invoiceCleaner" placeholder="NCC0001">
+                        </div>
+                        <div>
+                            <label>Service Type *</label>
+                            <select id="invoiceService">
+                                <option value="1-bed-standard">1-Bed Standard - R300</option>
+                                <option value="2-bed-standard">2-Bed Standard - R380</option>
+                                <option value="3-bed-standard">3-Bed Standard - R470</option>
+                                <option value="3-bed-premium">3-Bed Premium - R620</option>
+                                <option value="1-bed-deep">1-Bed Deep Clean - R1200</option>
+                                <option value="2-bed-deep">2-Bed Deep Clean - R1750</option>
+                                <option value="3-bed-deep">3-Bed Deep Clean - R2300</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div>
+                            <label>Amount (ZAR) *</label>
+                            <input type="number" id="invoiceAmount" placeholder="0.00" step="0.01">
+                        </div>
+                        <div>
+                            <label>Due Date</label>
+                            <input type="date" id="invoiceDueDate">
+                        </div>
+                    </div>
+                    <div>
+                        <label>Additional Items (JSON)</label>
+                        <textarea id="invoiceItems" placeholder='[{"description": "Additional service", "quantity": 1, "unitPrice": 100, "total": 100}]'></textarea>
+                    </div>
+                    <button class="btn" onclick="generateInvoice()">
+                        <i class="fas fa-file-pdf"></i> Generate Invoice
+                    </button>
+                    <div id="invoiceResult" style="margin-top: 15px;"></div>
+                </div>
+                
+                <div class="admin-panel">
+                    <h3 class="section-title">
+                        <i class="fas fa-paper-plane"></i> Send Invoice
+                    </h3>
+                    <div class="grid-3">
+                        <div>
+                            <label>Invoice Number</label>
+                            <input type="text" id="sendInvoiceNumber" placeholder="INV-2024-001">
+                        </div>
+                        <div>
+                            <label>Customer Number</label>
+                            <input type="text" id="sendCustomerNumber" placeholder="CUST0001">
+                        </div>
+                        <div>
+                            <label>&nbsp;</label>
+                            <button class="btn" onclick="sendInvoiceEmail()">
+                                <i class="fas fa-envelope"></i> Send to Customer
+                            </button>
+                        </div>
+                    </div>
+                    <div id="sendInvoiceResult" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - UPDATE THIS WITH YOUR GAS WEB APP URL
+        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbydDlCdH51PbasxeogNebpl10-57PZWzbQ6dkZOD8XoWqFBLScGZd5v7w_j-1QUVQOw/exec';
+        
+        let currentAdminUser = null;
+        let currentJobs = [];
+        let currentChecklistData = null;
+
+        // Initialize the system
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('assignDate').value = today;
+            
+            const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            document.getElementById('invoiceDueDate').value = nextWeek;
+            
+            // Initialize tab functionality
+            initializeTabs();
+            
+            // Set service prices
+            setupServicePrices();
+        });
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('currentTime').innerHTML = `<i class="fas fa-clock"></i> ${timeString}`;
+        }
+
+        function initializeTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    
+                    // Update main tabs
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                    
+                    // Handle specific tab logic
+                    if (tabName === 'dashboard' || tabName === 'invoices') {
+                        if (!currentAdminUser) {
+                            document.getElementById(`${tabName}LoginSection`).style.display = 'block';
+                            document.getElementById(`${tabName}Content`).style.display = 'none';
+                        } else {
+                            document.getElementById(`${tabName}LoginSection`).style.display = 'none';
+                            document.getElementById(`${tabName}Content`).style.display = 'block';
+                            if (tabName === 'dashboard') {
+                                loadDashboardData();
+                            }
+                        }
+                    }
+                    
+                    // If admin tab is selected and user is logged in, load stats
+                    if (tabName === 'admin' && currentAdminUser) {
+                        // Stats will be loaded when admin panel is shown
+                    }
+                });
+            });
+            
+            // Admin sub-tabs
+            document.querySelectorAll('#adminPanel .tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    
+                    document.querySelectorAll('#adminPanel .tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('#adminPanel .tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        function setupServicePrices() {
+            const servicePrices = {
+                '1-bed-standard': 300,
+                '2-bed-standard': 380,
+                '3-bed-standard': 470,
+                '3-bed-premium': 620,
+                '1-bed-deep': 1200,
+                '2-bed-deep': 1750,
+                '3-bed-deep': 2300
+            };
+            
+            const serviceSelect = document.getElementById('invoiceService');
+            serviceSelect.innerHTML = '';
+            
+            for (const [service, price] of Object.entries(servicePrices)) {
+                const option = document.createElement('option');
+                option.value = service;
+                option.textContent = `${getServiceDisplayName(service)} - R${price}`;
+                serviceSelect.appendChild(option);
+            }
+            
+            // Set amount when service changes
+            serviceSelect.addEventListener('change', function() {
+                const selectedPrice = servicePrices[this.value] || 0;
+                document.getElementById('invoiceAmount').value = selectedPrice;
+            });
+            
+            // Set initial amount
+            const initialPrice = servicePrices[serviceSelect.value] || 0;
+            document.getElementById('invoiceAmount').value = initialPrice;
+        }
+
+        // ==================== CLEANER PORTAL FUNCTIONS ====================
+
+        async function loadCleanerJobs() {
+            const cleanerNumber = document.getElementById('cleanerNumber').value.trim();
+            
+            if (!cleanerNumber) {
+                showCleanerStatus('Please enter your cleaner number', 'error');
+                return;
+            }
+
+            showCleanerStatus('Loading your assignments...', 'success');
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'getCleanerJobs',
+                        cleanerNumber: cleanerNumber
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentJobs = result.data.jobs;
+                    displayCleanerJobs(currentJobs);
+                    document.getElementById('cleanerJobs').style.display = 'block';
+                    showCleanerStatus(`Found ${result.data.totalJobs} assignments`, 'success');
+                } else {
+                    throw new Error(result.data.message || 'No assignments found');
+                }
+            } catch (error) {
+                showCleanerStatus('Error: ' + error.message, 'error');
+                document.getElementById('cleanerJobs').style.display = 'none';
+            }
+        }
+
+        function displayCleanerJobs(jobs) {
+            const jobsList = document.getElementById('jobsList');
+            const jobsSummary = document.getElementById('jobsSummary');
+            
+            if (jobs.length === 0) {
+                jobsList.innerHTML = '<div class="cleaner-card"><p>No assignments found.</p></div>';
+                jobsSummary.innerHTML = '<p>You have no assignments scheduled.</p>';
+                return;
+            }
+
+            // Update summary
+            const today = new Date().toISOString().split('T')[0];
+            const todayJobs = jobs.filter(job => job.ScheduleDate === today);
+            const upcomingJobs = jobs.filter(job => job.ScheduleDate > today);
+            
+            jobsSummary.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${todayJobs.length}</div>
+                        <div class="stat-label">Today's Jobs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${upcomingJobs.length}</div>
+                        <div class="stat-label">Upcoming Jobs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${jobs.length}</div>
+                        <div class="stat-label">Total Assignments</div>
+                    </div>
+                </div>
+            `;
+
+            // Display jobs
+            jobsList.innerHTML = jobs.map(job => `
+                <div class="cleaner-card fade-in">
+                    <div class="cleaner-header">
+                        <div class="cleaner-name">${getServiceDisplayName(job.ServiceType)}</div>
+                        <div class="cleaner-rating" style="background: ${getPriorityColor(job.Priority)}">
+                            ${job.Priority || 'Standard'}
+                        </div>
+                    </div>
+                    <div class="cleaner-details">
+                        <div><strong>Customer:</strong> ${job.customerName}</div>
+                        <div><strong>Date:</strong> ${formatDate(job.ScheduleDate)}</div>
+                        <div><strong>Phone:</strong> ${job.customerPhone}</div>
+                        <div><strong>Address:</strong> ${job.customerAddress}</div>
+                    </div>
+                    ${job.SpecialInstructions ? `<div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <strong>Instructions:</strong> ${job.SpecialInstructions}
+                    </div>` : ''}
+                    <button class="btn ${job.ScheduleDate === today ? 'btn-success' : 'btn-secondary'}" 
+                            onclick="loadChecklist('${job.CleanerNumber}', '${job.CustomerNumber}', '${job.ServiceType}')"
+                            style="margin-top: 15px;">
+                        <i class="fas fa-clipboard-check"></i> 
+                        ${job.ScheduleDate === today ? 'Start Checklist' : 'Available ' + formatDate(job.ScheduleDate)}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function getPriorityColor(priority) {
+            const colors = {
+                'High': '#dc3545',
+                'Medium': '#ffc107',
+                'Low': '#17a2b8',
+                'Standard': '#6c757d'
+            };
+            return colors[priority] || '#6c757d';
+        }
+
+        // [Include all the other functions from the previous implementation...]
+        // loadChecklist, generateChecklistHTML, createChecklistItem, updateChecklistProgress,
+        // submitChecklist, cancelChecklist, adminLogin, adminLogout, generateCleanerNumber,
+        // generateCustomerNumber, createAssignment, searchRecords, loadDashboardData, etc.
+
+        // ==================== DASHBOARD FUNCTIONS ====================
+
+        async function loadDashboardData() {
+            if (!currentAdminUser) return;
+            
+            const ratingFilter = document.getElementById('ratingFilter').value;
+            const dateRange = document.getElementById('dateRange').value;
+            const serviceFilter = document.getElementById('serviceFilter').value;
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'getDashboardData',
+                        filterRating: ratingFilter,
+                        dateRange: dateRange,
+                        serviceType: serviceFilter,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayDashboardData(result.data);
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function displayDashboardData(data) {
+            // Update stats
+            document.getElementById('dashboardStats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-number">${data.stats.totalCleaners}</div>
+                    <div class="stat-label">Total Cleaners</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-home"></i></div>
+                    <div class="stat-number">${data.stats.totalCustomers}</div>
+                    <div class="stat-label">Total Customers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-number">${data.stats.activeAssignments}</div>
+                    <div class="stat-label">Active Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-number">${data.stats.completionsToday}</div>
+                    <div class="stat-label">Completed Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="stat-number">R${data.stats.totalRevenue}</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-number">${data.stats.pendingInvoices}</div>
+                    <div class="stat-label">Pending Invoices</div>
+                </div>
+            `;
+
+            // Update cleaner ratings
+            displayCleanerRatings(data.cleanerRatings);
+            
+            // Update service distribution
+            displayServiceDistribution(data.serviceDistribution);
+            
+            // Update recent activities
+            displayRecentActivities(data.recentActivities);
+        }
+
+        function displayCleanerRatings(ratings) {
+            const container = document.getElementById('cleanerRatingsList');
+            
+            if (ratings.length === 0) {
+                container.innerHTML = '<p>No cleaners found with the selected criteria.</p>';
+                return;
+            }
+
+            container.innerHTML = ratings.map(cleaner => `
+                <div class="cleaner-card fade-in">
+                    <div class="cleaner-header">
+                        <div class="cleaner-name">${cleaner.fullName}</div>
+                        <div class="cleaner-rating">
+                            ${cleaner.averageRating.toFixed(1)} <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="cleaner-details">
+                        <div><strong>ID:</strong> ${cleaner.cleanerNumber}</div>
+                        <div><strong>Jobs Completed:</strong> ${cleaner.totalJobs}</div>
+                        <div><strong>Total Ratings:</strong> ${cleaner.ratingCount}</div>
+                        <div><strong>Status:</strong> ${cleaner.status}</div>
+                    </div>
+                    <div class="rating-stars" style="margin-top: 10px;">
+                        ${generateStarRating(cleaner.averageRating)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (halfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        function displayServiceDistribution(distribution) {
+            const container = document.getElementById('serviceDistribution');
+            // Implementation for service distribution chart
+            container.innerHTML = '<p>Service distribution visualization would be implemented here with a chart library.</p>';
+        }
+
+        function displayRecentActivities(activities) {
+            const container = document.getElementById('recentActivities');
+            // Implementation for recent activities
+            container.innerHTML = '<p>Recent activities list would be implemented here.</p>';
+        }
+
+        // ==================== INVOICE FUNCTIONS ====================
+
+        async function generateInvoice() {
+            if (!currentAdminUser) return;
+            
+            const customerNumber = document.getElementById('invoiceCustomer').value;
+            const cleanerNumber = document.getElementById('invoiceCleaner').value;
+            const serviceType = document.getElementById('invoiceService').value;
+            const amount = document.getElementById('invoiceAmount').value;
+            const dueDate = document.getElementById('invoiceDueDate').value;
+            const items = document.getElementById('invoiceItems').value;
+
+            if (!customerNumber || !serviceType || !amount) {
+                showInvoiceResult('Please fill in all required fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generateInvoice',
+                        customerNumber: customerNumber,
+                        cleanerNumber: cleanerNumber,
+                        serviceType: serviceType,
+                        amount: amount,
+                        dueDate: dueDate,
+                        items: items,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showInvoiceResult(`
+                        <div class="status-success">
+                            <strong>✅ Invoice Generated Successfully!</strong><br>
+                            Invoice Number: <code>${result.data.invoiceNumber}</code><br>
+                            <a href="${result.data.pdfUrl}" target="_blank" class="btn" style="margin-top: 10px;">
+                                <i class="fas fa-download"></i> Download PDF
+                            </a>
+                        </div>
+                    `, 'success');
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showInvoiceResult('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function sendInvoiceEmail() {
+            if (!currentAdminUser) return;
+            
+            const invoiceNumber = document.getElementById('sendInvoiceNumber').value;
+            const customerNumber = document.getElementById('sendCustomerNumber').value;
+
+            if (!invoiceNumber || !customerNumber) {
+                showSendInvoiceResult('Please enter invoice and customer numbers', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'sendInvoiceEmail',
+                        invoiceNumber: invoiceNumber,
+                        customerNumber: customerNumber,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSendInvoiceResult(`
+                        <div class="status-success">
+                            <strong>✅ Invoice Sent Successfully!</strong><br>
+                            Sent to: ${result.data.email}<br>
+                            Invoice: ${result.data.invoiceNumber}
+                        </div>
+                    `, 'success');
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showSendInvoiceResult('Error: ' + error.message, 'error');
+            }
+        }
+
+        function showInvoiceResult(message, type) {
+            const resultEl = document.getElementById('invoiceResult');
+            resultEl.innerHTML = message;
+            resultEl.className = `status-message status-${type}`;
+        }
+
+        function showSendInvoiceResult(message, type) {
+            const resultEl = document.getElementById('sendInvoiceResult');
+            resultEl.innerHTML = message;
+            resultEl.className = `status-message status-${type}`;
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+
+        function getServiceDisplayName(serviceType) {
+            const names = {
+                '1-bed-standard': '1-Bedroom Standard Clean',
+                '2-bed-standard': '2-Bedroom Standard Clean',
+                '3-bed-standard': '3-Bedroom Standard Clean',
+                '3-bed-premium': '3-Bedroom Premium Clean',
+                '1-bed-deep': '1-Bedroom Deep Clean',
+                '2-bed-deep': '2-Bedroom Deep Clean',
+                '3-bed-deep': '3-Bedroom Deep Clean'
+            };
+            return names[serviceType] || serviceType;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showCleanerStatus(message, type) {
+            const statusEl = document.getElementById('cleanerStatusMessage');
+            statusEl.innerHTML = message;
+            statusEl.className = `status-message status-${type} fade-in`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        function showAdminStatus(message, type) {
+            const statusEl = document.getElementById('adminStatusMessage');
+            statusEl.innerHTML = message;
+            statusEl.className = `status-message status-${type} fade-in`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        function showAdminLoginMessage(message, type) {
+            const statusEl = document.getElementById('adminLoginMessage');
+            statusEl.innerHTML = message;
+            statusEl.className = `status-message status-${type} fade-in`;
+            statusEl.style.display = 'block';
+        }
+
+        function showAdminLogin() {
+            document.querySelector('[data-tab="admin"]').click();
+        }
+
+        // [Include all other utility functions from previous implementation]
+    </script>
+</body>
+</html>
