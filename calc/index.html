@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Cleaning Quote Generator</title>
+    <style>
+        :root {
+            --primary: #2c7fb8;
+            --secondary: #4ecdc4;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #333;
+            --success: #25D366;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        
+        .quote-generator {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin: 20px;
+        }
+        
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin: 10px 0 0 0;
+        }
+        
+        .calculator {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
+        }
+        
+        .category-section {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .category-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .property-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+        
+        .property-option {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .property-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .property-option.selected {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+        
+        .property-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .property-desc {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        .addons {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .addon-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .addon-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .addon-item:last-child {
+            border-bottom: none;
+        }
+        
+        .addon-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .quote-result {
+            background: #f0f9f8;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid var(--secondary);
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .quote-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .total-price {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+        
+        .breakdown {
+            font-size: 14px;
+            color: var(--gray);
+            margin: 15px 0;
+            text-align: left;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .breakdown-item {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .breakdown-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .breakdown-total {
+            border-top: 2px solid var(--secondary);
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .cta-section {
+            padding: 30px;
+            background: var(--success);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-button {
+            background: white;
+            color: var(--success);
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .contact-info {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .service-type-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .service-type {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .service-type:hover {
+            border-color: var(--primary);
+        }
+        
+        .service-type.selected {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+        
+        .service-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .service-desc {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .price-note {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .property-options {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .service-type-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .property-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quote-generator">
+        <div class="header">
+            <div class="logo">🧹</div>
+            <h1 class="title">Professional Cleaning Quote</h1>
+            <div class="subtitle">Get Your Instant Custom Quote</div>
+        </div>
+        
+        <div class="calculator">
+            <div class="service-type-section">
+                <div class="service-type" data-type="once-off" data-multiplier="1">
+                    <div class="service-name">Once-Off Cleaning</div>
+                    <div class="service-desc">Standard cleaning service</div>
+                </div>
+                <div class="service-type" data-type="deep-cleaning" data-multiplier="1.8">
+                    <div class="service-name">Deep Cleaning</div>
+                    <div class="service-desc">Thorough cleaning including hard-to-reach areas</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="serviceFrequency">Service Frequency</label>
+                <select id="serviceFrequency">
+                    <option value="1">One-Time Service</option>
+                    <option value="0.85">Weekly Plan (Save 15%)</option>
+                    <option value="0.9">Bi-Weekly Plan (Save 10%)</option>
+                    <option value="0.95">Monthly Plan (Save 5%)</option>
+                    <option value="1.5">Emergency Weekend Service</option>
+                </select>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">🏠 Residential Properties</div>
+                <div class="property-options" id="residentialOptions">
+                    <div class="property-option" data-price="350" data-type="1 Bedroom">
+                        <div class="property-name">1 Bedroom</div>
+                        <div class="property-desc">Apartment or small home</div>
+                    </div>
+                    <div class="property-option" data-price="450" data-type="2 Bedrooms">
+                        <div class="property-name">2 Bedrooms</div>
+                        <div class="property-desc">Standard family home</div>
+                    </div>
+                    <div class="property-option" data-price="580" data-type="3 Bedrooms">
+                        <div class="property-name">3 Bedrooms</div>
+                        <div class="property-desc">Family home with living areas</div>
+                    </div>
+                    <div class="property-option" data-price="750" data-type="4 Bedrooms">
+                        <div class="property-name">4 Bedrooms</div>
+                        <div class="property-desc">Large family home</div>
+                    </div>
+                    <div class="property-option" data-price="950" data-type="5 Bedrooms">
+                        <div class="property-name">5 Bedrooms</div>
+                        <div class="property-desc">Executive home</div>
+                    </div>
+                    <div class="property-option" data-price="1200" data-type="6 Bedrooms">
+                        <div class="property-name">6 Bedrooms</div>
+                        <div class="property-desc">Large executive home</div>
+                    </div>
+                    <div class="property-option" data-price="1500" data-type="7 Bedrooms">
+                        <div class="property-name">7 Bedrooms</div>
+                        <div class="property-desc">Premium large home</div>
+                    </div>
+                    <div class="property-option" data-price="1800" data-type="8 Bedrooms">
+                        <div class="property-name">8+ Bedrooms</div>
+                        <div class="property-desc">Mansion or estate home</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">🏢 Commercial Properties</div>
+                <div class="property-options" id="commercialOptions">
+                    <div class="property-option" data-price="900" data-type="Small Office">
+                        <div class="property-name">Small Office</div>
+                        <div class="property-desc">Up to 50m² • 2-3 rooms</div>
+                    </div>
+                    <div class="property-option" data-price="1400" data-type="Medium Office">
+                        <div class="property-name">Medium Office</div>
+                        <div class="property-desc">50-100m² • 4-6 rooms</div>
+                    </div>
+                    <div class="property-option" data-price="2000" data-type="Large Office">
+                        <div class="property-name">Large Office</div>
+                        <div class="property-desc">100-200m² • Open plan</div>
+                    </div>
+                    <div class="property-option" data-price="2800" data-type="Corporate Office">
+                        <div class="property-name">Corporate Office</div>
+                        <div class="property-desc">200m²+ • Multiple floors</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="addons">
+                <div class="addon-title">➕ Add-On Services</div>
+                <div class="addon-item">
+                    <label class="addon-label">
+                        <input type="checkbox" id="windowCleaning" value="150">
+                        <span>Window Cleaning (Interior)</span>
+                    </label>
+                </div>
+                <div class="addon-item">
+                    <label class="addon-label">
+                        <input type="checkbox" id="fridgeCleaning" value="120">
+                        <span>Fridge Deep Clean</span>
+                    </label>
+                </div>
+                <div class="addon-item">
+                    <label class="addon-label">
+                        <input type="checkbox" id="ovenCleaning" value="200">
+                        <span>Oven Deep Clean</span>
+                    </label>
+                </div>
+                <div class="addon-item">
+                    <label class="addon-label">
+                        <input type="checkbox" id="carpetCleaning" value="250">
+                        <span>Carpet Cleaning</span>
+                    </label>
+                </div>
+                <div class="addon-item">
+                    <label class="addon-label">
+                        <input type="checkbox" id="laundryService" value="100">
+                        <span>Laundry Service (per hour)</span>
+                    </label>
+                </div>
+                <div class="addon-item">
+                    <label class="addon-label">
+                        <input type="checkbox" id="weSupply" value="0">
+                        <span>We Supply Materials</span>
+                    </label>
+                    <div class="price-note">Price varies by property size</div>
+                </div>
+            </div>
+            
+            <div class="quote-result">
+                <div class="quote-title">Your Professional Quote</div>
+                <div class="total-price" id="totalPrice">R0</div>
+                <div class="breakdown" id="breakdown">
+                    <div class="breakdown-item">Select a property type above</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <button class="cta-button" onclick="sendQuote()">
+                📱 Get This Quote
+            </button>
+            <div class="contact-info">070 764 3709 • Commercial & Residential Specialists</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedProperty = null;
+        let selectedPropertyType = '';
+        let selectedPropertyPrice = 0;
+        let selectedServiceType = 'once-off';
+        let selectedServiceMultiplier = 1;
+
+        // Initialize property selection
+        document.querySelectorAll('.property-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.property-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                
+                // Store selected property details
+                selectedProperty = this;
+                selectedPropertyPrice = parseInt(this.getAttribute('data-price'));
+                selectedPropertyType = this.getAttribute('data-type');
+                
+                // Update "We Supply Materials" price based on property size
+                updateWeSupplyPrice();
+                
+                // Recalculate quote
+                calculateQuote();
+            });
+        });
+
+        // Initialize service type selection
+        document.querySelectorAll('.service-type').forEach(service => {
+            service.addEventListener('click', function() {
+                // Remove selected class from all service types
+                document.querySelectorAll('.service-type').forEach(s => {
+                    s.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked service type
+                this.classList.add('selected');
+                
+                // Store selected service type details
+                selectedServiceType = this.getAttribute('data-type');
+                selectedServiceMultiplier = parseFloat(this.getAttribute('data-multiplier'));
+                
+                // Recalculate quote
+                calculateQuote();
+            });
+        });
+
+        function updateWeSupplyPrice() {
+            if (!selectedProperty) return;
+            
+            // Calculate "We Supply Materials" price based on property size
+            let weSupplyPrice = 0;
+            
+            if (selectedPropertyType.includes('1 Bedroom')) {
+                weSupplyPrice = 100;
+            } else if (selectedPropertyType.includes('2 Bedrooms')) {
+                weSupplyPrice = 150;
+            } else if (selectedPropertyType.includes('3 Bedrooms')) {
+                weSupplyPrice = 200;
+            } else if (selectedPropertyType.includes('4 Bedrooms')) {
+                weSupplyPrice = 250;
+            } else if (selectedPropertyType.includes('5 Bedrooms')) {
+                weSupplyPrice = 300;
+            } else if (selectedPropertyType.includes('6 Bedrooms')) {
+                weSupplyPrice = 350;
+            } else if (selectedPropertyType.includes('7 Bedrooms')) {
+                weSupplyPrice = 400;
+            } else if (selectedPropertyType.includes('8+ Bedrooms')) {
+                weSupplyPrice = 450;
+            } else if (selectedPropertyType.includes('Small Office')) {
+                weSupplyPrice = 200;
+            } else if (selectedPropertyType.includes('Medium Office')) {
+                weSupplyPrice = 300;
+            } else if (selectedPropertyType.includes('Large Office')) {
+                weSupplyPrice = 400;
+            } else if (selectedPropertyType.includes('Corporate Office')) {
+                weSupplyPrice = 500;
+            }
+            
+            // Update the checkbox value
+            document.getElementById('weSupply').value = weSupplyPrice;
+        }
+
+        function calculateQuote() {
+            if (!selectedProperty) {
+                document.getElementById('totalPrice').textContent = 'R0';
+                document.getElementById('breakdown').innerHTML = '<div class="breakdown-item">Select a property type above</div>';
+                return { total: 0, breakdown: [] };
+            }
+
+            const frequencyMultiplier = parseFloat(document.getElementById('serviceFrequency').value);
+            
+            let addonsTotal = 0;
+            const addons = [
+                { id: 'windowCleaning', name: 'Window Cleaning', price: 150 },
+                { id: 'fridgeCleaning', name: 'Fridge Cleaning', price: 120 },
+                { id: 'ovenCleaning', name: 'Oven Cleaning', price: 200 },
+                { id: 'carpetCleaning', name: 'Carpet Cleaning', price: 250 },
+                { id: 'laundryService', name: 'Laundry Service', price: 100 },
+                { id: 'weSupply', name: 'We Supply Materials', price: parseInt(document.getElementById('weSupply').value) }
+            ];
+            
+            let breakdown = [];
+            
+            // Base service calculation
+            let basePrice = selectedPropertyPrice * selectedServiceMultiplier * frequencyMultiplier;
+            let serviceTypeName = selectedServiceType === 'deep-cleaning' ? 'Deep Cleaning' : 'Once-Off Cleaning';
+            
+            // Add base price to breakdown
+            breakdown.push(`<div class="breakdown-item"><span>${selectedPropertyType} ${serviceTypeName}:</span><span>Included</span></div>`);
+            
+            // Add service type multiplier if applicable
+            if (selectedServiceMultiplier > 1) {
+                breakdown.push(`<div class="breakdown-item"><span>Deep Cleaning Service:</span><span>Included</span></div>`);
+            }
+            
+            // Add frequency multiplier if applicable
+            if (frequencyMultiplier !== 1) {
+                if (frequencyMultiplier > 1) {
+                    breakdown.push(`<div class="breakdown-item"><span>Emergency Service:</span><span>Included</span></div>`);
+                } else {
+                    breakdown.push(`<div class="breakdown-item"><span>Frequency Discount:</span><span>Applied</span></div>`);
+                }
+            }
+            
+            // Add-ons calculation
+            addons.forEach(addon => {
+                const checkbox = document.getElementById(addon.id);
+                if (checkbox.checked) {
+                    addonsTotal += addon.price;
+                    breakdown.push(`<div class="breakdown-item"><span>${addon.name}:</span><span>Included</span></div>`);
+                }
+            });
+            
+            const total = basePrice + addonsTotal;
+            
+            // Update display
+            document.getElementById('totalPrice').textContent = `R${total.toFixed(0)}`;
+            
+            // Add total to breakdown
+            breakdown.push(`<div class="breakdown-item breakdown-total"><span>TOTAL:</span><span>R${total.toFixed(0)}</span></div>`);
+            
+            document.getElementById('breakdown').innerHTML = breakdown.join('');
+            
+            return { total, breakdown };
+        }
+        
+        function sendQuote() {
+            if (!selectedProperty) {
+                alert('Please select a property type first');
+                return;
+            }
+
+            const quote = calculateQuote();
+            const frequencyType = document.getElementById('serviceFrequency').options[document.getElementById('serviceFrequency').selectedIndex].text;
+            const serviceTypeName = selectedServiceType === 'deep-cleaning' ? 'Deep Cleaning' : 'Once-Off Cleaning';
+            
+            let addonsList = [];
+            const addonCheckboxes = [
+                { id: 'windowCleaning', name: 'Window Cleaning' },
+                { id: 'fridgeCleaning', name: 'Fridge Cleaning' },
+                { id: 'ovenCleaning', name: 'Oven Cleaning' },
+                { id: 'carpetCleaning', name: 'Carpet Cleaning' },
+                { id: 'laundryService', name: 'Laundry Service' },
+                { id: 'weSupply', name: 'We Supply Materials' }
+            ];
+            
+            addonCheckboxes.forEach(addon => {
+                if (document.getElementById(addon.id).checked) {
+                    addonsList.push(addon.name);
+                }
+            });
+
+            const message = `Hello Ngaoyi Cleaning! I'd like to get a quote for:\n\n` +
+                           `📍 Property: ${selectedPropertyType}\n` +
+                           `🧹 Service: ${serviceTypeName}\n` +
+                           `📅 Frequency: ${frequencyType}\n` +
+                           `${addonsList.length > 0 ? `➕ Add-ons: ${addonsList.join(', ')}\n` : ''}\n` +
+                           `💰 Total: R${quote.total.toFixed(0)}\n\n` +
+                           `Please confirm availability and provide next steps!`;
+
+            window.open(`https://wa.me/27707643709?text=${encodeURIComponent(message)}`, '_blank');
+        }
+        
+        // Calculate quote when any input changes
+        document.querySelectorAll('select, input[type="checkbox"]').forEach(element => {
+            element.addEventListener('change', calculateQuote);
+        });
+        
+        // Auto-select first options
+        document.querySelector('.service-type').click();
+        document.querySelector('.property-option').click();
+    </script>
+</body>
+</html>
