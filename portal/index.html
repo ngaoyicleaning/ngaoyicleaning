@@ -270,7 +270,7 @@
         
         .cleaner-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
@@ -387,6 +387,78 @@
             border-radius: 12px;
             border: 2px dashed #dee2e6;
             margin: 20px 0;
+        }
+        
+        .checklist-section {
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-progress {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .checklist-items {
+            padding: 20px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: var(--primary);
+        }
+        
+        .progress-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+            width: 0%;
         }
         
         @media (max-width: 768px) {
@@ -957,11 +1029,6 @@
                             }
                         }
                     }
-                    
-                    // If admin tab is selected and user is logged in, load stats
-                    if (tabName === 'admin' && currentAdminUser) {
-                        // Stats will be loaded when admin panel is shown
-                    }
                 });
             });
             
@@ -1119,10 +1186,555 @@
             return colors[priority] || '#6c757d';
         }
 
-        // [Include all the other functions from the previous implementation...]
-        // loadChecklist, generateChecklistHTML, createChecklistItem, updateChecklistProgress,
-        // submitChecklist, cancelChecklist, adminLogin, adminLogout, generateCleanerNumber,
-        // generateCustomerNumber, createAssignment, searchRecords, loadDashboardData, etc.
+        function loadChecklist(cleanerNumber, customerNumber, serviceType) {
+            currentChecklistData = {
+                cleanerNumber: cleanerNumber,
+                customerNumber: customerNumber,
+                serviceType: serviceType
+            };
+
+            const checklistHTML = generateChecklistHTML(serviceType);
+            document.getElementById('checklistSection').innerHTML = checklistHTML;
+            document.getElementById('checklistSection').style.display = 'block';
+            
+            // Scroll to checklist
+            document.getElementById('checklistSection').scrollIntoView({ behavior: 'smooth' });
+            
+            showCleanerStatus('Checklist loaded. Start completing tasks!', 'success');
+        }
+
+        function generateChecklistHTML(serviceType) {
+            const baseChecklist = `
+                <div class="job-info">
+                    <h3>🧹 Cleaning Checklist - ${getServiceDisplayName(serviceType)}</h3>
+                    <p>Complete all tasks and submit when finished</p>
+                </div>
+
+                <div class="checklist-section">
+                    <div class="section-header">
+                        <span>🚽 Bathroom Cleaning</span>
+                        <span class="section-progress">0/6 tasks</span>
+                    </div>
+                    <div class="checklist-items">
+                        ${createChecklistItem('Clean toilet inside and out with disinfectant')}
+                        ${createChecklistItem('Disinfect sink, faucet, and countertops')}
+                        ${createChecklistItem('Clean mirror and glass surfaces')}
+                        ${createChecklistItem('Scrub shower/bathtub and rinse thoroughly')}
+                        ${createChecklistItem('Empty trash bin and replace liner')}
+                        ${createChecklistItem('Mop floor and dry properly')}
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <div class="section-header">
+                        <span>🍳 Kitchen Cleaning</span>
+                        <span class="section-progress">0/5 tasks</span>
+                    </div>
+                    <div class="checklist-items">
+                        ${createChecklistItem('Clean and disinfect all countertops')}
+                        ${createChecklistItem('Scrub sink and polish faucet')}
+                        ${createChecklistItem('Wipe exterior of all appliances')}
+                        ${createChecklistItem('Empty trash bin and replace liner')}
+                        ${createChecklistItem('Mop floor and dry thoroughly')}
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <div class="section-header">
+                        <span>🛋️ Living & Bedroom Areas</span>
+                        <span class="section-progress">0/4 tasks</span>
+                    </div>
+                    <div class="checklist-items">
+                        ${createChecklistItem('Dust all surfaces including furniture and shelves')}
+                        ${createChecklistItem('Vacuum all carpets and rugs')}
+                        ${createChecklistItem('Mop hard floors throughout')}
+                        ${createChecklistItem('Empty all trash bins and replace liners')}
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h4>Overall Progress</h4>
+                    <div class="progress-text">Completion: <span id="checklistProgress">0%</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="checklistProgressBar"></div>
+                    </div>
+                    <div>Tasks Completed: <span id="completedTasksCount">0</span> / <span id="totalTasksCount">15</span></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="customerRating">⭐ Customer Rating (1-5 stars)</label>
+                    <select id="customerRating">
+                        <option value="">Select Rating</option>
+                        <option value="5">5 Stars - Excellent</option>
+                        <option value="4">4 Stars - Very Good</option>
+                        <option value="3">3 Stars - Good</option>
+                        <option value="2">2 Stars - Fair</option>
+                        <option value="1">1 Star - Poor</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="customerFeedback">💬 Customer Feedback (Optional)</label>
+                    <textarea id="customerFeedback" placeholder="Any feedback from the customer..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="cleanerNotes">📝 Notes & Comments</label>
+                    <textarea id="cleanerNotes" placeholder="Any issues, special requests, or additional comments..."></textarea>
+                </div>
+
+                <div class="input-group grid-3">
+                    <div>
+                        <label for="startTime">🕐 Start Time</label>
+                        <input type="time" id="startTime" value="${new Date().toTimeString().substr(0, 5)}">
+                    </div>
+                    <div>
+                        <label for="endTime">🕔 End Time</label>
+                        <input type="time" id="endTime">
+                    </div>
+                    <div>
+                        <label for="totalTime">⏱️ Total Time</label>
+                        <input type="text" id="totalTime" readonly placeholder="Auto-calculated">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="qualityCheck"> 
+                        ✅ I confirm that all tasks have been completed to quality standards
+                    </label>
+                </div>
+
+                <button class="btn btn-success" onclick="submitChecklist()" id="submitChecklistBtn" disabled>
+                    Submit Completed Checklist
+                </button>
+
+                <button class="btn btn-secondary" onclick="cancelChecklist()" style="margin-left: 10px;">
+                    Cancel
+                </button>
+            `;
+
+            // Add time calculation
+            setTimeout(() => {
+                const startTime = document.getElementById('startTime');
+                const endTime = document.getElementById('endTime');
+                
+                if (startTime) startTime.addEventListener('change', calculateTotalTime);
+                if (endTime) endTime.addEventListener('change', calculateTotalTime);
+            }, 100);
+
+            return baseChecklist;
+        }
+
+        function createChecklistItem(text) {
+            const id = 'check_' + Math.random().toString(36).substr(2, 9);
+            return `
+                <div class="checklist-item">
+                    <input type="checkbox" id="${id}" class="task-checkbox" onchange="updateChecklistProgress()">
+                    <label for="${id}">${text}</label>
+                </div>
+            `;
+        }
+
+        function updateChecklistProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const checked = document.querySelectorAll('.task-checkbox:checked').length;
+            const total = checkboxes.length;
+            const progress = total > 0 ? (checked / total) * 100 : 0;
+            
+            document.getElementById('checklistProgressBar').style.width = `${progress}%`;
+            document.getElementById('checklistProgress').textContent = `${Math.round(progress)}%`;
+            document.getElementById('completedTasksCount').textContent = checked;
+            document.getElementById('totalTasksCount').textContent = total;
+            
+            const qualityCheck = document.getElementById('qualityCheck');
+            if (qualityCheck) {
+                document.getElementById('submitChecklistBtn').disabled = checked === 0 || !qualityCheck.checked;
+            }
+        }
+
+        function calculateTotalTime() {
+            const start = document.getElementById('startTime').value;
+            const end = document.getElementById('endTime').value;
+            
+            if (start && end) {
+                const startTime = new Date(`2000-01-01T${start}`);
+                const endTime = new Date(`2000-01-01T${end}`);
+                const diff = (endTime - startTime) / (1000 * 60); // difference in minutes
+                
+                if (diff > 0) {
+                    const hours = Math.floor(diff / 60);
+                    const minutes = diff % 60;
+                    document.getElementById('totalTime').value = `${hours}h ${minutes}m`;
+                } else {
+                    document.getElementById('totalTime').value = 'Invalid time range';
+                }
+            }
+        }
+
+        async function submitChecklist() {
+            const submitBtn = document.getElementById('submitChecklistBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const completedTasks = [];
+            document.querySelectorAll('.task-checkbox:checked').forEach(checkbox => {
+                completedTasks.push(checkbox.nextElementSibling.textContent);
+            });
+
+            const checklistData = {
+                action: 'submitChecklist',
+                cleanerNumber: currentChecklistData.cleanerNumber,
+                customerNumber: currentChecklistData.customerNumber,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                totalTime: document.getElementById('totalTime').value,
+                notes: document.getElementById('cleanerNotes').value,
+                completedTasks: completedTasks,
+                progress: document.getElementById('checklistProgress').textContent,
+                qualityCheck: document.getElementById('qualityCheck').checked,
+                customerRating: document.getElementById('customerRating').value,
+                customerFeedback: document.getElementById('customerFeedback').value
+            };
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(checklistData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showCleanerStatus('✅ Checklist submitted successfully!', 'success');
+                    setTimeout(() => {
+                        document.getElementById('checklistSection').style.display = 'none';
+                        loadCleanerJobs(); // Refresh jobs list
+                    }, 3000);
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showCleanerStatus('❌ Error: ' + error.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        }
+
+        function cancelChecklist() {
+            document.getElementById('checklistSection').style.display = 'none';
+            showCleanerStatus('Checklist cancelled', 'success');
+        }
+
+        // ==================== ADMIN FUNCTIONS ====================
+
+        async function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (!username || !password) {
+                showAdminLoginMessage('Please enter both username and password', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'adminLogin',
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentAdminUser = result.data.user;
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('adminUserName').textContent = currentAdminUser;
+                    showAdminStatus('Login successful!', 'success');
+                    
+                    // Also show dashboard and invoices if on those tabs
+                    document.getElementById('dashboardLoginSection').style.display = 'none';
+                    document.getElementById('dashboardContent').style.display = 'block';
+                    document.getElementById('invoicesLoginSection').style.display = 'none';
+                    document.getElementById('invoicesContent').style.display = 'block';
+                    
+                    loadDashboardData();
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showAdminLoginMessage('Login failed: ' + error.message, 'error');
+            }
+        }
+
+        function adminLogout() {
+            currentAdminUser = null;
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+            
+            // Also hide dashboard and invoices
+            document.getElementById('dashboardLoginSection').style.display = 'block';
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.getElementById('invoicesLoginSection').style.display = 'block';
+            document.getElementById('invoicesContent').style.display = 'none';
+            
+            showAdminLoginMessage('Logged out successfully', 'success');
+        }
+
+        async function generateCleanerNumber() {
+            const fullName = document.getElementById('newCleanerName').value;
+            const phone = document.getElementById('newCleanerPhone').value;
+            const email = document.getElementById('newCleanerEmail').value;
+
+            if (!fullName) {
+                showAdminStatus('Full name is required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generateCleanerNumber',
+                        fullName: fullName,
+                        phone: phone,
+                        email: email,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('newCleanerResult').innerHTML = `
+                        <div class="status-success">
+                            <strong>✅ Cleaner Created Successfully!</strong><br>
+                            Cleaner Number: <code>${result.data.cleanerNumber}</code><br>
+                            Name: ${fullName}<br>
+                            ${result.data.message}
+                        </div>
+                    `;
+                    
+                    // Clear form
+                    document.getElementById('newCleanerName').value = '';
+                    document.getElementById('newCleanerPhone').value = '';
+                    document.getElementById('newCleanerEmail').value = '';
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showAdminStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function generateCustomerNumber() {
+            const fullName = document.getElementById('newCustomerName').value;
+            const phone = document.getElementById('newCustomerPhone').value;
+            const email = document.getElementById('newCustomerEmail').value;
+            const address = document.getElementById('newCustomerAddress').value;
+            const preferences = document.getElementById('newCustomerPreferences').value;
+
+            if (!fullName || !address) {
+                showAdminStatus('Full name and address are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generateCustomerNumber',
+                        fullName: fullName,
+                        phone: phone,
+                        email: email,
+                        address: address,
+                        preferences: preferences,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('newCustomerResult').innerHTML = `
+                        <div class="status-success">
+                            <strong>✅ Customer Created Successfully!</strong><br>
+                            Customer Number: <code>${result.data.customerNumber}</code><br>
+                            Name: ${fullName}<br>
+                            Address: ${address}<br>
+                            ${result.data.message}
+                        </div>
+                    `;
+                    
+                    // Clear form
+                    document.getElementById('newCustomerName').value = '';
+                    document.getElementById('newCustomerPhone').value = '';
+                    document.getElementById('newCustomerEmail').value = '';
+                    document.getElementById('newCustomerAddress').value = '';
+                    document.getElementById('newCustomerPreferences').value = '';
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showAdminStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function createAssignment() {
+            const cleanerNumber = document.getElementById('assignCleaner').value;
+            const customerNumber = document.getElementById('assignCustomer').value;
+            const serviceType = document.getElementById('assignService').value;
+            const scheduleDate = document.getElementById('assignDate').value;
+            const instructions = document.getElementById('assignInstructions').value;
+
+            if (!cleanerNumber || !customerNumber || !serviceType || !scheduleDate) {
+                showAdminStatus('All fields are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'createAssignment',
+                        cleanerNumber: cleanerNumber,
+                        customerNumber: customerNumber,
+                        serviceType: serviceType,
+                        scheduleDate: scheduleDate,
+                        specialInstructions: instructions,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('assignmentResult').innerHTML = `
+                        <div class="status-success">
+                            <strong>✅ Assignment Created Successfully!</strong><br>
+                            Cleaner: ${result.data.details.cleaner}<br>
+                            Customer: ${result.data.details.customer}<br>
+                            Service: ${getServiceDisplayName(serviceType)}<br>
+                            Date: ${formatDate(scheduleDate)}<br>
+                            ${result.data.message}
+                        </div>
+                    `;
+                    
+                    // Clear form
+                    document.getElementById('assignCleaner').value = '';
+                    document.getElementById('assignCustomer').value = '';
+                    document.getElementById('assignInstructions').value = '';
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showAdminStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function searchRecords() {
+            const searchType = document.getElementById('searchType').value;
+            const searchTerm = document.getElementById('searchTerm').value;
+
+            if (!searchTerm) {
+                showAdminStatus('Please enter a search term', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'searchRecords',
+                        searchType: searchType,
+                        searchTerm: searchTerm,
+                        adminUser: currentAdminUser
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displaySearchResults(result.data.results, searchType);
+                    showAdminStatus(`Found ${result.data.resultsCount} results`, 'success');
+                } else {
+                    throw new Error(result.data);
+                }
+            } catch (error) {
+                showAdminStatus('Search error: ' + error.message, 'error');
+            }
+        }
+
+        function displaySearchResults(results, searchType) {
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="status-message">No results found</div>';
+                return;
+            }
+
+            resultsContainer.innerHTML = results.map(result => `
+                <div class="result-item">
+                    <h4>${getResultTitle(result, searchType)}</h4>
+                    <div class="grid-3">
+                        ${getResultFields(result, searchType)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getResultTitle(result, searchType) {
+            switch(searchType) {
+                case 'cleaners':
+                    return `🧹 ${result.FullName} (${result.CleanerNumber})`;
+                case 'customers':
+                    return `🏠 ${result.FullName} (${result.CustomerNumber})`;
+                case 'assignments':
+                    return `📅 ${result.ServiceType} - ${formatDate(result.ScheduleDate)}`;
+                case 'completions':
+                    return `✅ ${result.ServiceType} - ${new Date(result.Timestamp).toLocaleDateString()}`;
+                default:
+                    return 'Result';
+            }
+        }
+
+        function getResultFields(result, searchType) {
+            switch(searchType) {
+                case 'cleaners':
+                    return `
+                        <div><strong>Phone:</strong> ${result.Phone}</div>
+                        <div><strong>Email:</strong> ${result.Email}</div>
+                        <div><strong>Status:</strong> ${result.Status}</div>
+                    `;
+                case 'customers':
+                    return `
+                        <div><strong>Phone:</strong> ${result.Phone}</div>
+                        <div><strong>Email:</strong> ${result.Email}</div>
+                        <div><strong>Address:</strong> ${result.Address}</div>
+                    `;
+                case 'assignments':
+                    return `
+                        <div><strong>Cleaner:</strong> ${result.CleanerNumber}</div>
+                        <div><strong>Customer:</strong> ${result.CustomerNumber}</div>
+                        <div><strong>Status:</strong> ${result.Status}</div>
+                    `;
+                default:
+                    return '<div>Details available</div>';
+            }
+        }
 
         // ==================== DASHBOARD FUNCTIONS ====================
 
@@ -1183,30 +1795,24 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-                    <div class="stat-number">R${data.stats.totalRevenue}</div>
+                    <div class="stat-number">R${data.stats.totalRevenue || 0}</div>
                     <div class="stat-label">Total Revenue</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                    <div class="stat-number">${data.stats.pendingInvoices}</div>
+                    <div class="stat-number">${data.stats.pendingInvoices || 0}</div>
                     <div class="stat-label">Pending Invoices</div>
                 </div>
             `;
 
             // Update cleaner ratings
             displayCleanerRatings(data.cleanerRatings);
-            
-            // Update service distribution
-            displayServiceDistribution(data.serviceDistribution);
-            
-            // Update recent activities
-            displayRecentActivities(data.recentActivities);
         }
 
         function displayCleanerRatings(ratings) {
             const container = document.getElementById('cleanerRatingsList');
             
-            if (ratings.length === 0) {
+            if (!ratings || ratings.length === 0) {
                 container.innerHTML = '<p>No cleaners found with the selected criteria.</p>';
                 return;
             }
@@ -1216,17 +1822,17 @@
                     <div class="cleaner-header">
                         <div class="cleaner-name">${cleaner.fullName}</div>
                         <div class="cleaner-rating">
-                            ${cleaner.averageRating.toFixed(1)} <i class="fas fa-star"></i>
+                            ${cleaner.averageRating ? cleaner.averageRating.toFixed(1) : '0.0'} <i class="fas fa-star"></i>
                         </div>
                     </div>
                     <div class="cleaner-details">
                         <div><strong>ID:</strong> ${cleaner.cleanerNumber}</div>
-                        <div><strong>Jobs Completed:</strong> ${cleaner.totalJobs}</div>
-                        <div><strong>Total Ratings:</strong> ${cleaner.ratingCount}</div>
+                        <div><strong>Jobs Completed:</strong> ${cleaner.totalJobs || 0}</div>
+                        <div><strong>Total Ratings:</strong> ${cleaner.ratingCount || 0}</div>
                         <div><strong>Status:</strong> ${cleaner.status}</div>
                     </div>
                     <div class="rating-stars" style="margin-top: 10px;">
-                        ${generateStarRating(cleaner.averageRating)}
+                        ${generateStarRating(cleaner.averageRating || 0)}
                     </div>
                 </div>
             `).join('');
@@ -1252,18 +1858,6 @@
             }
             
             return stars;
-        }
-
-        function displayServiceDistribution(distribution) {
-            const container = document.getElementById('serviceDistribution');
-            // Implementation for service distribution chart
-            container.innerHTML = '<p>Service distribution visualization would be implemented here with a chart library.</p>';
-        }
-
-        function displayRecentActivities(activities) {
-            const container = document.getElementById('recentActivities');
-            // Implementation for recent activities
-            container.innerHTML = '<p>Recent activities list would be implemented here.</p>';
         }
 
         // ==================== INVOICE FUNCTIONS ====================
@@ -1306,9 +1900,9 @@
                         <div class="status-success">
                             <strong>✅ Invoice Generated Successfully!</strong><br>
                             Invoice Number: <code>${result.data.invoiceNumber}</code><br>
-                            <a href="${result.data.pdfUrl}" target="_blank" class="btn" style="margin-top: 10px;">
+                            ${result.data.pdfUrl ? `<a href="${result.data.pdfUrl}" target="_blank" class="btn" style="margin-top: 10px;">
                                 <i class="fas fa-download"></i> Download PDF
-                            </a>
+                            </a>` : ''}
                         </div>
                     `, 'success');
                 } else {
@@ -1348,7 +1942,7 @@
                     showSendInvoiceResult(`
                         <div class="status-success">
                             <strong>✅ Invoice Sent Successfully!</strong><br>
-                            Sent to: ${result.data.email}<br>
+                            ${result.data.email ? `Sent to: ${result.data.email}<br>` : ''}
                             Invoice: ${result.data.invoiceNumber}
                         </div>
                     `, 'success');
@@ -1388,6 +1982,7 @@
         }
 
         function formatDate(dateString) {
+            if (!dateString) return 'Not set';
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', {
                 weekday: 'short',
@@ -1429,8 +2024,6 @@
         function showAdminLogin() {
             document.querySelector('[data-tab="admin"]').click();
         }
-
-        // [Include all other utility functions from previous implementation]
     </script>
 </body>
 </html>
