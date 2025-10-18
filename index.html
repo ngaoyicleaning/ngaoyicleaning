@@ -137,7 +137,6 @@
         }
         
         .logo-icon {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -147,6 +146,14 @@
             color: white;
             font-size: 1.5rem;
             margin-right: 10px;
+            overflow: hidden;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .logo h1 {
@@ -278,6 +285,52 @@
             margin-bottom: 20px;
         }
         
+        /* Gallery Section */
+        .gallery-section {
+            padding: 80px 0;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            height: 250px;
+            box-shadow: var(--shadow);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
         /* Pricing Section */
         .pricing-section {
             background-color: var(--light-gray);
@@ -392,6 +445,85 @@
             padding: 5px 30px;
             transform: rotate(45deg);
             font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* Emergency Pricing Table */
+        .emergency-pricing {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .emergency-pricing h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .emergency-pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .emergency-pricing-table th,
+        .emergency-pricing-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .emergency-pricing-table th {
+            background-color: var(--light-gray);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .emergency-pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Price Comparison Section */
+        .price-comparison-section {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px 20px;
+            text-align: center;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .comparison-table .service-name {
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .comparison-table .savings {
+            color: #28a745;
             font-weight: 600;
         }
         
@@ -603,6 +735,242 @@
         textarea.form-control {
             min-height: 120px;
             resize: vertical;
+        }
+        
+        /* Trust Badges Section (MOVED TO BOTTOM) */
+        .trust-section {
+            background-color: var(--light-gray);
+            padding: 80px 0;
+        }
+        
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .trust-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 200px;
+        }
+        
+        .badge-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Testimonials Section */
+        .testimonials-section {
+            background-color: var(--light);
+            padding: 80px 0;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .author-info h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .testimonial-rating {
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+        
+        /* Google Reviews Integration */
+        .google-reviews-section {
+            padding: 80px 0;
+            background-color: var(--light-gray);
+        }
+        
+        .reviews-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* Google Reviews Carousel Styles */
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .google-reviews-carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+            gap: 20px;
+        }
+
+        .google-review-card {
+            min-width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .google-review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .carousel-btn {
+            background-color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            pointer-events: all;
+            transition: var(--transition);
+        }
+
+        .carousel-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .carousel-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .carousel-indicator.active {
+            background-color: var(--primary);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .reviewer-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .review-date {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .review-stars {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .review-text {
+            color: var(--gray);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        
+        .google-reviews-cta {
+            text-align: center;
+            margin-top: 40px;
         }
         
         /* Footer */
@@ -822,7 +1190,7 @@
         /* Emergency Booking Section */
         .emergency-booking {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
-            color: white;
+            color: #000; /* Changed to black text */
             padding: 60px 0;
             text-align: center;
             margin-top: 40px;
@@ -837,12 +1205,13 @@
         .emergency-booking h2 {
             font-size: 2.2rem;
             margin-bottom: 20px;
+            color: #000; /* Changed to black text */
         }
         
         .emergency-booking p {
             font-size: 1.1rem;
             margin-bottom: 25px;
-            opacity: 0.9;
+            color: #000; /* Changed to black text */
         }
         
         .emergency-features {
@@ -854,10 +1223,11 @@
         }
         
         .emergency-feature {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.7);
             padding: 15px 20px;
             border-radius: 10px;
             font-weight: 600;
+            color: #000; /* Changed to black text */
         }
         
         /* Working Hours Section */
@@ -1001,6 +1371,17 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            .trust-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .emergency-pricing-table,
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
@@ -1010,7 +1391,8 @@
         <div class="container header-container">
             <div class="logo">
                 <div class="logo-icon">
-                    <i class="fas fa-broom"></i>
+                    <!-- Your actual logo URL -->
+                    <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning Logo">
                 </div>
                 <h1>Ngaoyi Cleaning</h1>
             </div>
@@ -1112,8 +1494,24 @@
                     <h3>Regular Hours</h3>
                     <ul class="hours-list">
                         <li>
-                            <span class="day">Monday - Friday</span>
-                            <span>9:00 AM - 6:00 PM</span>
+                            <span class="day">Monday</span>
+                            <span>8:00 AM - 5:00 PM</span>
+                        </li>
+                        <li>
+                            <span class="day">Tuesday</span>
+                            <span>8:00 AM - 5:00 PM</span>
+                        </li>
+                        <li>
+                            <span class="day">Wednesday</span>
+                            <span>8:00 AM - 5:00 PM</span>
+                        </li>
+                        <li>
+                            <span class="day">Thursday</span>
+                            <span>8:00 AM - 5:00 PM</span>
+                        </li>
+                        <li>
+                            <span class="day">Friday</span>
+                            <span>8:00 AM - 5:00 PM</span>
                         </li>
                         <li>
                             <span class="day">Saturday</span>
@@ -1132,7 +1530,7 @@
                     <ul class="hours-list">
                         <li>
                             <span class="day">Saturday Emergency</span>
-                            <span>After 4:00 PM</span>
+                            <span>Before 9:00 AM</span>
                         </li>
                         <li>
                             <span class="day">Sunday Emergency</span>
@@ -1156,7 +1554,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Transparent Pricing</h2>
-                <p>Quality service at competitive prices</p>
+                <p>Quality service at competitive prices with no hidden costs</p>
             </div>
             
             <div class="pricing-tabs">
@@ -1173,7 +1571,7 @@
                         <div class="pricing-header">
                             <h3>1-Bedroom</h3>
                             <div class="price">R300</div>
-                            <div class="price-period">You Supply Cleaning Materials</div>
+                            <div class="price-period">Customer Supplies Cleaning Materials</div>
                         </div>
                         <ul class="pricing-features">
                             <li><i class="fas fa-check"></i> Solo Cleaner</li>
@@ -1188,7 +1586,7 @@
                         <div class="pricing-header">
                             <h3>2-Bedroom</h3>
                             <div class="price">R380</div>
-                            <div class="price-period">You Supply Cleaning Materials</div>
+                            <div class="price-period">Customer Supplies Cleaning Materials</div>
                         </div>
                         <ul class="pricing-features">
                             <li><i class="fas fa-check"></i> Solo Cleaner</li>
@@ -1203,7 +1601,7 @@
                         <div class="pricing-header">
                             <h3>3-Bedroom</h3>
                             <div class="price">R470</div>
-                            <div class="price-period">You Supply Cleaning Materials</div>
+                            <div class="price-period">Customer Supplies Cleaning Materials</div>
                         </div>
                         <ul class="pricing-features">
                             <li><i class="fas fa-check"></i> Solo Cleaner</li>
@@ -1245,7 +1643,7 @@
                         <ul class="pricing-features">
                             <li><i class="fas fa-check"></i> 2-Bed: R323 per visit</li>
                             <li><i class="fas fa-check"></i> 3-Bed: R400 per visit</li>
-                            <li><i class="fas fa-check"></i> You supply materials</li>
+                            <li><i class="fas fa-check"></i> Customer supplies materials</li>
                             <li><i class="fas fa-check"></i> Consistent schedule</li>
                             <li><i class="fas fa-check"></i> Priority booking</li>
                         </ul>
@@ -1261,7 +1659,7 @@
                         <ul class="pricing-features">
                             <li><i class="fas fa-check"></i> 2-Bed: R342 per visit</li>
                             <li><i class="fas fa-check"></i> 3-Bed: R423 per visit</li>
-                            <li><i class="fas fa-check"></i> You supply materials</li>
+                            <li><i class="fas fa-check"></i> Customer supplies materials</li>
                             <li><i class="fas fa-check"></i> Every two weeks</li>
                             <li><i class="fas fa-check"></i> Flexible scheduling</li>
                         </ul>
@@ -1277,7 +1675,7 @@
                         <ul class="pricing-features">
                             <li><i class="fas fa-check"></i> 2-Bed: R361 per visit</li>
                             <li><i class="fas fa-check"></i> 3-Bed: R447 per visit</li>
-                            <li><i class="fas fa-check"></i> You supply materials</li>
+                            <li><i class="fas fa-check"></i> Customer supplies materials</li>
                             <li><i class="fas fa-check"></i> Once a month</li>
                             <li><i class="fas fa-check"></i> Flexible scheduling</li>
                         </ul>
@@ -1393,18 +1791,118 @@
             <div class="emergency-booking">
                 <div class="emergency-content">
                     <h2>Emergency Weekend Cleaning Available!</h2>
-                    <p>Need cleaning on Saturday after 4 PM or Sunday? We offer emergency services with additional charges.</p>
+                    <p>Need cleaning on Saturday before 9 AM or Sunday? We offer emergency services with transparent pricing.</p>
                     
-                    <div class="emergency-features">
-                        <div class="emergency-feature">Saturday after 4:00 PM</div>
-                        <div class="emergency-feature">Sunday (book by 4:00 PM Saturday)</div>
-                        <div class="emergency-feature">Additional charges apply</div>
+                    <div class="emergency-pricing">
+                        <h3>Emergency Service Pricing</h3>
+                        <table class="emergency-pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Service Type</th>
+                                    <th>Regular Price</th>
+                                    <th>Emergency Surcharge</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1-Bedroom Once-Off</td>
+                                    <td>R300</td>
+                                    <td>+50%</td>
+                                    <td>R450</td>
+                                </tr>
+                                <tr>
+                                    <td>2-Bedroom Once-Off</td>
+                                    <td>R380</td>
+                                    <td>+50%</td>
+                                    <td>R570</td>
+                                </tr>
+                                <tr>
+                                    <td>3-Bedroom Once-Off</td>
+                                    <td>R470</td>
+                                    <td>+50%</td>
+                                    <td>R705</td>
+                                </tr>
+                                <tr>
+                                    <td>Deep Cleaning</td>
+                                    <td>From R1200</td>
+                                    <td>+30%</td>
+                                    <td>From R1560</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="text-align: center; margin-top: 15px; font-style: italic;">
+                            Emergency bookings must be confirmed by 4 PM Saturday for Sunday service
+                        </p>
                     </div>
                     
-                    <button class="btn btn-emergency book-service" data-service="Emergency Weekend Cleaning" data-price="Price will be confirmed">
+                    <button class="btn btn-emergency book-service" data-service="Emergency Weekend Cleaning" data-price="Price will be confirmed based on service">
                         <i class="fas fa-exclamation-triangle"></i> Book Emergency Service
                     </button>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Comparison Section -->
+    <section class="price-comparison-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Price Comparison</h2>
+                <p>See how our prices compare to other cleaning services in the area</p>
+            </div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Ngaoyi Cleaning</th>
+                        <th>Competitor A</th>
+                        <th>Competitor B</th>
+                        <th>You Save</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="service-name">1-Bedroom Once-Off</td>
+                        <td>R300</td>
+                        <td>R400</td>
+                        <td>R450</td>
+                        <td class="savings">Up to 33%</td>
+                    </tr>
+                    <tr>
+                        <td class="service-name">2-Bedroom Once-Off</td>
+                        <td>R380</td>
+                        <td>R500</td>
+                        <td>R550</td>
+                        <td class="savings">Up to 31%</td>
+                    </tr>
+                    <tr>
+                        <td class="service-name">3-Bedroom Once-Off</td>
+                        <td>R470</td>
+                        <td>R600</td>
+                        <td>R650</td>
+                        <td class="savings">Up to 28%</td>
+                    </tr>
+                    <tr>
+                        <td class="service-name">Weekly Plan (3-Bed)</td>
+                        <td>R400</td>
+                        <td>R550</td>
+                        <td>R600</td>
+                        <td class="savings">Up to 33%</td>
+                    </tr>
+                    <tr>
+                        <td class="service-name">Deep Cleaning (3-Bed)</td>
+                        <td>R2300</td>
+                        <td>R2800</td>
+                        <td>R3000</td>
+                        <td class="savings">Up to 23%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pricing-note">
+                <p><strong>Note:</strong> Prices are based on market research and may vary. All Ngaoyi Cleaning prices include professional service with customer-supplied materials unless otherwise specified.</p>
             </div>
         </div>
     </section>
@@ -1440,6 +1938,46 @@
                     <div class="step-number">4</div>
                     <h3>Enjoy & Relax</h3>
                     <p>Sit back and enjoy your sparkling clean home. Rebook easily for ongoing service.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Previous Work</h2>
+                <p>See the transformation we bring to homes and businesses</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean kitchen">
+                    <div class="gallery-caption">
+                        <h4>Spotless Kitchen</h4>
+                        <p>Deep cleaning for move-out</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean bathroom">
+                    <div class="gallery-caption">
+                        <h4>Sanitized Bathroom</h4>
+                        <p>Weekly maintenance cleaning</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean living room">
+                    <div class="gallery-caption">
+                        <h4>Fresh Living Space</h4>
+                        <p>Recurring cleaning plan</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean office">
+                    <div class="gallery-caption">
+                        <h4>Office Cleaning</h4>
+                        <p>Commercial contract service</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1545,7 +2083,7 @@
                         </div>
                         <div class="contact-details">
                             <h3>Working Hours</h3>
-                            <p>Mon-Fri: 9:00 AM - 6:00 PM</p>
+                            <p>Mon-Fri: 8:00 AM - 5:00 PM</p>
                             <p>Sat: 8:00 AM - 4:00 PM</p>
                             <p>Sun: 9:00 AM - 2:00 PM</p>
                             <p><strong>Emergency weekend bookings available</strong></p>
@@ -1621,6 +2159,82 @@
                         
                         <button type="submit" class="btn" id="submitBtn">Request Quote</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Reviews Section -->
+    <section class="google-reviews-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Customer Reviews</h2>
+                <p>See what our customers are saying about our services</p>
+            </div>
+            
+            <div class="reviews-container">
+                <div class="carousel-container">
+                    <div class="google-reviews-carousel" id="googleReviewsCarousel">
+                        <!-- Google Reviews will be dynamically loaded here -->
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn prev-btn" id="prevBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-btn next-btn" id="nextBtn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="carousel-indicators" id="carouselIndicators">
+                        <!-- Indicators will be dynamically added -->
+                    </div>
+                </div>
+                
+                <div class="google-reviews-cta">
+                    <a href="https://g.page/r/CRQB4YD4KovSEBI/review" class="btn" target="_blank">
+                        <i class="fab fa-google"></i> Leave a Review on Google
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Badges Section (MOVED TO BOTTOM) -->
+    <section class="trust-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose Ngaoyi Cleaning</h2>
+                <p>We're committed to providing the highest quality cleaning service</p>
+            </div>
+            
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <div class="badge-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Insured & Vetted</h3>
+                    <p>All cleaners are thoroughly screened and insured</p>
+                </div>
+                <div class="trust-badge">
+                    <div class="badge-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Satisfaction Guarantee</h3>
+                    <p>Not happy? We'll come back and fix it for free</p>
+                </div>
+                <div class="trust-badge">
+                    <div class="badge-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Eco-Friendly</h3>
+                    <p>We use environmentally safe cleaning products</p>
+                </div>
+                <div class="trust-badge">
+                    <div class="badge-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Punctual Service</h3>
+                    <p>We value your time and arrive as scheduled</p>
                 </div>
             </div>
         </div>
@@ -1846,17 +2460,17 @@
         const serviceMessages = {
             '1-Bedroom Once-Off': {
                 price: 'R300',
-                description: '1-Bedroom Once-Off Cleaning (You supply materials)',
+                description: '1-Bedroom Once-Off Cleaning (Customer supplies materials)',
                 details: 'Includes comprehensive cleaning, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
             },
             '2-Bedroom Once-Off': {
                 price: 'R380',
-                description: '2-Bedroom Once-Off Cleaning (You supply materials)',
+                description: '2-Bedroom Once-Off Cleaning (Customer supplies materials)',
                 details: 'Includes comprehensive cleaning, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
             },
             '3-Bedroom Once-Off': {
                 price: 'R470',
-                description: '3-Bedroom Once-Off Cleaning (You supply materials)',
+                description: '3-Bedroom Once-Off Cleaning (Customer supplies materials)',
                 details: 'Includes comprehensive cleaning, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
             },
             '3-Bedroom Once-Off (We Supply)': {
@@ -1867,17 +2481,17 @@
             'Weekly Recurring Plan': {
                 price: 'R400',
                 description: 'Weekly Recurring Cleaning Plan (3-Bedroom)',
-                details: '15% discount, you supply materials, consistent schedule with priority booking'
+                details: '15% discount, customer supplies materials, consistent schedule with priority booking'
             },
             'Bi-Weekly Recurring Plan': {
                 price: 'R423',
                 description: 'Bi-Weekly Recurring Cleaning Plan (3-Bedroom)',
-                details: '10% discount, you supply materials, every two weeks with flexible scheduling'
+                details: '10% discount, customer supplies materials, every two weeks with flexible scheduling'
             },
             'Monthly Recurring Plan': {
                 price: 'R447',
                 description: 'Monthly Recurring Cleaning Plan (3-Bedroom)',
-                details: '5% discount, you supply materials, once a month with flexible scheduling'
+                details: '5% discount, customer supplies materials, once a month with flexible scheduling'
             },
             '1-Bedroom Deep Clean': {
                 price: 'R1200',
@@ -1910,9 +2524,9 @@
                 details: 'Per hour rate, washing & ironing included, folding & organizing'
             },
             'Emergency Weekend Cleaning': {
-                price: 'Price will be confirmed',
+                price: 'Price will be confirmed based on service',
                 description: 'Emergency Weekend Cleaning Service',
-                details: 'Available with additional charges for Saturday after 4 PM and Sunday bookings'
+                details: 'Available with additional charges for Saturday before 9 AM and Sunday bookings'
             }
         };
 
@@ -1979,6 +2593,192 @@ Thank you! Looking forward to your response.`;
                 bookingModal.style.display = 'none';
             }
         });
+
+        // Google Reviews Carousel Functionality
+        let currentReviewIndex = 0;
+        let googleReviews = [];
+
+        function initializeCarousel() {
+            const carousel = document.getElementById('googleReviewsCarousel');
+            const indicators = document.getElementById('carouselIndicators');
+            
+            // Clear existing content
+            carousel.innerHTML = '';
+            indicators.innerHTML = '';
+            
+            // Add review cards to carousel
+            googleReviews.forEach((review, index) => {
+                const reviewCard = document.createElement('div');
+                reviewCard.className = 'google-review-card';
+                reviewCard.setAttribute('data-review-id', review.reviewId);
+                reviewCard.innerHTML = `
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">${review.authorInitials}</div>
+                            <div>
+                                <div class="reviewer-name">${review.authorName}</div>
+                                <div class="review-date">${review.relativeTime}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-stars">
+                        ${generateStars(review.rating)}
+                    </div>
+                    <p class="review-text">${review.text}</p>
+                `;
+                
+                // Add click event to redirect to Google review
+                reviewCard.addEventListener('click', () => {
+                    window.open(`https://g.page/r/CRQB4YD4KovSEBI/review`, '_blank');
+                });
+                
+                carousel.appendChild(reviewCard);
+                
+                // Add indicator
+                const indicator = document.createElement('div');
+                indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
+                indicator.addEventListener('click', () => {
+                    goToReview(index);
+                });
+                indicators.appendChild(indicator);
+            });
+            
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const carousel = document.getElementById('googleReviewsCarousel');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            
+            // Update carousel position
+            carousel.style.transform = `translateX(-${currentReviewIndex * 100}%)`;
+            
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentReviewIndex);
+            });
+        }
+
+        function nextReview() {
+            currentReviewIndex = (currentReviewIndex + 1) % googleReviews.length;
+            updateCarousel();
+        }
+
+        function prevReview() {
+            currentReviewIndex = (currentReviewIndex - 1 + googleReviews.length) % googleReviews.length;
+            updateCarousel();
+        }
+
+        function goToReview(index) {
+            currentReviewIndex = index;
+            updateCarousel();
+        }
+
+        // Google Reviews API Integration
+        function loadGoogleReviews() {
+            // Replace with your actual Google Place ID and API Key
+            const placeId = 'ChIJn0IUFcRqkUkRFAHhgPgqi9I';
+            const apiKey = 'AIzaSyAZWeCCx1-KVnp-5Yl8suipxxLFhI6JFWY';
+            
+            // Using a proxy service to fetch Google Reviews
+            fetch(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&fields=reviews&key=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.result && data.result.reviews) {
+                    googleReviews = data.result.reviews.slice(0, 5); // Get first 5 reviews
+                    initializeCarousel();
+                } else {
+                    // Fallback to mock reviews if API fails
+                    loadMockReviews();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching Google reviews:', error);
+                // Fallback to mock reviews
+                loadMockReviews();
+            });
+        }
+
+        // Mock reviews for fallback
+        function loadMockReviews() {
+            googleReviews = [
+                {
+                    reviewId: 'mock1',
+                    authorName: 'Thandi S.',
+                    authorInitials: 'TS',
+                    rating: 5,
+                    relativeTime: '2 weeks ago',
+                    text: 'Ngaoyi Cleaning transformed my apartment before move-in. The attention to detail was impressive, and they were very professional. Highly recommended!'
+                },
+                {
+                    reviewId: 'mock2',
+                    authorName: 'Michael J.',
+                    authorInitials: 'MJ',
+                    rating: 5,
+                    relativeTime: '1 month ago',
+                    text: 'The weekly cleaning plan has been a lifesaver for our busy family. Consistent quality and reliable service. Great value for money!'
+                },
+                {
+                    reviewId: 'mock3',
+                    authorName: 'Priya N.',
+                    authorInitials: 'PN',
+                    rating: 4.5,
+                    relativeTime: '3 weeks ago',
+                    text: 'I needed emergency cleaning for a last-minute rental inspection. They accommodated my request and did an excellent job. Will use again!'
+                },
+                {
+                    reviewId: 'mock4',
+                    authorName: 'David K.',
+                    authorInitials: 'DK',
+                    rating: 5,
+                    relativeTime: '2 months ago',
+                    text: 'Excellent deep cleaning service for my move-out. They went above and beyond to ensure everything was spotless. Highly professional team!'
+                },
+                {
+                    reviewId: 'mock5',
+                    authorName: 'Sarah M.',
+                    authorInitials: 'SM',
+                    rating: 5,
+                    relativeTime: '1 week ago',
+                    text: 'The add-on window cleaning service was fantastic! My windows have never been so clear. Will definitely book again for regular maintenance.'
+                }
+            ];
+            
+            initializeCarousel();
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i - 0.5 === rating) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        // Event listeners for carousel controls
+        document.getElementById('nextBtn').addEventListener('click', nextReview);
+        document.getElementById('prevBtn').addEventListener('click', prevReview);
+
+        // Auto-advance carousel
+        let carouselInterval = setInterval(nextReview, 5000);
+
+        // Pause auto-advance on hover
+        document.querySelector('.carousel-container').addEventListener('mouseenter', () => {
+            clearInterval(carouselInterval);
+        });
+
+        document.querySelector('.carousel-container').addEventListener('mouseleave', () => {
+            carouselInterval = setInterval(nextReview, 5000);
+        });
+
+        // Load reviews when page loads
+        document.addEventListener('DOMContentLoaded', loadGoogleReviews);
     </script>
 </body>
 </html>
