@@ -11,18 +11,24 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ngaoyi Cleaning | Professional Cleaning Services</title>
+    <title>Ngaoyi Cleaning | Professional Cleaning Services in Gauteng</title>
+    <meta name="description" content="Ngaoyi Cleaning connects vetted cleaners to your home, office, or event in Gauteng. Flexible schedules, recurring plans, and emergency services available.">
+    <meta property="og:title" content="Ngaoyi Cleaning | Professional Cleaning Services in Gauteng">
+    <meta property="og:description" content="Trusted cleaners for homes, offices, and events across Gauteng. Book recurring or one-off services online.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png">
+    <meta property="og:url" content="https://www.ngaoyicleaning.co.za">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2c7fb8;
-            --primary-light: #5fa8d3;
-            --secondary: #7fcdbb;
-            --accent: #edf8b1;
+            --primary: #001f3f; /* Navy */
+            --primary-light: #003366;
+            --secondary: #000000; /* Black */
+            --accent: #FFD700; /* Gold accent */
             --light: #f8f9fa;
-            --dark: #253237;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
+            --dark: #001a33;
+            --gray: #7f8c8d;
+            --light-gray: #ecf0f1;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
@@ -36,7 +42,7 @@
         
         body {
             background-color: var(--light);
-            color: var(--dark);
+            color: var(--secondary);
             line-height: 1.6;
             overflow-x: hidden;
         }
@@ -70,7 +76,7 @@
             position: absolute;
             width: 70px;
             height: 4px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--primary), var(--accent));
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
@@ -95,16 +101,17 @@
             transition: var(--transition);
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(44, 127, 184, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 31, 63, 0.3);
         }
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(44, 127, 184, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 31, 63, 0.4);
         }
         
         .btn-secondary {
-            background: linear-gradient(to right, var(--secondary), #5bc0a5);
+            background: linear-gradient(to right, var(--secondary), #333333);
+            color: white;
         }
         
         .btn-whatsapp {
@@ -112,7 +119,17 @@
         }
         
         .btn-emergency {
-            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+        }
+        
+        .btn-cleaner {
+            background: linear-gradient(to right, var(--accent), #ffed4e);
+            color: var(--primary);
+        }
+        
+        .btn-accent {
+            background: linear-gradient(to right, var(--accent), #ffed4e);
+            color: var(--primary);
         }
         
         /* Header Styles */
@@ -147,7 +164,7 @@
             font-size: 1.5rem;
             margin-right: 10px;
             overflow: hidden;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--primary), var(--accent));
         }
         
         .logo-icon img {
@@ -204,31 +221,37 @@
             color: var(--primary);
         }
         
-        /* Hero Section */
+        /* Hero Section - ENHANCED */
         .hero {
-            background: linear-gradient(rgba(44, 127, 184, 0.85), rgba(127, 205, 187, 0.85)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
             color: white;
-            padding: 120px 0;
+            padding: 140px 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         
         .hero h2 {
-            font-size: 3rem;
+            font-size: 3.2rem;
             margin-bottom: 20px;
             line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             margin-bottom: 30px;
-            opacity: 0.9;
+            opacity: 0.95;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .hero-btns {
@@ -238,7 +261,160 @@
             flex-wrap: wrap;
         }
         
-        /* Services Section */
+        .cleaner-cta {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        /* About Section - NEW */
+        .about-section {
+            background-color: white;
+            padding: 80px 0;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .about-text h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+            color: var(--gray);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .about-text .highlight {
+            background: linear-gradient(120deg, var(--accent) 0%, var(--accent) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 0.4em;
+            background-position: 0 88%;
+            transition: background-size 0.25s ease-in;
+            padding: 0.1em 0;
+        }
+        
+        .coverage-areas {
+            margin-top: 30px;
+        }
+        
+        .coverage-areas h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .area-item {
+            background-color: var(--light-gray);
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .area-item:hover {
+            background-color: var(--primary-light);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .about-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .about-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom right, rgba(0, 31, 63, 0.2), rgba(255, 215, 0, 0.2));
+            z-index: 1;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Why Choose Us Section - NEW */
+        .why-choose-section {
+            background-color: var(--light-gray);
+            padding: 80px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+        }
+        
+        /* Services Section - ENHANCED */
+        .services-section {
+            padding: 80px 0;
+        }
+        
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -254,11 +430,15 @@
             text-align: center;
             padding: 30px 20px;
             border-top: 4px solid var(--primary);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
         
         .service-icon {
@@ -283,256 +463,165 @@
         .service-card p {
             color: var(--gray);
             margin-bottom: 20px;
+            flex-grow: 1;
         }
         
-        /* Gallery Section */
-        .gallery-section {
-            padding: 80px 0;
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .gallery-item {
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            height: 250px;
-            box-shadow: var(--shadow);
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        
-        .gallery-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-            color: white;
-            padding: 20px;
-            transform: translateY(100%);
-            transition: var(--transition);
-        }
-        
-        .gallery-item:hover .gallery-caption {
-            transform: translateY(0);
-        }
-        
-        /* Pricing Section */
-        .pricing-section {
-            background-color: var(--light-gray);
-        }
-        
-        .pricing-tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .tab-btn {
-            padding: 12px 25px;
-            background-color: white;
-            border: 2px solid var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            border-radius: 50px;
-            color: var(--primary);
-        }
-        
-        .tab-btn.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        
-        .pricing-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            text-align: center;
-            position: relative;
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .pricing-header {
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
-            color: white;
-            padding: 20px;
-        }
-        
-        .pricing-header h3 {
+        .service-price {
             font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .price {
-            font-size: 2.5rem;
             font-weight: 700;
+            color: var(--primary);
             margin: 15px 0;
         }
         
-        .price-period {
-            font-size: 1rem;
-            opacity: 0.9;
+        .material-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
         }
         
-        .pricing-features {
-            padding: 25px;
+        .material-option {
+            background-color: var(--light-gray);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .material-option.customer-supply {
+            background-color: #e8f6f3;
+            color: var(--primary);
+        }
+        
+        .material-option.we-supply {
+            background-color: #eaf2f8;
+            color: var(--primary);
+        }
+        
+        .service-features {
             list-style: none;
+            text-align: left;
+            margin: 15px 0;
+            flex-grow: 1;
         }
         
-        .pricing-features li {
-            padding: 10px 0;
+        .service-features li {
+            padding: 8px 0;
             border-bottom: 1px solid var(--light-gray);
             color: var(--gray);
+            display: flex;
+            align-items: center;
         }
         
-        .pricing-features li:last-child {
+        .service-features li:last-child {
             border-bottom: none;
         }
         
-        .pricing-features li i {
-            color: var(--secondary);
+        .service-features li i {
+            color: var(--accent);
             margin-right: 10px;
+            font-size: 0.9rem;
         }
         
-        .pricing-card .btn {
-            margin: 20px;
-            width: calc(100% - 40px);
+        .sub-services {
+            margin-top: 15px;
+            text-align: left;
         }
         
-        .plan-badge {
+        .sub-services h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .sub-service-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .sub-service-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .sub-service-item i {
+            color: var(--accent);
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .popular-badge {
             position: absolute;
             top: 15px;
             right: -30px;
-            background-color: var(--secondary);
-            color: white;
+            background-color: var(--accent);
+            color: var(--primary);
             padding: 5px 30px;
             transform: rotate(45deg);
             font-size: 0.8rem;
             font-weight: 600;
         }
         
-        /* Emergency Pricing Table */
-        .emergency-pricing {
+        /* Our Team Section - NEW */
+        .team-section {
             background-color: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-            box-shadow: var(--shadow);
-        }
-        
-        .emergency-pricing h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .emergency-pricing-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .emergency-pricing-table th,
-        .emergency-pricing-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--light-gray);
-        }
-        
-        .emergency-pricing-table th {
-            background-color: var(--light-gray);
-            color: var(--dark);
-            font-weight: 600;
-        }
-        
-        .emergency-pricing-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        /* Price Comparison Section */
-        .price-comparison-section {
             padding: 80px 0;
-            background-color: white;
         }
         
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 40px;
-            box-shadow: var(--shadow);
-            border-radius: 10px;
-            overflow: hidden;
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
         }
         
-        .comparison-table th,
-        .comparison-table td {
-            padding: 15px 20px;
+        .team-member {
             text-align: center;
-            border: 1px solid var(--light-gray);
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
         }
         
-        .comparison-table th {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 600;
+        .team-member:hover {
+            transform: translateY(-10px);
         }
         
-        .comparison-table tr:nth-child(even) {
-            background-color: var(--light-gray);
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 5px solid var(--light-gray);
         }
         
-        .comparison-table .service-name {
-            text-align: left;
-            font-weight: 600;
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
-        .comparison-table .savings {
-            color: #28a745;
-            font-weight: 600;
+        .team-member h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
         }
         
-        /* Planning Section */
-        .planning-section {
-            background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+        .team-member p {
+            color: var(--gray);
         }
         
-        .planning-steps {
+        .member-rating {
+            color: #ffc107;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        /* How It Works Section - ENHANCED */
+        .process-steps {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
@@ -540,7 +629,7 @@
             margin-top: 50px;
         }
         
-        .step {
+        .process-step {
             flex: 1;
             min-width: 250px;
             text-align: center;
@@ -549,9 +638,10 @@
             border-radius: 10px;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            position: relative;
         }
         
-        .step:hover {
+        .process-step:hover {
             transform: translateY(-10px);
         }
         
@@ -569,91 +659,167 @@
             margin: 0 auto 20px;
         }
         
-        .step h3 {
+        .step-icon {
+            font-size: 2.5rem;
             color: var(--primary);
             margin-bottom: 15px;
         }
         
-        .step p {
+        .process-step h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .process-step p {
             color: var(--gray);
         }
         
-        /* About Section */
-        .about-content {
+        /* Testimonials Section - ENHANCED */
+        .testimonials-section {
+            background-color: var(--light);
+            padding: 80px 0;
+        }
+        
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonials-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        .testimonial-author {
+            display: flex;
             align-items: center;
         }
         
-        .about-text h2 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 2.2rem;
-        }
-        
-        .about-text p {
-            margin-bottom: 20px;
-            color: var(--gray);
-        }
-        
-        .about-features {
-            margin-top: 30px;
-        }
-        
-        .feature {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        
-        .feature-icon {
-            background-color: var(--light-gray);
+        .author-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--primary);
-            font-size: 1.2rem;
-            margin-right: 15px;
-            flex-shrink: 0;
+            font-weight: bold;
         }
         
-        .feature-text h4 {
+        .author-info h4 {
             color: var(--dark);
             margin-bottom: 5px;
         }
         
-        .about-image {
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .testimonial-rating {
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+        
+        .rating-summary {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: white;
             border-radius: 10px;
-            overflow: hidden;
             box-shadow: var(--shadow);
-            position: relative;
         }
         
-        .about-image::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom right, rgba(44, 127, 184, 0.2), rgba(127, 205, 187, 0.2));
-            z-index: 1;
+        .rating-summary h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
         }
         
-        .about-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: var(--transition);
+        .average-rating {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
         }
         
-        .about-image:hover img {
-            transform: scale(1.05);
+        .total-reviews {
+            color: var(--gray);
+            font-size: 1.1rem;
         }
         
-        /* Contact Section */
+        /* Cleaner Recruitment Section - ENHANCED */
+        .recruitment-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%), url('https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-blend-mode: overlay;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin: 40px auto;
+            max-width: 1200px;
+        }
+        
+        .recruitment-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .recruitment-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .recruitment-section p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+        
+        .recruitment-features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .recruitment-feature {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        /* Contact Section - ENHANCED */
+        .contact-section {
+            background-color: var(--light-gray);
+            padding: 80px 0;
+        }
+        
         .contact-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -729,7 +895,7 @@
         .form-control:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.1);
         }
         
         textarea.form-control {
@@ -737,245 +903,28 @@
             resize: vertical;
         }
         
-        /* Trust Badges Section (MOVED TO BOTTOM) */
-        .trust-section {
-            background-color: var(--light-gray);
-            padding: 80px 0;
-        }
-        
-        .trust-badges {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-        
-        .trust-badge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            max-width: 200px;
-        }
-        
-        .badge-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-        
-        /* Testimonials Section */
-        .testimonials-section {
-            background-color: var(--light);
-            padding: 80px 0;
-        }
-        
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .testimonial-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-        
-        .testimonial-text {
-            font-style: italic;
+        .form-status {
+            padding: 15px;
+            border-radius: 5px;
             margin-bottom: 20px;
-            color: var(--gray);
+            display: none;
         }
         
-        .testimonial-author {
-            display: flex;
-            align-items: center;
+        .form-status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--light-gray);
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-weight: bold;
-        }
-        
-        .author-info h4 {
-            color: var(--dark);
-            margin-bottom: 5px;
-        }
-        
-        .author-info p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .testimonial-rating {
-            color: #ffc107;
-            margin-bottom: 15px;
-        }
-        
-        /* Google Reviews Integration */
-        .google-reviews-section {
-            padding: 80px 0;
-            background-color: var(--light-gray);
-        }
-        
-        .reviews-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        /* Google Reviews Carousel Styles */
-        .carousel-container {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        .google-reviews-carousel {
-            display: flex;
-            transition: transform 0.5s ease;
-            gap: 20px;
-        }
-
-        .google-review-card {
-            min-width: 100%;
-            background-color: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .google-review-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-
-        .carousel-btn {
-            background-color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            pointer-events: all;
-            transition: var(--transition);
-        }
-
-        .carousel-btn:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .carousel-indicators {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
-        }
-
-        .carousel-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--light-gray);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .carousel-indicator.active {
-            background-color: var(--primary);
-        }
-        
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .reviewer-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .reviewer-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--light-gray);
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        .reviewer-name {
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .review-date {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-        
-        .review-stars {
-            color: #ffc107;
-            margin-bottom: 10px;
-        }
-        
-        .review-text {
-            color: var(--gray);
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
-        
-        .google-reviews-cta {
-            text-align: center;
-            margin-top: 40px;
+        .form-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         
         /* Footer */
         footer {
-            background-color: var(--dark);
+            background-color: var(--secondary);
             color: white;
             padding: 70px 0 20px;
         }
@@ -988,7 +937,7 @@
         }
         
         .footer-column h3 {
-            color: var(--secondary);
+            color: var(--accent);
             margin-bottom: 20px;
             font-size: 1.3rem;
         }
@@ -1013,7 +962,7 @@
         }
         
         .footer-column ul li a:hover {
-            color: var(--secondary);
+            color: var(--accent);
             padding-left: 5px;
         }
         
@@ -1036,7 +985,8 @@
         }
         
         .social-links a:hover {
-            background-color: var(--secondary);
+            background-color: var(--accent);
+            color: var(--primary);
             transform: translateY(-3px);
         }
         
@@ -1072,225 +1022,6 @@
             box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
         }
         
-        .pricing-note {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--gray);
-            font-style: italic;
-        }
-        
-        /* Form Status Messages */
-        .form-status {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .form-status.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .form-status.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        /* Booking Modal */
-        .booking-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .modal-title {
-            color: var(--primary);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .booking-summary {
-            background-color: var(--light-gray);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .booking-summary h4 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .payment-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .payment-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            border: 1px solid var(--light-gray);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .payment-option:hover {
-            border-color: var(--primary);
-            background-color: rgba(44, 127, 184, 0.05);
-        }
-        
-        .payment-option.selected {
-            border-color: var(--primary);
-            background-color: rgba(44, 127, 184, 0.1);
-        }
-        
-        .payment-icon {
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-        
-        .whatsapp-payment {
-            color: #25D366;
-        }
-        
-        /* Emergency Booking Section */
-        .emergency-booking {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
-            color: #000; /* Changed to black text */
-            padding: 60px 0;
-            text-align: center;
-            margin-top: 40px;
-            border-radius: 15px;
-        }
-        
-        .emergency-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .emergency-booking h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            color: #000; /* Changed to black text */
-        }
-        
-        .emergency-booking p {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            color: #000; /* Changed to black text */
-        }
-        
-        .emergency-features {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .emergency-feature {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            color: #000; /* Changed to black text */
-        }
-        
-        /* Working Hours Section */
-        .hours-section {
-            background-color: var(--light-gray);
-            padding: 60px 0;
-        }
-        
-        .hours-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .hours-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-        
-        .hours-card h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        
-        .hours-list {
-            list-style: none;
-            text-align: left;
-        }
-        
-        .hours-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .hours-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .day {
-            font-weight: 600;
-        }
-        
-        .emergency-note {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 20px;
-            color: #856404;
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         /* Responsive Styles */
         @media (max-width: 992px) {
             .about-content,
@@ -1304,6 +1035,14 @@
             
             .hero h2 {
                 font-size: 2.5rem;
+            }
+            
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sub-service-list {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1340,8 +1079,12 @@
                 right: 20px;
             }
             
+            .hero {
+                padding: 100px 0;
+            }
+            
             .hero h2 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .hero p {
@@ -1363,24 +1106,45 @@
                 font-size: 2rem;
             }
             
-            .planning-steps {
+            .process-steps {
                 flex-direction: column;
             }
             
-            .emergency-features {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .trust-badges {
+            .recruitment-features {
                 flex-direction: column;
                 align-items: center;
             }
             
-            .emergency-pricing-table,
-            .comparison-table {
-                display: block;
-                overflow-x: auto;
+            .cleaner-cta {
+                position: static;
+                margin-top: 20px;
+            }
+            
+            .areas-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .material-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .areas-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -1391,8 +1155,7 @@
         <div class="container header-container">
             <div class="logo">
                 <div class="logo-icon">
-                    <!-- Your actual logo URL -->
-                    <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning Logo">
+                    <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning Logo - Professional Cleaning Services">
                 </div>
                 <h1>Ngaoyi Cleaning</h1>
             </div>
@@ -1402,644 +1165,555 @@
             <nav>
                 <ul>
                     <li><a href="#home">Home</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#hours">Working Hours</a></li>
-                    <li><a href="#planning">How It Works</a></li>
                     <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#team">Our Team</a></li>
+                    <li><a href="#why-choose">Why Choose Us</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - ENHANCED -->
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h2>Professional Cleaning Services</h2>
-                <p>Serving customers nationwide since 2024. Get premium cleaning at competitive prices - save up to 25% compared to other services!</p>
+                <h2>Book Trusted Cleaners Instantly – Flexible, Reliable, Local</h2>
+                <p>Ngaoyi Cleaning connects vetted cleaner teams to your home, office, or event. Recurring plans available for busy households and businesses.</p>
                 <div class="hero-btns">
-                    <a href="#pricing" class="btn">View Our Plans</a>
-                    <a href="#contact" class="btn btn-secondary">Get Free Quote</a>
+                    <a href="#services" class="btn">View Our Services</a>
+                    <a href="#contact" class="btn btn-accent">Get Free Quote</a>
+                    <a href="https://www.ngaoyicleaning.co.za/apply/" class="btn btn-cleaner">Join Our Team</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services">
+    <!-- About Section - NEW -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Your Trusted Cleaning Partner in Gauteng</h2>
+                    <p><span class="highlight">Ngaoyi Cleaning connects you with vetted cleaner teams</span> who are trained to deliver top-quality cleaning for homes, offices, and events. Founded to make cleaning simple, flexible, and dependable, we bring consistency and care to every job.</p>
+                    
+                    <p>Our <span class="highlight">recurring plans, one-off services, and emergency cleanings</span> are designed to save you time while keeping your space spotless—perfect for busy households and businesses in Gauteng.</p>
+                    
+                    <div class="coverage-areas">
+                        <h3>Coverage Areas</h3>
+                        <p>We proudly serve households and businesses across Gauteng, including:</p>
+                        <div class="areas-grid">
+                            <div class="area-item">Johannesburg</div>
+                            <div class="area-item">Pretoria</div>
+                            <div class="area-item">Sandton</div>
+                            <div class="area-item">Midrand</div>
+                            <div class="area-item">Centurion</div>
+                            <div class="area-item">Surrounding suburbs</div>
+                        </div>
+                        <p style="margin-top: 15px; font-style: italic;">If you're outside these areas, reach out – we're expanding fast!</p>
+                    </div>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Professional cleaning team serving Gauteng">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section - ENHANCED -->
+    <section id="services" class="services-section">
         <div class="container">
             <div class="section-title">
-                <h2>Our Services</h2>
-                <p>We offer a range of cleaning services tailored to your specific needs and budget</p>
+                <h2>Our Cleaning Services</h2>
+                <p>Professional cleaning solutions tailored to your needs and budget</p>
             </div>
             <div class="services-grid">
                 <div class="service-card">
+                    <div class="popular-badge">Most Popular</div>
                     <div class="service-icon">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <h3>Once-Off Cleaning</h3>
-                    <p>Perfect for move-in/move-out, spring cleaning, or special occasions. We'll make your home sparkle from top to bottom.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-calendar-alt"></i>
+                        <i class="fas fa-calendar-check"></i>
                     </div>
                     <h3>Recurring Plans</h3>
-                    <p>Regular cleaning services to keep your home consistently clean. Choose from weekly, bi-weekly, or monthly schedules.</p>
+                    <p>Weekly, bi-weekly, or monthly cleaning schedules for homes and offices. Perfect for maintaining consistent cleanliness.</p>
+                    
+                    <div class="material-options">
+                        <div class="material-option customer-supply">Customer Supplies: R300/session</div>
+                        <div class="material-option we-supply">We Supply: R450/session</div>
+                    </div>
+                    
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Weekly, bi-weekly or monthly</li>
+                        <li><i class="fas fa-check"></i> Customizable schedule</li>
+                        <li><i class="fas fa-check"></i> Priority booking</li>
+                        <li><i class="fas fa-check"></i> Discounted rates</li>
+                    </ul>
+                    
+                    <div class="sub-services">
+                        <h4>Plan Options:</h4>
+                        <div class="sub-service-list">
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Weekly (15% off)</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Bi-weekly (10% off)</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Monthly (5% off)</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Custom frequency</div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Recurring%20Plans%20service.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Book This Plan</a>
                 </div>
+                
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-broom"></i>
+                        <i class="fas fa-home-heart"></i>
+                    </div>
+                    <h3>Once-Off Cleaning</h3>
+                    <p>Ideal for special events, move-in/move-out, or deep cleans. We'll make your space sparkle from top to bottom.</p>
+                    
+                    <div class="material-options">
+                        <div class="material-option customer-supply">Customer Supplies</div>
+                        <div class="material-option we-supply">We Supply (+R150)</div>
+                    </div>
+                    
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> 1-bedroom: R350 / R500</li>
+                        <li><i class="fas fa-check"></i> 2-bedroom: R450 / R600</li>
+                        <li><i class="fas fa-check"></i> 3-bedroom: R550 / R700</li>
+                        <li><i class="fas fa-check"></i> Comprehensive cleaning</li>
+                    </ul>
+                    
+                    <div class="sub-services">
+                        <h4>Service Types:</h4>
+                        <div class="sub-service-list">
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Standard cleaning</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Spring cleaning</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Post-construction</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Special events</div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Once-Off%20Cleaning%20service.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Book This Service</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-sparkles"></i>
                     </div>
                     <h3>Deep Cleaning</h3>
                     <p>Thorough cleaning for move-in/move-out situations. We pay attention to every detail to ensure your space is immaculate.</p>
+                    
+                    <div class="service-price">We Supply Materials Included</div>
+                    
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> 1-bedroom: R1200</li>
+                        <li><i class="fas fa-check"></i> 2-bedroom: R1750</li>
+                        <li><i class="fas fa-check"></i> 3-bedroom: R2300</li>
+                        <li><i class="fas fa-check"></i> Premium products included</li>
+                    </ul>
+                    
+                    <div class="sub-services">
+                        <h4>Deep Clean Includes:</h4>
+                        <div class="sub-service-list">
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Inside cabinets</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Appliance interiors</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Baseboards & sills</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Deep sanitization</div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Deep%20Cleaning%20service.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Book Deep Clean</a>
                 </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Emergency Services</h3>
+                    <p>Quick-response cleaning for urgent situations. Available with additional charges for Saturday and Sunday bookings.</p>
+                    
+                    <div class="service-price">+50% Surcharge</div>
+                    
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Same-day service available</li>
+                        <li><i class="fas fa-check"></i> Weekend availability</li>
+                        <li><i class="fas fa-check"></i> Urgent situations</li>
+                        <li><i class="fas fa-check"></i> Quick response team</li>
+                    </ul>
+                    
+                    <div class="sub-services">
+                        <h4>Emergency Types:</h4>
+                        <div class="sub-service-list">
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Rental inspections</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Guest arrivals</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Spill emergencies</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Last-minute events</div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I%20need%20urgent%20cleaning%20services.%20Can%20you%20please%20provide%20emergency%20assistance%3F" class="btn btn-emergency" target="_blank">Emergency Booking</a>
+                </div>
+                
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-building"></i>
                     </div>
-                    <h3>Complex Contracts</h3>
-                    <p>Commercial cleaning services for complexes, offices, and businesses. Customized plans to meet your specific needs.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-plus-circle"></i>
-                    </div>
-                    <h3>Add-On Services</h3>
-                    <p>Enhance your cleaning with additional services like window cleaning, fridge cleaning, oven cleaning, and laundry.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <h3>Emergency Cleaning</h3>
-                    <p>Urgent cleaning services for unexpected situations. Available with additional charges for Saturday and Sunday bookings.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Working Hours Section -->
-    <section id="hours" class="hours-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Working Hours</h2>
-                <p>We're available when you need us most</p>
-            </div>
-            
-            <div class="hours-container">
-                <div class="hours-card">
-                    <h3>Regular Hours</h3>
-                    <ul class="hours-list">
-                        <li>
-                            <span class="day">Monday</span>
-                            <span>8:00 AM - 5:00 PM</span>
-                        </li>
-                        <li>
-                            <span class="day">Tuesday</span>
-                            <span>8:00 AM - 5:00 PM</span>
-                        </li>
-                        <li>
-                            <span class="day">Wednesday</span>
-                            <span>8:00 AM - 5:00 PM</span>
-                        </li>
-                        <li>
-                            <span class="day">Thursday</span>
-                            <span>8:00 AM - 5:00 PM</span>
-                        </li>
-                        <li>
-                            <span class="day">Friday</span>
-                            <span>8:00 AM - 5:00 PM</span>
-                        </li>
-                        <li>
-                            <span class="day">Saturday</span>
-                            <span>8:00 AM - 4:00 PM</span>
-                        </li>
-                        <li>
-                            <span class="day">Sunday</span>
-                            <span>9:00 AM - 2:00 PM</span>
-                        </li>
+                    <h3>Commercial Cleaning</h3>
+                    <p>Professional cleaning services for complexes, offices, and businesses. Customized plans to meet your specific needs.</p>
+                    
+                    <div class="service-price">Custom Quotes</div>
+                    
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Office spaces</li>
+                        <li><i class="fas fa-check"></i> Complex common areas</li>
+                        <li><i class="fas fa-check"></i> Retail spaces</li>
+                        <li><i class="fas fa-check"></i> Customized schedules</li>
                     </ul>
+                    
+                    <div class="sub-services">
+                        <h4>Commercial Services:</h4>
+                        <div class="sub-service-list">
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Office cleaning</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Common areas</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Retail spaces</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Industrial cleaning</div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Commercial%20Cleaning%20services.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Get Commercial Quote</a>
                 </div>
                 
-                <div class="hours-card">
-                    <h3>Emergency Bookings</h3>
-                    <p>Need cleaning outside our regular hours? We offer emergency services with additional charges.</p>
-                    <ul class="hours-list">
-                        <li>
-                            <span class="day">Saturday Emergency</span>
-                            <span>Before 9:00 AM</span>
-                        </li>
-                        <li>
-                            <span class="day">Sunday Emergency</span>
-                            <span>Book by 4:00 PM Saturday</span>
-                        </li>
-                        <li>
-                            <span class="day">Sunday Service</span>
-                            <span>Available from 9:00 AM</span>
-                        </li>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-plus-hexagon"></i>
+                    </div>
+                    <h3>Add-On Services</h3>
+                    <p>Enhance your cleaning with additional services. Perfect for specialized cleaning needs.</p>
+                    
+                    <div class="service-price">From R100</div>
+                    
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Window cleaning: R150</li>
+                        <li><i class="fas fa-check"></i> Oven cleaning: R180</li>
+                        <li><i class="fas fa-check"></i> Fridge cleaning: R100</li>
+                        <li><i class="fas fa-check"></i> Laundry service: R80/hour</li>
                     </ul>
-                    <div class="emergency-note">
-                        <p><strong>Note:</strong> Emergency Saturday and Sunday bookings incur additional charges. Contact us via WhatsApp for emergency pricing.</p>
+                    
+                    <div class="sub-services">
+                        <h4>Add-On Options:</h4>
+                        <div class="sub-service-list">
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Window cleaning</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Appliance cleaning</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Laundry service</div>
+                            <div class="sub-service-item"><i class="fas fa-circle"></i> Carpet cleaning</div>
+                        </div>
                     </div>
+                    
+                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Add-On%20Services.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Add to Service</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing-section">
+    <!-- Our Team Section - NEW -->
+    <section id="team" class="team-section">
         <div class="container">
             <div class="section-title">
-                <h2>Transparent Pricing</h2>
-                <p>Quality service at competitive prices with no hidden costs</p>
+                <h2>Meet Our Cleaning Team</h2>
+                <p>Our vetted and professional cleaning specialists</p>
             </div>
             
-            <div class="pricing-tabs">
-                <button class="tab-btn active" data-tab="once-off">Once-Off</button>
-                <button class="tab-btn" data-tab="recurring">Recurring Plans</button>
-                <button class="tab-btn" data-tab="deep">Deep Cleaning</button>
-                <button class="tab-btn" data-tab="addons">Add-Ons</button>
-            </div>
-            
-            <!-- Once-Off Cleaning -->
-            <div class="tab-content active" id="once-off">
-                <div class="pricing-cards">
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>1-Bedroom</h3>
-                            <div class="price">R300</div>
-                            <div class="price-period">Customer Supplies Cleaning Materials</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Solo Cleaner</li>
-                            <li><i class="fas fa-check"></i> Comprehensive Cleaning</li>
-                            <li><i class="fas fa-check"></i> Bathroom & Kitchen Focus</li>
-                            <li><i class="fas fa-check"></i> Dusting & Vacuuming</li>
-                        </ul>
-                        <button class="btn book-service" data-service="1-Bedroom Once-Off" data-price="300">Book Now</button>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://images.unsplash.com/photo-1560250056-07ba64664864?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sarah - Professional Cleaner">
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>2-Bedroom</h3>
-                            <div class="price">R380</div>
-                            <div class="price-period">Customer Supplies Cleaning Materials</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Solo Cleaner</li>
-                            <li><i class="fas fa-check"></i> Comprehensive Cleaning</li>
-                            <li><i class="fas fa-check"></i> Bathroom & Kitchen Focus</li>
-                            <li><i class="fas fa-check"></i> Dusting & Vacuuming</li>
-                        </ul>
-                        <button class="btn book-service" data-service="2-Bedroom Once-Off" data-price="380">Book Now</button>
+                    <h3>Sarah M.</h3>
+                    <p>Residential Cleaning Specialist</p>
+                    <div class="member-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span> (4.9)</span>
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>3-Bedroom</h3>
-                            <div class="price">R470</div>
-                            <div class="price-period">Customer Supplies Cleaning Materials</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Solo Cleaner</li>
-                            <li><i class="fas fa-check"></i> Comprehensive Cleaning</li>
-                            <li><i class="fas fa-check"></i> Bathroom & Kitchen Focus</li>
-                            <li><i class="fas fa-check"></i> Dusting & Vacuuming</li>
-                        </ul>
-                        <button class="btn book-service" data-service="3-Bedroom Once-Off" data-price="470">Book Now</button>
-                    </div>
-                    
-                    <div class="pricing-card">
-                        <div class="plan-badge">We Supply</div>
-                        <div class="pricing-header">
-                            <h3>3-Bedroom</h3>
-                            <div class="price">R620</div>
-                            <div class="price-period">We Supply Cleaning Materials</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Solo Cleaner</li>
-                            <li><i class="fas fa-check"></i> Premium Cleaning Products</li>
-                            <li><i class="fas fa-check"></i> Comprehensive Cleaning</li>
-                            <li><i class="fas fa-check"></i> Bathroom & Kitchen Focus</li>
-                            <li><i class="fas fa-check"></i> Dusting & Vacuuming</li>
-                        </ul>
-                        <button class="btn book-service" data-service="3-Bedroom Once-Off (We Supply)" data-price="620">Book Now</button>
-                    </div>
+                    <p><small>3+ years experience</small></p>
                 </div>
-            </div>
-            
-            <!-- Recurring Plans -->
-            <div class="tab-content" id="recurring">
-                <div class="pricing-cards">
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Weekly Plan</h3>
-                            <div class="price">15% OFF</div>
-                            <div class="price-period">Most Popular</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> 2-Bed: R323 per visit</li>
-                            <li><i class="fas fa-check"></i> 3-Bed: R400 per visit</li>
-                            <li><i class="fas fa-check"></i> Customer supplies materials</li>
-                            <li><i class="fas fa-check"></i> Consistent schedule</li>
-                            <li><i class="fas fa-check"></i> Priority booking</li>
-                        </ul>
-                        <button class="btn book-service" data-service="Weekly Recurring Plan" data-price="400">Get Started</button>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://images.unsplash.com/photo-1584516150909-c43483ee7932?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="James - Commercial Cleaner">
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Bi-Weekly Plan</h3>
-                            <div class="price">10% OFF</div>
-                            <div class="price-period">Great Value</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> 2-Bed: R342 per visit</li>
-                            <li><i class="fas fa-check"></i> 3-Bed: R423 per visit</li>
-                            <li><i class="fas fa-check"></i> Customer supplies materials</li>
-                            <li><i class="fas fa-check"></i> Every two weeks</li>
-                            <li><i class="fas fa-check"></i> Flexible scheduling</li>
-                        </ul>
-                        <button class="btn book-service" data-service="Bi-Weekly Recurring Plan" data-price="423">Get Started</button>
+                    <h3>James T.</h3>
+                    <p>Commercial Cleaning Expert</p>
+                    <div class="member-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span> (4.7)</span>
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Monthly Plan</h3>
-                            <div class="price">5% OFF</div>
-                            <div class="price-period">Basic Maintenance</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> 2-Bed: R361 per visit</li>
-                            <li><i class="fas fa-check"></i> 3-Bed: R447 per visit</li>
-                            <li><i class="fas fa-check"></i> Customer supplies materials</li>
-                            <li><i class="fas fa-check"></i> Once a month</li>
-                            <li><i class="fas fa-check"></i> Flexible scheduling</li>
-                        </ul>
-                        <button class="btn book-service" data-service="Monthly Recurring Plan" data-price="447">Get Started</button>
-                    </div>
+                    <p><small>5+ years experience</small></p>
                 </div>
-            </div>
-            
-            <!-- Deep Cleaning -->
-            <div class="tab-content" id="deep">
-                <div class="pricing-cards">
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>1-Bedroom</h3>
-                            <div class="price">R1200</div>
-                            <div class="price-period">Move-In / Move-Out</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Solo Cleaner</li>
-                            <li><i class="fas fa-check"></i> We supply materials</li>
-                            <li><i class="fas fa-check"></i> Deep sanitization</li>
-                            <li><i class="fas fa-check"></i> Inside cabinets & appliances</li>
-                            <li><i class="fas fa-check"></i> Baseboards & window sills</li>
-                        </ul>
-                        <button class="btn book-service" data-service="1-Bedroom Deep Clean" data-price="1200">Book Now</button>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Maria - Deep Cleaning Specialist">
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>2-Bedroom</h3>
-                            <div class="price">R1750</div>
-                            <div class="price-period">Move-In / Move-Out</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Cleaning Crew</li>
-                            <li><i class="fas fa-check"></i> We supply materials</li>
-                            <li><i class="fas fa-check"></i> Deep sanitization</li>
-                            <li><i class="fas fa-check"></i> Inside cabinets & appliances</li>
-                            <li><i class="fas fa-check"></i> Baseboards & window sills</li>
-                        </ul>
-                        <button class="btn book-service" data-service="2-Bedroom Deep Clean" data-price="1750">Book Now</button>
+                    <h3>Maria K.</h3>
+                    <p>Deep Cleaning Specialist</p>
+                    <div class="member-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span> (4.9)</span>
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>3-Bedroom</h3>
-                            <div class="price">R2300</div>
-                            <div class="price-period">Move-In / Move-Out</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Cleaning Crew</li>
-                            <li><i class="fas fa-check"></i> We supply materials</li>
-                            <li><i class="fas fa-check"></i> Deep sanitization</li>
-                            <li><i class="fas fa-check"></i> Inside cabinets & appliances</li>
-                            <li><i class="fas fa-check"></i> Baseboards & window sills</li>
-                        </ul>
-                        <button class="btn book-service" data-service="3-Bedroom Deep Clean" data-price="2300">Book Now</button>
-                    </div>
+                    <p><small>4+ years experience</small></p>
                 </div>
-            </div>
-            
-            <!-- Add-Ons -->
-            <div class="tab-content" id="addons">
-                <div class="pricing-cards">
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Window Cleaning</h3>
-                            <div class="price">R150</div>
-                            <div class="price-period">Interior Only</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Solo Cleaner</li>
-                            <li><i class="fas fa-check"></i> All interior windows</li>
-                            <li><i class="fas fa-check"></i> Streak-free finish</li>
-                            <li><i class="fas fa-check"></i> Window sills & frames</li>
-                        </ul>
-                        <button class="btn book-service" data-service="Window Cleaning" data-price="150">Add to Service</button>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671d66?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="David - Team Supervisor">
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Appliance Cleaning</h3>
-                            <div class="price">R100-180</div>
-                            <div class="price-period">Fridge or Oven</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Fridge: R100</li>
-                            <li><i class="fas fa-check"></i> Oven: R180</li>
-                            <li><i class="fas fa-check"></i> Interior & exterior</li>
-                            <li><i class="fas fa-check"></i> Sanitized surfaces</li>
-                        </ul>
-                        <button class="btn book-service" data-service="Appliance Cleaning" data-price="180">Add to Service</button>
+                    <h3>David L.</h3>
+                    <p>Team Supervisor</p>
+                    <div class="member-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span> (5.0)</span>
                     </div>
-                    
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Laundry Service</h3>
-                            <div class="price">R80/hour</div>
-                            <div class="price-period">Washing & Ironing</div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Per hour rate</li>
-                            <li><i class="fas fa-check"></i> Washing included</li>
-                            <li><i class="fas fa-check"></i> Ironing included</li>
-                            <li><i class="fas fa-check"></i> Folding & organizing</li>
-                        </ul>
-                        <button class="btn book-service" data-service="Laundry Service" data-price="80">Add to Service</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Emergency Booking Section -->
-            <div class="emergency-booking">
-                <div class="emergency-content">
-                    <h2>Emergency Weekend Cleaning Available!</h2>
-                    <p>Need cleaning on Saturday before 9 AM or Sunday? We offer emergency services with transparent pricing.</p>
-                    
-                    <div class="emergency-pricing">
-                        <h3>Emergency Service Pricing</h3>
-                        <table class="emergency-pricing-table">
-                            <thead>
-                                <tr>
-                                    <th>Service Type</th>
-                                    <th>Regular Price</th>
-                                    <th>Emergency Surcharge</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1-Bedroom Once-Off</td>
-                                    <td>R300</td>
-                                    <td>+50%</td>
-                                    <td>R450</td>
-                                </tr>
-                                <tr>
-                                    <td>2-Bedroom Once-Off</td>
-                                    <td>R380</td>
-                                    <td>+50%</td>
-                                    <td>R570</td>
-                                </tr>
-                                <tr>
-                                    <td>3-Bedroom Once-Off</td>
-                                    <td>R470</td>
-                                    <td>+50%</td>
-                                    <td>R705</td>
-                                </tr>
-                                <tr>
-                                    <td>Deep Cleaning</td>
-                                    <td>From R1200</td>
-                                    <td>+30%</td>
-                                    <td>From R1560</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p style="text-align: center; margin-top: 15px; font-style: italic;">
-                            Emergency bookings must be confirmed by 4 PM Saturday for Sunday service
-                        </p>
-                    </div>
-                    
-                    <button class="btn btn-emergency book-service" data-service="Emergency Weekend Cleaning" data-price="Price will be confirmed based on service">
-                        <i class="fas fa-exclamation-triangle"></i> Book Emergency Service
-                    </button>
+                    <p><small>6+ years experience</small></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Price Comparison Section -->
-    <section class="price-comparison-section">
+    <!-- Why Choose Us Section - NEW -->
+    <section id="why-choose" class="why-choose-section">
         <div class="container">
             <div class="section-title">
-                <h2>Price Comparison</h2>
-                <p>See how our prices compare to other cleaning services in the area</p>
+                <h2>Why Choose Ngaoyi Cleaning?</h2>
+                <p>Discover what makes us the preferred cleaning service in Gauteng</p>
             </div>
             
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Service</th>
-                        <th>Ngaoyi Cleaning</th>
-                        <th>Competitor A</th>
-                        <th>Competitor B</th>
-                        <th>You Save</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="service-name">1-Bedroom Once-Off</td>
-                        <td>R300</td>
-                        <td>R400</td>
-                        <td>R450</td>
-                        <td class="savings">Up to 33%</td>
-                    </tr>
-                    <tr>
-                        <td class="service-name">2-Bedroom Once-Off</td>
-                        <td>R380</td>
-                        <td>R500</td>
-                        <td>R550</td>
-                        <td class="savings">Up to 31%</td>
-                    </tr>
-                    <tr>
-                        <td class="service-name">3-Bedroom Once-Off</td>
-                        <td>R470</td>
-                        <td>R600</td>
-                        <td>R650</td>
-                        <td class="savings">Up to 28%</td>
-                    </tr>
-                    <tr>
-                        <td class="service-name">Weekly Plan (3-Bed)</td>
-                        <td>R400</td>
-                        <td>R550</td>
-                        <td>R600</td>
-                        <td class="savings">Up to 33%</td>
-                    </tr>
-                    <tr>
-                        <td class="service-name">Deep Cleaning (3-Bed)</td>
-                        <td>R2300</td>
-                        <td>R2800</td>
-                        <td>R3000</td>
-                        <td class="savings">Up to 23%</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="pricing-note">
-                <p><strong>Note:</strong> Prices are based on market research and may vary. All Ngaoyi Cleaning prices include professional service with customer-supplied materials unless otherwise specified.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Vetted & Trained Cleaners</h3>
+                    <p>All our cleaners undergo thorough background checks and professional training to ensure they meet our high standards.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Fully Insured Services</h3>
+                    <p>Complete peace of mind with fully insured cleaning services for your home or business.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Local Gauteng Expertise</h3>
+                    <p>Trusted by households and businesses across Gauteng with deep understanding of local needs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Customer-First Approach</h3>
+                    <p>Consistent 5-star service with positive reviews and satisfaction guarantee.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Eco-Friendly Products</h3>
+                    <p>We use environmentally friendly cleaning products that are safe for your family and pets.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Flexible Scheduling</h3>
+                    <p>Recurring plans, one-off services, and emergency cleanings to fit your busy schedule.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Planning Section -->
-    <section id="planning" class="planning-section">
+    <!-- How It Works Section - ENHANCED -->
+    <section id="how-it-works" class="planning-section">
         <div class="container">
             <div class="section-title">
                 <h2>How It Works</h2>
                 <p>Our simple 4-step process makes getting your home cleaned effortless</p>
             </div>
             
-            <div class="planning-steps">
-                <div class="step">
+            <div class="process-steps">
+                <div class="process-step">
                     <div class="step-number">1</div>
-                    <h3>Choose Your Plan</h3>
-                    <p>Select from our once-off, recurring, or deep cleaning services based on your needs and budget.</p>
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <h3>Book</h3>
+                    <p>Via WhatsApp or our website form. Tell us your cleaning needs and preferred schedule.</p>
                 </div>
                 
-                <div class="step">
+                <div class="process-step">
                     <div class="step-number">2</div>
-                    <h3>Book & Pay via WhatsApp</h3>
-                    <p>Use our simple WhatsApp booking system to confirm your appointment and make payment securely.</p>
+                    <div class="step-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Cleaner Assigned</h3>
+                    <p>We match you with a vetted cleaner based on location, availability, and your specific requirements.</p>
                 </div>
                 
-                <div class="step">
+                <div class="process-step">
                     <div class="step-number">3</div>
-                    <h3>We Clean</h3>
-                    <p>Our professional team arrives with all necessary equipment to transform your space.</p>
+                    <div class="step-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                    <h3>Service Delivered</h3>
+                    <p>Our professional team arrives with all necessary equipment to transform your space according to our SOP checklist.</p>
                 </div>
                 
-                <div class="step">
+                <div class="process-step">
                     <div class="step-number">4</div>
-                    <h3>Enjoy & Relax</h3>
-                    <p>Sit back and enjoy your sparkling clean home. Rebook easily for ongoing service.</p>
+                    <div class="step-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <h3>Payment & Feedback</h3>
+                    <p>Easy, secure payment and opportunity to provide feedback for continuous service improvement.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Gallery Section -->
-    <section class="gallery-section">
-        <div class="container">
+    <!-- Testimonials Section - ENHANCED -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="container testimonials-container">
             <div class="section-title">
-                <h2>Our Previous Work</h2>
-                <p>See the transformation we bring to homes and businesses</p>
+                <h2>Customer Reviews</h2>
+                <p>See what our customers are saying about our services</p>
             </div>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean kitchen">
-                    <div class="gallery-caption">
-                        <h4>Spotless Kitchen</h4>
-                        <p>Deep cleaning for move-out</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
                     </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean bathroom">
-                    <div class="gallery-caption">
-                        <h4>Sanitized Bathroom</h4>
-                        <p>Weekly maintenance cleaning</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean living room">
-                    <div class="gallery-caption">
-                        <h4>Fresh Living Space</h4>
-                        <p>Recurring cleaning plan</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Clean office">
-                    <div class="gallery-caption">
-                        <h4>Office Cleaning</h4>
-                        <p>Commercial contract service</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>About Ngaoyi Cleaning</h2>
-                    <p>Established in June 2024, Ngaoyi Cleaning is a professional cleaning company serving customers nationwide with reliable and high-quality cleaning services. We take pride in our attention to detail and commitment to customer satisfaction.</p>
-                    <p>Our team of experienced cleaners uses eco-friendly products and modern cleaning techniques to ensure your space is not only clean but also healthy and safe for your family or employees.</p>
-                    
-                    <div class="about-features">
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="feature-text">
-                                <h4>Trusted & Insured</h4>
-                                <p>All our cleaners are thoroughly vetted and insured for your peace of mind.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-leaf"></i>
-                            </div>
-                            <div class="feature-text">
-                                <h4>Eco-Friendly Products</h4>
-                                <p>We use environmentally friendly cleaning products that are safe for your family and pets.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-award"></i>
-                            </div>
-                            <div class="feature-text">
-                                <h4>Satisfaction Guarantee</h4>
-                                <p>If you're not completely satisfied, we'll come back and fix it at no extra cost.</p>
-                            </div>
+                    <p class="testimonial-text">"Ngaoyi Cleaning transformed my apartment before move-in. The attention to detail was impressive, and they were very professional. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">TS</div>
+                        <div class="author-info">
+                            <h4>Thandi S.</h4>
+                            <p>Johannesburg</p>
                         </div>
                     </div>
-                    
-                    <a href="#contact" class="btn">Contact Us Today</a>
                 </div>
                 
-                <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Professional cleaning team">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The weekly cleaning plan has been a lifesaver for our busy family. Consistent quality and reliable service. Great value for money!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MJ</div>
+                        <div class="author-info">
+                            <h4>Michael J.</h4>
+                            <p>Cape Town</p>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="testimonial-text">"I needed emergency cleaning for a last-minute rental inspection. They accommodated my request and did an excellent job. Will use again!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">PN</div>
+                        <div class="author-info">
+                            <h4>Priya N.</h4>
+                            <p>Durban</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rating-summary">
+                <h3>Customer Satisfaction</h3>
+                <div class="average-rating">4.8/5</div>
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="total-reviews">Based on 127+ customer reviews</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="https://g.page/r/CRQB4YD4KovSEBI/review" class="btn" target="_blank">
+                    <i class="fab fa-google"></i> Leave a Review on Google
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact">
+    <!-- Cleaner Recruitment Section - ENHANCED -->
+    <section class="recruitment-section">
+        <div class="container">
+            <div class="recruitment-content">
+                <h2>Want to Join Ngaoyi Cleaning?</h2>
+                <p>Flexible Schedules, Fair Pay, Reliable Work</p>
+                
+                <div class="recruitment-features">
+                    <div class="recruitment-feature">Flexible Hours</div>
+                    <div class="recruitment-feature">Competitive Pay</div>
+                    <div class="recruitment-feature">Ongoing Training</div>
+                    <div class="recruitment-feature">Supportive Team</div>
+                </div>
+                
+                <a href="https://www.ngaoyicleaning.co.za/apply/" class="btn btn-cleaner">Apply Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section - ENHANCED -->
+    <section id="contact" class="contact-section">
         <div class="container">
             <div class="section-title">
-                <h2>Get Your Free Quote</h2>
-                <p>Contact us today to schedule your cleaning service or ask any questions</p>
+                <h2>Contact Us</h2>
+                <p>Get your free quote or book a service today</p>
             </div>
             
             <div class="contact-container">
@@ -2050,8 +1724,8 @@
                         </div>
                         <div class="contact-details">
                             <h3>Our Location</h3>
-                            <p>Online Service - Nationwide</p>
-                            <p><small>We serve customers across South Africa</small></p>
+                            <p>Online Service - Gauteng</p>
+                            <p><small>We serve customers across Gauteng</small></p>
                         </div>
                     </div>
                     
@@ -2061,7 +1735,7 @@
                         </div>
                         <div class="contact-details">
                             <h3>WhatsApp Business</h3>
-                            <p>070 764 3709</p>
+                            <p><a href="tel:+27707643709" style="color: inherit; text-decoration: none;">070 764 3709</a></p>
                             <p><small>Available during working hours</small></p>
                         </div>
                     </div>
@@ -2072,7 +1746,7 @@
                         </div>
                         <div class="contact-details">
                             <h3>Email Address</h3>
-                            <p>ngaoyicleaning@gmail.com</p>
+                            <p><a href="mailto:ngaoyicleaning@gmail.com" style="color: inherit; text-decoration: none;">ngaoyicleaning@gmail.com</a></p>
                             <p><small>Response within 2 hours</small></p>
                         </div>
                     </div>
@@ -2124,13 +1798,12 @@
                             <label for="service">Service Interested In *</label>
                             <select id="service" class="form-control" required>
                                 <option value="">Select a service</option>
-                                <option value="once-off">Once-Off Cleaning</option>
                                 <option value="recurring">Recurring Plan</option>
+                                <option value="once-off">Once-Off Cleaning</option>
                                 <option value="deep">Deep Cleaning</option>
-                                <option value="move-in-out">Move-In/Move-Out</option>
-                                <option value="complex">Complex Contract</option>
+                                <option value="commercial">Commercial Cleaning</option>
+                                <option value="emergency">Emergency Service</option>
                                 <option value="addon">Add-On Service</option>
-                                <option value="emergency">Emergency Weekend Service</option>
                             </select>
                         </div>
                         
@@ -2157,100 +1830,24 @@
                             <textarea id="message" class="form-control" placeholder="Tell us about your cleaning needs, special requests, pets, access instructions, or any questions..."></textarea>
                         </div>
                         
-                        <button type="submit" class="btn" id="submitBtn">Request Quote</button>
+                        <button type="submit" class="btn" id="submitBtn" style="width: 100%;">Request Quote</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Google Reviews Section -->
-    <section class="google-reviews-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Customer Reviews</h2>
-                <p>See what our customers are saying about our services</p>
-            </div>
-            
-            <div class="reviews-container">
-                <div class="carousel-container">
-                    <div class="google-reviews-carousel" id="googleReviewsCarousel">
-                        <!-- Google Reviews will be dynamically loaded here -->
-                    </div>
-                    <div class="carousel-controls">
-                        <button class="carousel-btn prev-btn" id="prevBtn">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="carousel-btn next-btn" id="nextBtn">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="carousel-indicators" id="carouselIndicators">
-                        <!-- Indicators will be dynamically added -->
-                    </div>
-                </div>
-                
-                <div class="google-reviews-cta">
-                    <a href="https://g.page/r/CRQB4YD4KovSEBI/review" class="btn" target="_blank">
-                        <i class="fab fa-google"></i> Leave a Review on Google
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Trust Badges Section (MOVED TO BOTTOM) -->
-    <section class="trust-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Choose Ngaoyi Cleaning</h2>
-                <p>We're committed to providing the highest quality cleaning service</p>
-            </div>
-            
-            <div class="trust-badges">
-                <div class="trust-badge">
-                    <div class="badge-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Insured & Vetted</h3>
-                    <p>All cleaners are thoroughly screened and insured</p>
-                </div>
-                <div class="trust-badge">
-                    <div class="badge-icon">
-                        <i class="fas fa-award"></i>
-                    </div>
-                    <h3>Satisfaction Guarantee</h3>
-                    <p>Not happy? We'll come back and fix it for free</p>
-                </div>
-                <div class="trust-badge">
-                    <div class="badge-icon">
-                        <i class="fas fa-leaf"></i>
-                    </div>
-                    <h3>Eco-Friendly</h3>
-                    <p>We use environmentally safe cleaning products</p>
-                </div>
-                <div class="trust-badge">
-                    <div class="badge-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h3>Punctual Service</h3>
-                    <p>We value your time and arrive as scheduled</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
+    <!-- Footer - ENHANCED -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>Ngaoyi Cleaning</h3>
-                    <p>Professional cleaning services available nationwide. Established in 2024, we're committed to making your space spotless with reliable and high-quality service.</p>
+                    <p>Professional cleaning services available across Gauteng. Vetted Cleaner Teams, Flexible Scheduling, Recurring Plans Available.</p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/p/Ngaoyi-Cleaning-61573973758236/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/ngaoyicleaning" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/message/KCBUZ3M54C4KM1" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/p/Ngaoyi-Cleaning-61573973758236/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/ngaoyicleaning" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/message/KCBUZ3M54C4KM1" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
                 
@@ -2258,11 +1855,12 @@
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
                         <li><a href="#services">Services</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="#hours">Working Hours</a></li>
-                        <li><a href="#planning">How It Works</a></li>
-                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#team">Our Team</a></li>
+                        <li><a href="#why-choose">Why Choose Us</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -2270,22 +1868,24 @@
                 <div class="footer-column">
                     <h3>Our Services</h3>
                     <ul>
-                        <li><a href="#pricing">Once-Off Cleaning</a></li>
-                        <li><a href="#pricing">Recurring Plans</a></li>
-                        <li><a href="#pricing">Deep Cleaning</a></li>
-                        <li><a href="#pricing">Move-In/Move-Out</a></li>
-                        <li><a href="#pricing">Add-On Services</a></li>
-                        <li><a href="#pricing">Emergency Services</a></li>
+                        <li><a href="#services">Recurring Plans</a></li>
+                        <li><a href="#services">Once-Off Cleaning</a></li>
+                        <li><a href="#services">Deep Cleaning</a></li>
+                        <li><a href="#services">Commercial Cleaning</a></li>
+                        <li><a href="#services">Emergency Services</a></li>
+                        <li><a href="#services">Add-On Services</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
                     <h3>Contact Info</h3>
                     <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> Online Service - Nationwide</li>
-                        <li><i class="fas fa-phone"></i> 070 764 3709 (WhatsApp)</li>
-                        <li><i class="fas fa-envelope"></i> ngaoyicleaning@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Online Service - Gauteng</li>
+                        <li><i class="fas fa-phone"></i> <a href="tel:+27707643709" style="color: #bbb; text-decoration: none;">070 764 3709 (WhatsApp)</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:ngaoyicleaning@gmail.com" style="color: #bbb; text-decoration: none;">ngaoyicleaning@gmail.com</a></li>
                     </ul>
+                    <a href="#contact" class="btn" style="margin-top: 15px;">Book Your Cleaner</a>
+                    <a href="https://www.ngaoyicleaning.co.za/apply/" class="btn btn-cleaner" style="margin-top: 10px;">Join Our Team</a>
                 </div>
             </div>
             
@@ -2295,49 +1895,11 @@
         </div>
     </footer>
 
-    <!-- Booking Modal -->
-    <div class="booking-modal" id="bookingModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h2 class="modal-title">Complete Your Booking</h2>
-            
-            <div class="booking-summary">
-                <h4>Booking Summary</h4>
-                <p><strong>Service:</strong> <span id="modalService">-</span></p>
-                <p><strong>Price:</strong> <span id="modalPrice">0</span></p>
-                <p><strong>Payment Method:</strong> WhatsApp Payment</p>
-            </div>
-            
-            <p>To complete your booking, we'll redirect you to WhatsApp where you can:</p>
-            <ul>
-                <li>Confirm your booking details</li>
-                <li>Choose your preferred payment method</li>
-                <li>Schedule your cleaning date</li>
-                <li>Receive payment confirmation</li>
-            </ul>
-            
-            <div class="payment-options">
-                <div class="payment-option selected">
-                    <div class="payment-icon whatsapp-payment">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <div>
-                        <h4>Pay via WhatsApp</h4>
-                        <p>Secure payment through WhatsApp chat</p>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn btn-whatsapp" id="confirmBooking" style="width: 100%; margin-top: 20px;">
-                <i class="fab fa-whatsapp"></i> Continue to WhatsApp
-            </button>
-        </div>
-    </div>
-
     <!-- WhatsApp Float Button -->
     <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20cleaning%20services.%20Can%20you%20please%20provide%20more%20information%3F" 
        class="whatsapp-float" 
-       target="_blank">
+       target="_blank"
+       aria-label="Contact us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -2347,26 +1909,7 @@
             document.querySelector('nav ul').classList.toggle('show');
         });
         
-        // Tab Switching Functionality
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons and contents
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked button
-                btn.classList.add('active');
-                
-                // Show corresponding content
-                const tabId = btn.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-        
-        // Updated Form Submission with Google Apps Script Integration
+        // Form Submission with Google Apps Script Integration
         document.getElementById('quoteForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -2449,336 +1992,6 @@
                 }
             });
         });
-
-        // Booking Modal Functionality with Specific WhatsApp Messages
-        const bookingModal = document.getElementById('bookingModal');
-        const closeModal = document.getElementById('closeModal');
-        const confirmBooking = document.getElementById('confirmBooking');
-        const bookServiceBtns = document.querySelectorAll('.book-service');
-
-        // Service descriptions for WhatsApp messages
-        const serviceMessages = {
-            '1-Bedroom Once-Off': {
-                price: 'R300',
-                description: '1-Bedroom Once-Off Cleaning (Customer supplies materials)',
-                details: 'Includes comprehensive cleaning, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
-            },
-            '2-Bedroom Once-Off': {
-                price: 'R380',
-                description: '2-Bedroom Once-Off Cleaning (Customer supplies materials)',
-                details: 'Includes comprehensive cleaning, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
-            },
-            '3-Bedroom Once-Off': {
-                price: 'R470',
-                description: '3-Bedroom Once-Off Cleaning (Customer supplies materials)',
-                details: 'Includes comprehensive cleaning, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
-            },
-            '3-Bedroom Once-Off (We Supply)': {
-                price: 'R620',
-                description: '3-Bedroom Once-Off Cleaning (We supply materials)',
-                details: 'Includes comprehensive cleaning with premium products, bathroom & kitchen focus, dusting & vacuuming with solo cleaner'
-            },
-            'Weekly Recurring Plan': {
-                price: 'R400',
-                description: 'Weekly Recurring Cleaning Plan (3-Bedroom)',
-                details: '15% discount, customer supplies materials, consistent schedule with priority booking'
-            },
-            'Bi-Weekly Recurring Plan': {
-                price: 'R423',
-                description: 'Bi-Weekly Recurring Cleaning Plan (3-Bedroom)',
-                details: '10% discount, customer supplies materials, every two weeks with flexible scheduling'
-            },
-            'Monthly Recurring Plan': {
-                price: 'R447',
-                description: 'Monthly Recurring Cleaning Plan (3-Bedroom)',
-                details: '5% discount, customer supplies materials, once a month with flexible scheduling'
-            },
-            '1-Bedroom Deep Clean': {
-                price: 'R1200',
-                description: '1-Bedroom Deep Cleaning',
-                details: 'Move-in/move-out deep clean with materials supplied, deep sanitization, inside cabinets & appliances'
-            },
-            '2-Bedroom Deep Clean': {
-                price: 'R1750',
-                description: '2-Bedroom Deep Cleaning',
-                details: 'Move-in/move-out deep clean with cleaning crew, materials supplied, deep sanitization'
-            },
-            '3-Bedroom Deep Clean': {
-                price: 'R2300',
-                description: '3-Bedroom Deep Cleaning',
-                details: 'Move-in/move-out deep clean with cleaning crew, materials supplied, comprehensive deep sanitization'
-            },
-            'Window Cleaning': {
-                price: 'R150',
-                description: 'Window Cleaning Add-On',
-                details: 'Interior windows only, streak-free finish, window sills & frames included'
-            },
-            'Appliance Cleaning': {
-                price: 'R180',
-                description: 'Appliance Cleaning Add-On',
-                details: 'Oven cleaning (R180) or Fridge cleaning (R100), interior & exterior, sanitized surfaces'
-            },
-            'Laundry Service': {
-                price: 'R80/hour',
-                description: 'Laundry Service Add-On',
-                details: 'Per hour rate, washing & ironing included, folding & organizing'
-            },
-            'Emergency Weekend Cleaning': {
-                price: 'Price will be confirmed based on service',
-                description: 'Emergency Weekend Cleaning Service',
-                details: 'Available with additional charges for Saturday before 9 AM and Sunday bookings'
-            }
-        };
-
-        // Open modal from pricing cards
-        bookServiceBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const service = this.getAttribute('data-service');
-                const price = this.getAttribute('data-price');
-                
-                document.getElementById('modalService').textContent = service;
-                document.getElementById('modalPrice').textContent = price;
-                
-                // Store service info for WhatsApp message
-                document.getElementById('confirmBooking').setAttribute('data-service', service);
-                
-                bookingModal.style.display = 'flex';
-            });
-        });
-
-        // Close modal
-        closeModal.addEventListener('click', function() {
-            bookingModal.style.display = 'none';
-        });
-
-        // Confirm booking and redirect to WhatsApp with specific message
-        confirmBooking.addEventListener('click', function() {
-            const service = this.getAttribute('data-service');
-            const serviceInfo = serviceMessages[service];
-            
-            if (!serviceInfo) {
-                console.error('Service not found:', service);
-                return;
-            }
-            
-            // WhatsApp Business Greeting Message
-            const message = `Hello Ngaoyi Cleaning! 🧹
-
-I would like to book the following service:
-
-📋 SERVICE: ${serviceInfo.description}
-💰 PRICE: ${serviceInfo.price}
-📝 DETAILS: ${serviceInfo.details}
-
-Please provide:
-• Available dates for cleaning
-• Payment details and methods
-• Any preparation needed
-
-Thank you! Looking forward to your response.`;
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappURL = `https://wa.me/27707643709?text=${encodedMessage}`;
-            
-            // Open WhatsApp
-            window.open(whatsappURL, '_blank');
-            
-            // Close modal
-            bookingModal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target === bookingModal) {
-                bookingModal.style.display = 'none';
-            }
-        });
-
-        // Google Reviews Carousel Functionality
-        let currentReviewIndex = 0;
-        let googleReviews = [];
-
-        function initializeCarousel() {
-            const carousel = document.getElementById('googleReviewsCarousel');
-            const indicators = document.getElementById('carouselIndicators');
-            
-            // Clear existing content
-            carousel.innerHTML = '';
-            indicators.innerHTML = '';
-            
-            // Add review cards to carousel
-            googleReviews.forEach((review, index) => {
-                const reviewCard = document.createElement('div');
-                reviewCard.className = 'google-review-card';
-                reviewCard.setAttribute('data-review-id', review.reviewId);
-                reviewCard.innerHTML = `
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <div class="reviewer-avatar">${review.authorInitials}</div>
-                            <div>
-                                <div class="reviewer-name">${review.authorName}</div>
-                                <div class="review-date">${review.relativeTime}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="review-stars">
-                        ${generateStars(review.rating)}
-                    </div>
-                    <p class="review-text">${review.text}</p>
-                `;
-                
-                // Add click event to redirect to Google review
-                reviewCard.addEventListener('click', () => {
-                    window.open(`https://g.page/r/CRQB4YD4KovSEBI/review`, '_blank');
-                });
-                
-                carousel.appendChild(reviewCard);
-                
-                // Add indicator
-                const indicator = document.createElement('div');
-                indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
-                indicator.addEventListener('click', () => {
-                    goToReview(index);
-                });
-                indicators.appendChild(indicator);
-            });
-            
-            updateCarousel();
-        }
-
-        function updateCarousel() {
-            const carousel = document.getElementById('googleReviewsCarousel');
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            
-            // Update carousel position
-            carousel.style.transform = `translateX(-${currentReviewIndex * 100}%)`;
-            
-            // Update indicators
-            indicators.forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === currentReviewIndex);
-            });
-        }
-
-        function nextReview() {
-            currentReviewIndex = (currentReviewIndex + 1) % googleReviews.length;
-            updateCarousel();
-        }
-
-        function prevReview() {
-            currentReviewIndex = (currentReviewIndex - 1 + googleReviews.length) % googleReviews.length;
-            updateCarousel();
-        }
-
-        function goToReview(index) {
-            currentReviewIndex = index;
-            updateCarousel();
-        }
-
-        // Google Reviews API Integration
-        function loadGoogleReviews() {
-            // Replace with your actual Google Place ID and API Key
-            const placeId = 'ChIJn0IUFcRqkUkRFAHhgPgqi9I';
-            const apiKey = 'AIzaSyAZWeCCx1-KVnp-5Yl8suipxxLFhI6JFWY';
-            
-            // Using a proxy service to fetch Google Reviews
-            fetch(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&fields=reviews&key=${apiKey}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.result && data.result.reviews) {
-                    googleReviews = data.result.reviews.slice(0, 5); // Get first 5 reviews
-                    initializeCarousel();
-                } else {
-                    // Fallback to mock reviews if API fails
-                    loadMockReviews();
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching Google reviews:', error);
-                // Fallback to mock reviews
-                loadMockReviews();
-            });
-        }
-
-        // Mock reviews for fallback
-        function loadMockReviews() {
-            googleReviews = [
-                {
-                    reviewId: 'mock1',
-                    authorName: 'Thandi S.',
-                    authorInitials: 'TS',
-                    rating: 5,
-                    relativeTime: '2 weeks ago',
-                    text: 'Ngaoyi Cleaning transformed my apartment before move-in. The attention to detail was impressive, and they were very professional. Highly recommended!'
-                },
-                {
-                    reviewId: 'mock2',
-                    authorName: 'Michael J.',
-                    authorInitials: 'MJ',
-                    rating: 5,
-                    relativeTime: '1 month ago',
-                    text: 'The weekly cleaning plan has been a lifesaver for our busy family. Consistent quality and reliable service. Great value for money!'
-                },
-                {
-                    reviewId: 'mock3',
-                    authorName: 'Priya N.',
-                    authorInitials: 'PN',
-                    rating: 4.5,
-                    relativeTime: '3 weeks ago',
-                    text: 'I needed emergency cleaning for a last-minute rental inspection. They accommodated my request and did an excellent job. Will use again!'
-                },
-                {
-                    reviewId: 'mock4',
-                    authorName: 'David K.',
-                    authorInitials: 'DK',
-                    rating: 5,
-                    relativeTime: '2 months ago',
-                    text: 'Excellent deep cleaning service for my move-out. They went above and beyond to ensure everything was spotless. Highly professional team!'
-                },
-                {
-                    reviewId: 'mock5',
-                    authorName: 'Sarah M.',
-                    authorInitials: 'SM',
-                    rating: 5,
-                    relativeTime: '1 week ago',
-                    text: 'The add-on window cleaning service was fantastic! My windows have never been so clear. Will definitely book again for regular maintenance.'
-                }
-            ];
-            
-            initializeCarousel();
-        }
-
-        function generateStars(rating) {
-            let stars = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= rating) {
-                    stars += '<i class="fas fa-star"></i>';
-                } else if (i - 0.5 === rating) {
-                    stars += '<i class="fas fa-star-half-alt"></i>';
-                } else {
-                    stars += '<i class="far fa-star"></i>';
-                }
-            }
-            return stars;
-        }
-
-        // Event listeners for carousel controls
-        document.getElementById('nextBtn').addEventListener('click', nextReview);
-        document.getElementById('prevBtn').addEventListener('click', prevReview);
-
-        // Auto-advance carousel
-        let carouselInterval = setInterval(nextReview, 5000);
-
-        // Pause auto-advance on hover
-        document.querySelector('.carousel-container').addEventListener('mouseenter', () => {
-            clearInterval(carouselInterval);
-        });
-
-        document.querySelector('.carousel-container').addEventListener('mouseleave', () => {
-            carouselInterval = setInterval(nextReview, 5000);
-        });
-
-        // Load reviews when page loads
-        document.addEventListener('DOMContentLoaded', loadGoogleReviews);
     </script>
 </body>
 </html>
