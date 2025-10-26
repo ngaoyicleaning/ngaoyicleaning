@@ -118,6 +118,10 @@
             background: linear-gradient(to right, #25D366, #128C7E);
         }
         
+        .btn-email {
+            background: linear-gradient(to right, #EA4335, #D14836);
+        }
+        
         .btn-emergency {
             background: linear-gradient(to right, #e74c3c, #c0392b);
         }
@@ -267,7 +271,7 @@
             right: 20px;
         }
         
-        /* About Section - NEW */
+        /* About Section - UPDATED */
         .about-section {
             background-color: white;
             padding: 80px 0;
@@ -361,7 +365,7 @@
             transform: scale(1.05);
         }
         
-        /* Why Choose Us Section - NEW */
+        /* Why Choose Us Section */
         .why-choose-section {
             background-color: var(--light-gray);
             padding: 80px 0;
@@ -565,62 +569,20 @@
             font-weight: 600;
         }
         
-        /* Our Team Section - NEW */
-        .team-section {
-            background-color: white;
-            padding: 80px 0;
+        .contact-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
         
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-        
-        .team-member {
+        .contact-options .btn {
+            flex: 1;
             text-align: center;
-            background-color: var(--light);
-            border-radius: 10px;
-            padding: 30px 20px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .team-member:hover {
-            transform: translateY(-10px);
-        }
-        
-        .member-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            overflow: hidden;
-            border: 5px solid var(--light-gray);
-        }
-        
-        .member-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .team-member h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .team-member p {
-            color: var(--gray);
-        }
-        
-        .member-rating {
-            color: #ffc107;
-            margin: 10px 0;
+            padding: 10px 15px;
             font-size: 0.9rem;
         }
         
-        /* How It Works Section - ENHANCED */
+        /* How It Works Section */
         .process-steps {
             display: flex;
             justify-content: space-between;
@@ -771,7 +733,7 @@
             font-size: 1.1rem;
         }
         
-        /* Cleaner Recruitment Section - ENHANCED */
+        /* Cleaner Recruitment Section */
         .recruitment-section {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%), url('https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
@@ -814,7 +776,7 @@
             font-weight: 600;
         }
         
-        /* Contact Section - ENHANCED */
+        /* Contact Section */
         .contact-section {
             background-color: var(--light-gray);
             padding: 80px 0;
@@ -1124,21 +1086,17 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .team-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .material-options {
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            .contact-options {
+                flex-direction: column;
+            }
         }
         
         @media (max-width: 480px) {
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .areas-grid {
                 grid-template-columns: 1fr;
             }
@@ -1167,7 +1125,6 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#services">Services</a></li>
-                    <li><a href="#team">Our Team</a></li>
                     <li><a href="#why-choose">Why Choose Us</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#testimonials">Testimonials</a></li>
@@ -1177,7 +1134,7 @@
         </div>
     </header>
 
-    <!-- Hero Section - ENHANCED -->
+    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
@@ -1192,7 +1149,7 @@
         </div>
     </section>
 
-    <!-- About Section - NEW -->
+    <!-- About Section - UPDATED IMAGE -->
     <section id="about" class="about-section">
         <div class="container">
             <div class="about-content">
@@ -1218,13 +1175,13 @@
                 </div>
                 
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Professional cleaning team serving Gauteng">
+                    <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/display1.png" alt="Ngaoyi Cleaning Services - Professional Cleaning Team">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section - ENHANCED -->
+    <!-- Services Section - ENHANCED WITH ICONS -->
     <section id="services" class="services-section">
         <div class="container">
             <div class="section-title">
@@ -1267,7 +1224,7 @@
                 
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-home-heart"></i>
+                        <i class="fas fa-broom"></i>
                     </div>
                     <h3>Once-Off Cleaning</h3>
                     <p>Ideal for special events, move-in/move-out, or deep cleans. We'll make your space sparkle from top to bottom.</p>
@@ -1381,7 +1338,10 @@
                         </div>
                     </div>
                     
-                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Commercial%20Cleaning%20services.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Get Commercial Quote</a>
+                    <div class="contact-options">
+                        <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Commercial%20Cleaning%20services.%20Can%20you%20please%20provide%20more%20information%3F" class="btn btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="mailto:ngaoyicleaning@gmail.com?subject=Commercial Cleaning Quote Request&body=Hi Ngaoyi Cleaning, I'm interested in your commercial cleaning services. Please provide me with a quote." class="btn btn-email"><i class="fas fa-envelope"></i> Email</a>
+                    </div>
                 </div>
                 
                 <div class="service-card">
@@ -1416,87 +1376,7 @@
         </div>
     </section>
 
-    <!-- Our Team Section - NEW -->
-    <section id="team" class="team-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Meet Our Cleaning Team</h2>
-                <p>Our vetted and professional cleaning specialists</p>
-            </div>
-            
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1560250056-07ba64664864?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sarah - Professional Cleaner">
-                    </div>
-                    <h3>Sarah M.</h3>
-                    <p>Residential Cleaning Specialist</p>
-                    <div class="member-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span> (4.9)</span>
-                    </div>
-                    <p><small>3+ years experience</small></p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1584516150909-c43483ee7932?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="James - Commercial Cleaner">
-                    </div>
-                    <h3>James T.</h3>
-                    <p>Commercial Cleaning Expert</p>
-                    <div class="member-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <span> (4.7)</span>
-                    </div>
-                    <p><small>5+ years experience</small></p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Maria - Deep Cleaning Specialist">
-                    </div>
-                    <h3>Maria K.</h3>
-                    <p>Deep Cleaning Specialist</p>
-                    <div class="member-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span> (4.9)</span>
-                    </div>
-                    <p><small>4+ years experience</small></p>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671d66?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="David - Team Supervisor">
-                    </div>
-                    <h3>David L.</h3>
-                    <p>Team Supervisor</p>
-                    <div class="member-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span> (5.0)</span>
-                    </div>
-                    <p><small>6+ years experience</small></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us Section - NEW -->
+    <!-- Why Choose Us Section -->
     <section id="why-choose" class="why-choose-section">
         <div class="container">
             <div class="section-title">
@@ -1556,7 +1436,7 @@
         </div>
     </section>
 
-    <!-- How It Works Section - ENHANCED -->
+    <!-- How It Works Section -->
     <section id="how-it-works" class="planning-section">
         <div class="container">
             <div class="section-title">
@@ -1604,7 +1484,7 @@
         </div>
     </section>
 
-    <!-- Testimonials Section - ENHANCED -->
+    <!-- Testimonials Section - ENHANCED WITH 4 REVIEWS -->
     <section id="testimonials" class="testimonials-section">
         <div class="container testimonials-container">
             <div class="section-title">
@@ -1666,11 +1546,29 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The deep cleaning service was exceptional! They cleaned areas I didn't even know needed attention. My home has never been cleaner!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">LK</div>
+                        <div class="author-info">
+                            <h4>Lerato K.</h4>
+                            <p>Pretoria</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="rating-summary">
                 <h3>Customer Satisfaction</h3>
-                <div class="average-rating">4.8/5</div>
+                <div class="average-rating">4.5/5</div>
                 <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -1678,7 +1576,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star-half-alt"></i>
                 </div>
-                <p class="total-reviews">Based on 127+ customer reviews</p>
+                <p class="total-reviews">Based on 50+ customer reviews</p>
             </div>
             
             <div style="text-align: center; margin-top: 40px;">
@@ -1689,7 +1587,7 @@
         </div>
     </section>
 
-    <!-- Cleaner Recruitment Section - ENHANCED -->
+    <!-- Cleaner Recruitment Section -->
     <section class="recruitment-section">
         <div class="container">
             <div class="recruitment-content">
@@ -1708,7 +1606,7 @@
         </div>
     </section>
 
-    <!-- Contact Section - ENHANCED -->
+    <!-- Contact Section -->
     <section id="contact" class="contact-section">
         <div class="container">
             <div class="section-title">
@@ -1837,7 +1735,7 @@
         </div>
     </section>
 
-    <!-- Footer - ENHANCED -->
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -1857,7 +1755,6 @@
                         <li><a href="#home">Home</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#services">Services</a></li>
-                        <li><a href="#team">Our Team</a></li>
                         <li><a href="#why-choose">Why Choose Us</a></li>
                         <li><a href="#how-it-works">How It Works</a></li>
                         <li><a href="#testimonials">Testimonials</a></li>
