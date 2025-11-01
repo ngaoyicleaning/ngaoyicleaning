@@ -576,8 +576,8 @@
     </div>
 
     <script>
-        // Configuration
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwi_SZQjd01KjEko6GRCcZbCTPK7gsw-nv7g4nLzrJsW9ob6fMzw78cGPiY5PV9u8EZ/exec';
+        // Configuration - UPDATED URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5W2aCI0szhhGMGlyt1dxpASuCpf0EnVWR4qPhp5p_4gt79Tfg_6gIndHsup9bDgL_/exec';
         
         let bookingData = {};
         let discountApplied = null;
@@ -840,24 +840,28 @@
             confirmButton.disabled = true;
 
             try {
-                // Save booking to Google Sheets
+                // First save the booking
                 const bookingResponse = await saveBookingToSheets(bookingData);
                 
                 if (bookingResponse.success) {
-                    // Update booking status and create calendar event
-                    await updateBookingStatus(bookingResponse.bookingRef, 'Confirmed');
+                    // Then update the booking status to confirmed
+                    const updateResponse = await updateBookingStatus(bookingResponse.bookingRef, 'Confirmed');
                     
-                    // Show success message
-                    successMessage.style.display = 'block';
-                    confirmationSection.style.display = 'none';
-                    
-                    // Clear storage after delay
-                    setTimeout(() => {
-                        localStorage.removeItem('ngaoyi_booking');
-                        localStorage.removeItem('ngaoyi_discount');
-                        window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
-                    }, 3000);
-                    
+                    if (updateResponse.success) {
+                        // Show success message
+                        successMessage.style.display = 'block';
+                        confirmationSection.style.display = 'none';
+                        
+                        // Clear storage after delay and redirect
+                        setTimeout(() => {
+                            localStorage.removeItem('ngaoyi_booking');
+                            localStorage.removeItem('ngaoyi_discount');
+                            window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                        }, 3000);
+                        
+                    } else {
+                        throw new Error(updateResponse.error || 'Failed to confirm booking');
+                    }
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to save booking');
                 }
@@ -876,15 +880,24 @@
                 action: 'saveBooking'
             };
 
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            return await response.json();
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving booking:', error);
+                throw new Error('Failed to connect to booking service. Please check your internet connection and try again.');
+            }
         }
 
         async function updateBookingStatus(bookingRef, status) {
@@ -894,17 +907,52 @@
                 status: status
             };
 
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error updating booking status:', error);
+                throw new Error('Failed to confirm booking. Please contact support.');
+            }
+        }
+
+        // Test connection on load
+        async function testConnection() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action: 'testConnection' })
+                });
+                
+                if (response.ok) {
+                    console.log('Connection to Google Apps Script successful');
+                } else {
+                    console.warn('Connection test failed:', response.status);
+                }
+            } catch (error) {
+                console.error('Connection test error:', error);
+            }
         }
 
         // Initialize page
-        window.addEventListener('load', updateSummary);
+        window.addEventListener('load', function() {
+            updateSummary();
+            testConnection();
+        });
     </script>
 </body>
 </html>
