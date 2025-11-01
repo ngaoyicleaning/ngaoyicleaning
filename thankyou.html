@@ -318,7 +318,7 @@
             <div class="details-grid">
                 <div class="detail-item">
                     <strong>Booking Reference:</strong>
-                    <span>NC-<?php echo rand(100000, 999999); ?></span>
+                    <span id="booking-ref">NC-<?php echo rand(100000, 999999); ?></span>
                 </div>
                 <div class="detail-item">
                     <strong>Payment Status:</strong>
@@ -396,8 +396,15 @@
             });
         }
         
-        // Generate random booking reference
-        document.querySelector('.detail-item span').textContent = 'NC-' + Math.floor(100000 + Math.random() * 900000);
+        // Get booking reference from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingRef = urlParams.get('ref');
+        if (bookingRef) {
+            document.getElementById('booking-ref').textContent = bookingRef;
+        } else {
+            // Generate random booking reference if none provided
+            document.getElementById('booking-ref').textContent = 'NC-' + Math.floor(100000 + Math.random() * 900000);
+        }
     </script>
 </body>
 </html>
