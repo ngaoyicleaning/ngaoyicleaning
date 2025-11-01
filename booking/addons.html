@@ -15,6 +15,7 @@
             --dark: #00264d;
             --gray: #6c6c6c;
             --light-gray: #e9ecef;
+            --success: #28a745;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
@@ -196,8 +197,8 @@
             line-height: 1.7;
         }
         
-        /* Addon Cards */
-        .addon-options {
+        /* Add-ons Grid */
+        .addons-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
@@ -205,19 +206,19 @@
         }
         
         .addon-card {
+            background: white;
             border: 2px solid var(--light-gray);
             border-radius: 15px;
             padding: 25px;
-            cursor: pointer;
             transition: var(--transition);
-            background: white;
+            cursor: pointer;
             position: relative;
         }
         
         .addon-card:hover {
             border-color: var(--accent);
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 198, 255, 0.1);
         }
         
         .addon-card.selected {
@@ -225,29 +226,23 @@
             background: linear-gradient(135deg, rgba(0, 59, 111, 0.03), rgba(0, 198, 255, 0.03));
         }
         
-        .addon-header {
+        .addon-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
             display: flex;
-            justify-content: between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            gap: 15px;
-        }
-        
-        .addon-info {
-            flex: 1;
-        }
-        
-        .addon-info h3 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 1.3rem;
-        }
-        
-        .addon-price {
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-size: 1.5rem;
-            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .addon-card h3 {
             color: var(--primary);
-            white-space: nowrap;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
         }
         
         .addon-description {
@@ -256,86 +251,42 @@
             line-height: 1.5;
         }
         
+        .addon-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
         .addon-features {
             list-style: none;
             margin-bottom: 20px;
         }
         
         .addon-features li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--light-gray);
+            padding: 5px 0;
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--gray);
         }
         
-        .addon-features li:last-child {
-            border-bottom: none;
-        }
-        
-        .addon-features i {
-            color: var(--primary);
+        .addon-features li i {
+            color: var(--success);
             font-size: 0.9rem;
         }
         
-        .addon-checkbox {
+        .select-indicator {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--light-gray);
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: var(--light-gray);
+            font-size: 1.5rem;
             transition: var(--transition);
         }
         
-        .addon-card.selected .addon-checkbox {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-        
-        .addon-card.selected .addon-checkbox::after {
-            content: '✓';
-            font-weight: bold;
-        }
-        
-        /* Price Summary */
-        .price-summary {
-            background: var(--light);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 1px solid var(--light-gray);
-        }
-        
-        .price-summary h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.4rem;
-        }
-        
-        .price-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(108, 108, 108, 0.1);
-        }
-        
-        .price-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid var(--primary);
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
+        .addon-card.selected .select-indicator {
+            color: var(--success);
         }
         
         .form-actions {
@@ -365,13 +316,6 @@
             box-shadow: 0 8px 25px rgba(0, 59, 111, 0.4);
         }
         
-        .btn:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
         .btn-outline {
             background: white;
             color: var(--primary);
@@ -381,19 +325,6 @@
         .btn-outline:hover {
             background: var(--primary);
             color: white;
-        }
-        
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--gray);
-        }
-        
-        .loading i {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--primary);
         }
         
         /* Responsive */
@@ -412,6 +343,10 @@
                 text-align: center;
             }
             
+            .addons-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .booking-main h2 {
                 font-size: 1.8rem;
             }
@@ -424,15 +359,6 @@
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
-            }
-            
-            .addon-options {
-                grid-template-columns: 1fr;
-            }
-            
-            .addon-header {
-                flex-direction: column;
-                gap: 10px;
             }
         }
         
@@ -456,11 +382,6 @@
             .step-number {
                 margin-bottom: 0;
             }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
         }
     </style>
 </head>
@@ -468,7 +389,7 @@
     <div class="booking-container">
         <header class="booking-header">
             <a href="cleaner.html" class="back-home">
-                <i class="fas fa-arrow-left"></i> Back to Cleaner
+                <i class="fas fa-arrow-left"></i> Back to Cleaners
             </a>
             <div class="logo">
                 <div class="logo-icon">
@@ -501,50 +422,128 @@
             <h2>Add Extra Services</h2>
             <p class="step-description">Enhance your cleaning experience with these additional services (optional)</p>
 
-            <div class="price-summary">
-                <h3>Current Price Summary</h3>
-                <div class="price-item">
-                    <span>Base Cleaning</span>
-                    <span id="current-base-price">R0</span>
+            <div class="addons-grid" id="addonsContainer">
+                <div class="addon-card" onclick="toggleAddon('window-cleaning')">
+                    <div class="addon-icon">
+                        <i class="fas fa-window-restore"></i>
+                    </div>
+                    <h3>Window Cleaning</h3>
+                    <p class="addon-description">Professional interior and exterior window cleaning for crystal-clear views</p>
+                    <div class="addon-price">R150</div>
+                    <ul class="addon-features">
+                        <li><i class="fas fa-check"></i> Interior window surfaces</li>
+                        <li><i class="fas fa-check"></i> Exterior window surfaces</li>
+                        <li><i class="fas fa-check"></i> Window frames and sills</li>
+                        <li><i class="fas fa-check"></i> Streak-free finish</li>
+                    </ul>
+                    <div class="select-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
                 </div>
-                <div class="price-item" id="current-materials-item" style="display: none;">
-                    <span>Materials Fee</span>
-                    <span id="current-materials-price">R0</span>
-                </div>
-                <div class="price-item" id="current-addons-item" style="display: none;">
-                    <span>Additional Services</span>
-                    <span id="current-addons-price">R0</span>
-                </div>
-                <div class="price-total">
-                    <strong>Current Total</strong>
-                    <strong id="current-total-price">R0</strong>
-                </div>
-            </div>
 
-            <div id="addonOptions" class="addon-options">
-                <div class="loading">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Loading additional services...</p>
+                <div class="addon-card" onclick="toggleAddon('oven-cleaning')">
+                    <div class="addon-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <h3>Oven Cleaning</h3>
+                    <p class="addon-description">Deep cleaning of oven interior, racks, and exterior surfaces</p>
+                    <div class="addon-price">R180</div>
+                    <ul class="addon-features">
+                        <li><i class="fas fa-check"></i> Oven interior deep clean</li>
+                        <li><i class="fas fa-check"></i> Rack cleaning</li>
+                        <li><i class="fas fa-check"></i> Exterior surface polish</li>
+                        <li><i class="fas fa-check"></i> Grease and grime removal</li>
+                    </ul>
+                    <div class="select-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="addon-card" onclick="toggleAddon('fridge-cleaning')">
+                    <div class="addon-icon">
+                        <i class="fas fa-snowflake"></i>
+                    </div>
+                    <h3>Fridge Cleaning</h3>
+                    <p class="addon-description">Thorough cleaning and organization of refrigerator and freezer</p>
+                    <div class="addon-price">R100</div>
+                    <ul class="addon-features">
+                        <li><i class="fas fa-check"></i> Interior shelf cleaning</li>
+                        <li><i class="fas fa-check"></i> Drawer sanitization</li>
+                        <li><i class="fas fa-check"></i> Door seal cleaning</li>
+                        <li><i class="fas fa-check"></i> Organization service</li>
+                    </ul>
+                    <div class="select-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="addon-card" onclick="toggleAddon('laundry-service')">
+                    <div class="addon-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3>Laundry Service</h3>
+                    <p class="addon-description">Wash, dry, and fold laundry service (per hour)</p>
+                    <div class="addon-price">R80/hour</div>
+                    <ul class="addon-features">
+                        <li><i class="fas fa-check"></i> Washing and drying</li>
+                        <li><i class="fas fa-check"></i> Folding service</li>
+                        <li><i class="fas fa-check"></i> Ironing available</li>
+                        <li><i class="fas fa-check"></i> Detergent provided</li>
+                    </ul>
+                    <div class="select-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="addon-card" onclick="toggleAddon('carpet-cleaning')">
+                    <div class="addon-icon">
+                        <i class="fas fa-border-all"></i>
+                    </div>
+                    <h3>Carpet Cleaning</h3>
+                    <p class="addon-description">Professional steam cleaning for carpets and area rugs</p>
+                    <div class="addon-price">R200/room</div>
+                    <ul class="addon-features">
+                        <li><i class="fas fa-check"></i> Steam cleaning</li>
+                        <li><i class="fas fa-check"></i> Stain removal</li>
+                        <li><i class="fas fa-check"></i> Deodorizing</li>
+                        <li><i class="fas fa-check"></i> Quick drying</li>
+                    </ul>
+                    <div class="select-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="addon-card" onclick="toggleAddon('balcony-cleaning')">
+                    <div class="addon-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Balcony Cleaning</h3>
+                    <p class="addon-description">Outdoor balcony or patio cleaning and sweeping</p>
+                    <div class="addon-price">R120</div>
+                    <ul class="addon-features">
+                        <li><i class="fas fa-check"></i> Floor sweeping</li>
+                        <li><i class="fas fa-check"></i> Surface washing</li>
+                        <li><i class="fas fa-check"></i> Rail cleaning</li>
+                        <li><i class="fas fa-check"></i> Debris removal</li>
+                    </ul>
+                    <div class="select-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button onclick="proceedToSummary()" class="btn">
+                <button onclick="proceedToSummary()" class="btn btn-primary">
                     Continue to Summary <i class="fas fa-arrow-right"></i>
                 </button>
-                <button onclick="window.location.href='cleaner.html'" class="btn btn-outline">
-                    <i class="fas fa-arrow-left"></i> Back to Cleaner
+                <button onclick="skipAddons()" class="btn btn-outline" style="margin-left: 15px;">
+                    Skip Add-ons
                 </button>
             </div>
         </main>
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5W2aCI0szhhGMGlyt1dxpASuCpf0EnVWR4qPhp5p_4gt79Tfg_6gIndHsup9bDgL_/exec';
-        let selectedAddons = [];
-        let currentPrices = {};
-
-        // Addon prices (fallback)
         const addonPrices = {
             'window-cleaning': 150,
             'oven-cleaning': 180,
@@ -554,274 +553,66 @@
             'balcony-cleaning': 120
         };
 
-        // Addon names
-        const addonNames = {
-            'window-cleaning': 'Window Cleaning',
-            'oven-cleaning': 'Oven Cleaning',
-            'fridge-cleaning': 'Fridge Cleaning',
-            'laundry-service': 'Laundry Service',
-            'carpet-cleaning': 'Carpet Cleaning',
-            'balcony-cleaning': 'Balcony Cleaning'
-        };
+        let selectedAddons = [];
 
-        // Addon descriptions
-        const addonDescriptions = {
-            'window-cleaning': 'Professional interior and exterior window cleaning for crystal clear views',
-            'oven-cleaning': 'Deep cleaning of oven interior, racks, and exterior surfaces',
-            'fridge-cleaning': 'Complete sanitization and organization of your refrigerator',
-            'laundry-service': 'Washing, drying, and folding of your laundry',
-            'carpet-cleaning': 'Deep steam cleaning and stain removal for carpets',
-            'balcony-cleaning': 'Cleaning and maintenance of balcony areas and furniture'
-        };
-
-        // Addon features
-        const addonFeatures = {
-            'window-cleaning': ['Interior window surfaces', 'Exterior window surfaces', 'Window frames and sills', 'Streak-free finish'],
-            'oven-cleaning': ['Oven interior cleaning', 'Rack cleaning', 'Exterior polish', 'Grease removal'],
-            'fridge-cleaning': ['Interior sanitization', 'Shelf cleaning', 'Door seals cleaning', 'Odor removal'],
-            'laundry-service': ['Washing included', 'Drying included', 'Folding service', 'Ironing available'],
-            'carpet-cleaning': ['Steam cleaning', 'Stain removal', 'Deodorizing', 'Quick drying'],
-            'balcony-cleaning': ['Floor cleaning', 'Railings cleaning', 'Furniture cleaning', 'Drainage check']
-        };
-
-        async function loadAddons() {
-            try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAddons`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    displayAddons(data.addons);
-                } else {
-                    throw new Error('Failed to load addons');
-                }
-            } catch (error) {
-                console.error('Error loading addons:', error);
-                displayDefaultAddons();
-            }
-        }
-
-        function displayAddons(addons) {
-            const container = document.getElementById('addonOptions');
-            container.innerHTML = '';
-
-            addons.forEach(addon => {
-                const addonCard = document.createElement('div');
-                addonCard.className = 'addon-card';
-                addonCard.onclick = () => toggleAddon(addon.id, addonCard);
-                
-                const featuresHtml = addon.features ? addon.features.map(feature => 
-                    `<li><i class="fas fa-check"></i> ${feature}</li>`
-                ).join('') : '';
-                
-                addonCard.innerHTML = `
-                    <div class="addon-header">
-                        <div class="addon-info">
-                            <h3>${addon.name}</h3>
-                            <div class="addon-description">${addon.description}</div>
-                        </div>
-                        <div class="addon-price">R${addon.price}</div>
-                    </div>
-                    ${featuresHtml ? `<ul class="addon-features">${featuresHtml}</ul>` : ''}
-                    <div class="addon-checkbox"></div>
-                `;
-                
-                container.appendChild(addonCard);
-            });
-        }
-
-        function displayDefaultAddons() {
-            const defaultAddons = [
-                {
-                    id: 'window-cleaning',
-                    name: 'Window Cleaning',
-                    description: 'Professional interior and exterior window cleaning for crystal clear views',
-                    price: 150,
-                    features: ['Interior window surfaces', 'Exterior window surfaces', 'Window frames and sills', 'Streak-free finish']
-                },
-                {
-                    id: 'oven-cleaning',
-                    name: 'Oven Cleaning',
-                    description: 'Deep cleaning of oven interior, racks, and exterior surfaces',
-                    price: 180,
-                    features: ['Oven interior cleaning', 'Rack cleaning', 'Exterior polish', 'Grease removal']
-                },
-                {
-                    id: 'fridge-cleaning',
-                    name: 'Fridge Cleaning',
-                    description: 'Complete sanitization and organization of your refrigerator',
-                    price: 100,
-                    features: ['Interior sanitization', 'Shelf cleaning', 'Door seals cleaning', 'Odor removal']
-                },
-                {
-                    id: 'laundry-service',
-                    name: 'Laundry Service',
-                    description: 'Washing, drying, and folding of your laundry',
-                    price: 80,
-                    features: ['Washing included', 'Drying included', 'Folding service', 'Ironing available']
-                },
-                {
-                    id: 'carpet-cleaning',
-                    name: 'Carpet Cleaning',
-                    description: 'Deep steam cleaning and stain removal for carpets',
-                    price: 200,
-                    features: ['Steam cleaning', 'Stain removal', 'Deodorizing', 'Quick drying']
-                },
-                {
-                    id: 'balcony-cleaning',
-                    name: 'Balcony Cleaning',
-                    description: 'Cleaning and maintenance of balcony areas and furniture',
-                    price: 120,
-                    features: ['Floor cleaning', 'Railings cleaning', 'Furniture cleaning', 'Drainage check']
-                }
-            ];
-            
-            displayAddons(defaultAddons);
-        }
-
-        function toggleAddon(addonId, element) {
+        function toggleAddon(addonId) {
+            const card = event.currentTarget;
             const index = selectedAddons.indexOf(addonId);
             
             if (index === -1) {
                 // Add addon
                 selectedAddons.push(addonId);
-                element.classList.add('selected');
+                card.classList.add('selected');
             } else {
                 // Remove addon
                 selectedAddons.splice(index, 1);
-                element.classList.remove('selected');
+                card.classList.remove('selected');
             }
             
             // Save to localStorage
-            const bookingData = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
-            bookingData.addons = selectedAddons;
-            localStorage.setItem('ngaoyi_booking', JSON.stringify(bookingData));
-            
-            updatePriceSummary();
-        }
-
-        function calculateCurrentPrice() {
-            const bookingData = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
-            const discountData = JSON.parse(localStorage.getItem('ngaoyi_discount') || 'null');
-            
-            if (!bookingData.serviceType || !bookingData.propertySize || !bookingData.date) {
-                return {
-                    base: 0,
-                    materials: 0,
-                    addons: 0,
-                    total: 0
-                };
-            }
-
-            const basePrices = {
-                '1-bed': { 'once-off': 350, 'recurring': 300, 'deep': 1200, 'commercial': 500 },
-                '2-bed': { 'once-off': 450, 'recurring': 400, 'deep': 1750, 'commercial': 700 },
-                '3-bed': { 'once-off': 550, 'recurring': 500, 'deep': 2300, 'commercial': 900 },
-                '4-bed': { 'once-off': 650, 'recurring': 600, 'deep': 2800, 'commercial': 1100 },
-                '5+bed': { 'once-off': 800, 'recurring': 750, 'deep': 3500, 'commercial': 1300 },
-                'office': { 'once-off': 600, 'recurring': 550, 'deep': 2000, 'commercial': 600 }
-            };
-
-            const materialPrices = {
-                'once-off': { 'customer': 0, 'we_supply': 150 },
-                'recurring': { 'customer': 0, 'we_supply': 150 },
-                'deep': { 'customer': 0, 'we_supply': 0 },
-                'commercial': { 'customer': 0, 'we_supply': 200 }
-            };
-
-            let basePrice = basePrices[bookingData.propertySize]?.[bookingData.serviceType] || 0;
-            let materialsFee = 0;
-            let addonsTotal = 0;
-
-            // Materials fee
-            if (bookingData.materialOption && materialPrices[bookingData.serviceType]) {
-                materialsFee = materialPrices[bookingData.serviceType][bookingData.materialOption] || 0;
-            }
-
-            // Addons total
-            selectedAddons.forEach(addonId => {
-                addonsTotal += addonPrices[addonId] || 0;
-            });
-
-            let subtotal = basePrice + materialsFee + addonsTotal;
-            let discountAmount = 0;
-
-            // Apply discount
-            if (discountData && discountData.discount) {
-                discountAmount = subtotal * discountData.discount;
-            }
-
-            let total = Math.max(0, subtotal - discountAmount);
-
-            return {
-                base: basePrice,
-                materials: materialsFee,
-                addons: addonsTotal,
-                discount: discountAmount,
-                total: total
-            };
-        }
-
-        function updatePriceSummary() {
-            currentPrices = calculateCurrentPrice();
-            
-            document.getElementById('current-base-price').textContent = `R${currentPrices.base}`;
-            document.getElementById('current-total-price').textContent = `R${currentPrices.total}`;
-            
-            // Show/hide materials fee
-            const materialsItem = document.getElementById('current-materials-item');
-            if (currentPrices.materials > 0) {
-                materialsItem.style.display = 'flex';
-                document.getElementById('current-materials-price').textContent = `R${currentPrices.materials}`;
-            } else {
-                materialsItem.style.display = 'none';
-            }
-            
-            // Show/hide addons fee
-            const addonsItem = document.getElementById('current-addons-item');
-            if (currentPrices.addons > 0) {
-                addonsItem.style.display = 'flex';
-                document.getElementById('current-addons-price').textContent = `R${currentPrices.addons}`;
-            } else {
-                addonsItem.style.display = 'none';
-            }
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            clientInfo.addons = selectedAddons;
+            localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
         }
 
         function proceedToSummary() {
-            // Save addons to localStorage
-            const bookingData = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
-            bookingData.addons = selectedAddons;
-            localStorage.setItem('ngaoyi_booking', JSON.stringify(bookingData));
+            // Save addons selection
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            clientInfo.addons = selectedAddons;
+            localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
             
-            // Redirect to summary page
+            // Redirect to summary
             window.location.href = 'summary.html';
         }
 
-        // Initialize page
+        function skipAddons() {
+            // Clear any selected addons
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            clientInfo.addons = [];
+            localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
+            
+            // Redirect to summary
+            window.location.href = 'summary.html';
+        }
+
+        // Load existing selections
         window.addEventListener('load', function() {
-            // Check if user data exists
-            const bookingData = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
-            if (!bookingData.name) {
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            if (!clientInfo.name) {
                 window.location.href = 'index.html';
                 return;
             }
             
             // Load previously selected addons
-            if (bookingData.addons) {
-                selectedAddons = bookingData.addons;
-            }
-            
-            loadAddons();
-            updatePriceSummary();
-            
-            // Update selected addons after a brief delay to ensure DOM is ready
-            setTimeout(() => {
+            if (clientInfo.addons) {
+                selectedAddons = clientInfo.addons;
                 selectedAddons.forEach(addonId => {
-                    const addonCard = document.querySelector(`[onclick*="${addonId}"]`);
-                    if (addonCard) {
-                        addonCard.classList.add('selected');
+                    const card = document.querySelector(`[onclick="toggleAddon('${addonId}')"]`);
+                    if (card) {
+                        card.classList.add('selected');
                     }
                 });
-            }, 100);
+            }
         });
     </script>
 </body>
