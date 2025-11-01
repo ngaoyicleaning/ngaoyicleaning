@@ -5,18 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm & Pay - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Yoco Inline SDK -->
-    <script>
-        (function (d, s, c) {
-            var w = window, p = w.document.location.protocol, sc = d.createElement(s);
-            sc.src = p + "//js.yoco.com/sdk/v1/yoco-sdk-web.js";
-            sc.onload = function () {
-                w.YocoSDK = w.YocoSDK || function (c) { w.yoco = new w.YocoSDK(c) };
-                w.yoco = new w.YocoSDK({ publicKey: 'pk_test_04c01a4bGNBrnnq06d84' });
-            };
-            var m = d.getElementsByTagName(s)[0]; m.parentNode.insertBefore(sc, m);
-        })(document, 'script', 'yoco-sdk-web');
-    </script>
+    <!-- Yoco SDK -->
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
         :root {
             --primary: #003b6f;
@@ -332,47 +322,6 @@
             font-size: 1.5rem;
         }
         
-        /* Yoco Payment Form */
-        .yoco-form {
-            background: var(--light);
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 20px;
-            border: 1px solid var(--light-gray);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.1);
-        }
-        
-        .card-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 15px;
-        }
-        
         .form-actions {
             text-align: center;
         }
@@ -415,6 +364,21 @@
         
         .secure-notice i {
             color: var(--success);
+        }
+        
+        .payment-info {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .payment-info i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
         }
         
         /* Loading State */
@@ -462,10 +426,6 @@
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
-            }
-            
-            .card-row {
-                grid-template-columns: 1fr;
             }
         }
         
@@ -595,7 +555,7 @@
             <div class="payment-section">
                 <h3>Payment Method</h3>
                 <div class="payment-options">
-                    <div class="payment-option selected" onclick="selectPayment('yoco')">
+                    <div class="payment-option selected">
                         <i class="fas fa-credit-card"></i>
                         <span>Credit/Debit Card</span>
                         <div class="payment-icons">
@@ -606,28 +566,10 @@
                     </div>
                 </div>
 
-                <div class="yoco-form" id="yocoForm">
-                    <div class="form-group">
-                        <label for="card-number">Card Number</label>
-                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
-                    </div>
-                    
-                    <div class="card-row">
-                        <div class="form-group">
-                            <label for="card-name">Name on Card</label>
-                            <input type="text" id="card-name" class="form-control" placeholder="John Doe">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="card-expiry">Expiry Date</label>
-                            <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY" maxlength="5">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="card-cvc">CVC</label>
-                            <input type="text" id="card-cvc" class="form-control" placeholder="123" maxlength="3">
-                        </div>
-                    </div>
+                <div class="payment-info">
+                    <i class="fas fa-shield-alt"></i>
+                    <p><strong>Secure Payment with Yoco</strong></p>
+                    <p>When you click "Pay Now", a secure payment window will open where you can safely enter your card details.</p>
                 </div>
 
                 <div class="form-actions">
@@ -645,29 +587,44 @@
     <script>
         // Configuration
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpb73Y8EmQgD9Idqd1rO76y6Ytu01ZwpdeQUFCpfK_Q7yorR-QNrsBKJgaBTaJMoqk/exec';
+        const YOCO_PUBLIC_KEY = 'pk_test_04c01a4bGNBrnnq06d84';
         
         let bookingData = {};
-        let yocoInitialized = false;
+        let yoco = null;
+
+        // Initialize Yoco SDK
+        function initYoco() {
+            if (typeof YocoSDK !== 'undefined') {
+                yoco = new YocoSDK({
+                    publicKey: YOCO_PUBLIC_KEY
+                });
+                console.log('Yoco SDK initialized successfully');
+                return true;
+            } else {
+                console.error('Yoco SDK not loaded');
+                return false;
+            }
+        }
 
         // Wait for Yoco SDK to load
         function waitForYoco() {
             return new Promise((resolve, reject) => {
-                const checkYoco = () => {
-                    if (window.yoco) {
-                        yocoInitialized = true;
-                        resolve(window.yoco);
-                    } else {
-                        setTimeout(checkYoco, 100);
-                    }
-                };
-                checkYoco();
+                const maxAttempts = 50;
+                let attempts = 0;
                 
-                // Timeout after 10 seconds
-                setTimeout(() => {
-                    if (!yocoInitialized) {
+                const checkYoco = () => {
+                    attempts++;
+                    if (typeof YocoSDK !== 'undefined') {
+                        initYoco();
+                        resolve(yoco);
+                    } else if (attempts < maxAttempts) {
+                        setTimeout(checkYoco, 100);
+                    } else {
                         reject(new Error('Yoco SDK failed to load'));
                     }
-                }, 10000);
+                };
+                
+                checkYoco();
             });
         }
 
@@ -882,150 +839,47 @@
             }
 
             const payButton = document.getElementById('payButton');
-            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            const originalButtonHTML = payButton.innerHTML;
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading payment...';
             payButton.disabled = true;
 
             try {
-                // Wait for Yoco to be ready
-                const yoco = await waitForYoco();
-
-                // Validate card details
-                const cardDetails = {
-                    number: document.getElementById('card-number').value.replace(/\s/g, ''),
-                    expiryMonth: document.getElementById('card-expiry').value.split('/')[0],
-                    expiryYear: '20' + document.getElementById('card-expiry').value.split('/')[1],
-                    cvc: document.getElementById('card-cvc').value,
-                    name: document.getElementById('card-name').value
-                };
-
-                // Validate card details
-                if (!validateCardDetails(cardDetails)) {
-                    throw new Error('Please check your card details and try again');
+                // Ensure Yoco is loaded
+                if (!yoco) {
+                    await waitForYoco();
                 }
 
-                // Create token with Yoco
-                const token = await yoco.createToken(cardDetails);
-                
-                if (token.error) {
-                    throw new Error(token.error.message);
+                if (!yoco) {
+                    throw new Error('Payment system not available. Please refresh the page.');
                 }
 
-                // Save booking to Google Sheets
-                const bookingResponse = await saveBookingToSheets(bookingData, token.id);
-                
-                if (bookingResponse.success) {
-                    // For demo purposes, we'll simulate successful payment
-                    // In production, you would process the payment with Yoco here
-                    await simulatePaymentSuccess(bookingResponse.bookingRef);
-                    
-                    // Clear storage and redirect
-                    localStorage.removeItem('ngaoyi_booking');
-                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
-                } else {
-                    throw new Error(bookingResponse.error || 'Failed to save booking');
-                }
-
-            } catch (error) {
-                console.error('Payment error:', error);
-                alert('Payment failed: ' + error.message);
-                payButton.innerHTML = '<i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R' + bookingData.totalAmount + '</span>';
-                payButton.disabled = false;
-            }
-        }
-
-        function validateCardDetails(card) {
-            if (!card.number || card.number.length < 13) {
-                return false;
-            }
-            if (!card.expiryMonth || !card.expiryYear) {
-                return false;
-            }
-            if (!card.cvc || card.cvc.length < 3) {
-                return false;
-            }
-            if (!card.name) {
-                return false;
-            }
-            return true;
-        }
-
-        async function saveBookingToSheets(clientInfo, token) {
-            const payload = {
-                ...clientInfo,
-                paymentToken: token,
-                action: 'saveBooking'
-            };
-
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-
-            return await response.json();
-        }
-
-        async function simulatePaymentSuccess(bookingRef) {
-            // Simulate API call to update payment status
-            const payload = {
-                action: 'updatePayment',
-                bookingRef: bookingRef,
-                paymentId: 'pay_' + Math.random().toString(36).substr(2, 9),
-                status: 'Paid'
-            };
-
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-        }
-
-        function selectPayment(method) {
-            document.querySelectorAll('.payment-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            event.currentTarget.classList.add('selected');
-        }
-
-        // Format card number
-        document.getElementById('card-number').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-            value = value.replace(/(.{4})/g, '$1 ').trim();
-            e.target.value = value.substring(0, 19);
-        });
-
-        // Format expiry date
-        document.getElementById('card-expiry').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            e.target.value = value.substring(0, 5);
-        });
-
-        // Format CVC - numbers only
-        document.getElementById('card-cvc').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
-        });
-
-        // Initialize page
-        window.addEventListener('load', function() {
-            updateSummary();
-            
-            // Check if Yoco is loading
-            waitForYoco().then(() => {
-                console.log('Yoco SDK loaded successfully');
-            }).catch(error => {
-                console.error('Yoco SDK failed to load:', error);
-                document.getElementById('payButton').disabled = true;
-                document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment Unavailable';
-            });
-        });
-    </script>
-</body>
-</html>
+                // Open Yoco popup for secure payment
+                yoco.showPopup({
+                    amountInCents: Math.round(bookingData.totalAmount * 100),
+                    currency: 'ZAR',
+                    name: 'Ngaoyi Cleaning',
+                    description: `${formatServiceType(bookingData.serviceType)} - ${bookingData.propertySize}`,
+                    callback: async function (result) {
+                        if (result.error) {
+                            // Payment failed
+                            console.error('Yoco payment error:', result.error);
+                            alert('Payment failed: ' + result.error.message);
+                            payButton.innerHTML = originalButtonHTML;
+                            payButton.disabled = false;
+                        } else {
+                            // Payment successful - token received
+                            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving booking...';
+                            
+                            try {
+                                const bookingResponse = await saveBookingToSheets(bookingData, result.id);
+                                
+                                if (bookingResponse.success) {
+                                    // Clear storage and redirect
+                                    localStorage.removeItem('ngaoyi_booking');
+                                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                                } else {
+                                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                                }
+                            } catch (error) {
+                                console.error('Booking save error:', error);
+                                alert
