@@ -401,6 +401,10 @@
             box-shadow: none;
         }
         
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
         .secure-notice {
             text-align: center;
             color: var(--gray);
@@ -428,15 +432,36 @@
         .free-booking {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
         
         .free-booking i {
-            font-size: 2rem;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .free-booking h3 {
+            font-size: 1.8rem;
             margin-bottom: 10px;
+        }
+        
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .success-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
         
         /* Responsive */
@@ -554,6 +579,7 @@
                 <i class="fas fa-gift"></i>
                 <h3>Free Booking!</h3>
                 <p>Your discount code covers the full amount. No payment required.</p>
+                <p><strong>We'll add this booking to your Google Calendar automatically!</strong></p>
             </div>
 
             <div class="summary-container">
@@ -654,7 +680,7 @@
                     <button id="payButton" class="btn btn-primary" onclick="processPayment()">
                         <i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R0</span>
                     </button>
-                    <button id="freeBookingButton" class="btn btn-primary" style="display: none; background: linear-gradient(135deg, #28a745, #20c997);" onclick="processFreeBooking()">
+                    <button id="freeBookingButton" class="btn btn-success" style="display: none;" onclick="processFreeBooking()">
                         <i class="fas fa-check"></i> Confirm Free Booking
                     </button>
                     <p class="secure-notice">
@@ -667,12 +693,13 @@
 
     <script>
         // Configuration
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWJHlXE-jHHKQ2bTaKxyWjC5D3IrOsByTIsLEmOb7znoTDqpD5I0UXKZS6sjIvLiqw/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwi_SZQjd01KjEko6GRCcZbCTPK7gsw-nv7g4nLzrJsW9ob6fMzw78cGPiY5PV9u8EZ/exec';
         const YOCO_PUBLIC_KEY = 'pk_live_ddd5e9c6GNBrnnq2c414';
         
         let bookingData = {};
         let yoco;
         let discountApplied = null;
+        let savedBookingRef = null;
 
         // Initialize Yoco SDK
         function initYoco() {
@@ -949,6 +976,15 @@
             payButton.disabled = true;
 
             try {
+                // First save the booking
+                const bookingResponse = await saveBookingToSheets(bookingData, 'PENDING');
+                
+                if (!bookingResponse.success) {
+                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                }
+
+                savedBookingRef = bookingResponse.bookingRef;
+
                 // Validate card details
                 const cardDetails = {
                     number: document.getElementById('card-number').value.replace(/\s/g, ''),
@@ -970,20 +1006,16 @@
                     throw new Error(token.error.message);
                 }
 
-                // Save booking to Google Sheets
-                const bookingResponse = await saveBookingToSheets(bookingData, token.id);
+                // Update payment status
+                const paymentResult = await updatePaymentStatus(savedBookingRef, token.id, 'Paid');
                 
-                if (bookingResponse.success) {
-                    // For demo purposes, we'll simulate successful payment
-                    // In production, you would process the payment with Yoco here
-                    await simulatePaymentSuccess(bookingResponse.bookingRef);
-                    
+                if (paymentResult.success) {
                     // Clear storage and redirect
                     localStorage.removeItem('ngaoyi_booking');
                     localStorage.removeItem('ngaoyi_discount');
-                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                    window.location.href = `/thankyou.html?ref=${savedBookingRef}`;
                 } else {
-                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                    throw new Error(paymentResult.error || 'Payment failed');
                 }
 
             } catch (error) {
@@ -1000,17 +1032,21 @@
             button.disabled = true;
 
             try {
-                // Save booking to Google Sheets without payment
+                // Save booking to Google Sheets
                 const bookingResponse = await saveBookingToSheets(bookingData, 'FREE_BOOKING');
                 
                 if (bookingResponse.success) {
-                    // Update payment status
-                    await updatePaymentStatus(bookingResponse.bookingRef, 'FREE', 'Paid');
+                    // Confirm free booking
+                    const confirmResponse = await confirmFreeBooking(bookingResponse.bookingRef);
                     
-                    // Clear storage and redirect
-                    localStorage.removeItem('ngaoyi_booking');
-                    localStorage.removeItem('ngaoyi_discount');
-                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                    if (confirmResponse.success) {
+                        // Clear storage and redirect
+                        localStorage.removeItem('ngaoyi_booking');
+                        localStorage.removeItem('ngaoyi_discount');
+                        window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                    } else {
+                        throw new Error(confirmResponse.error || 'Failed to confirm booking');
+                    }
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to save booking');
                 }
@@ -1061,24 +1097,6 @@
             return await response.json();
         }
 
-        async function simulatePaymentSuccess(bookingRef) {
-            // Simulate API call to update payment status
-            const payload = {
-                action: 'updatePayment',
-                bookingRef: bookingRef,
-                paymentId: 'pay_' + Math.random().toString(36).substr(2, 9),
-                status: 'Paid'
-            };
-
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-        }
-
         async function updatePaymentStatus(bookingRef, paymentId, status) {
             const payload = {
                 action: 'updatePayment',
@@ -1087,13 +1105,32 @@
                 status: status
             };
 
-            await fetch(GOOGLE_SCRIPT_URL, {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payload)
             });
+
+            return await response.json();
+        }
+
+        async function confirmFreeBooking(bookingRef) {
+            const payload = {
+                action: 'confirmFreeBooking',
+                bookingRef: bookingRef
+            };
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            return await response.json();
         }
 
         function selectPayment(method) {
