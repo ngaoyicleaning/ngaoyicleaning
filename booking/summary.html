@@ -882,4 +882,64 @@
                                 }
                             } catch (error) {
                                 console.error('Booking save error:', error);
-                                alert
+                                alert('Booking could not be saved: ' + error.message);
+                                payButton.innerHTML = originalButtonHTML;
+                                payButton.disabled = false;
+                            }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment failed: ' + error.message);
+                payButton.innerHTML = originalButtonHTML;
+                payButton.disabled = false;
+            }
+        }
+
+        async function saveBookingToSheets(clientInfo, paymentToken) {
+            const payload = {
+                ...clientInfo,
+                paymentToken: paymentToken,
+                paymentStatus: 'Paid',
+                action: 'saveBooking'
+            };
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving booking:', error);
+                throw error;
+            }
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            updateSummary();
+            
+            // Initialize Yoco
+            waitForYoco().then(() => {
+                console.log('Yoco SDK ready for payment');
+            }).catch(error => {
+                console.error('Yoco SDK failed to load:', error);
+                document.getElementById('payButton').disabled = true;
+                document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment System Unavailable';
+                alert('Payment system could not be loaded. Please refresh the page and try again.');
+            });
+        });
+    </script>
+</body>
+</html>
