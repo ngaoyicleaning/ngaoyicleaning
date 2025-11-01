@@ -5,8 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm & Pay - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Yoco SDK -->
-    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    <!-- Yoco Inline SDK -->
+    <script>
+        (function (d, s, c) {
+            var w = window, p = w.document.location.protocol, sc = d.createElement(s);
+            sc.src = p + "//js.yoco.com/sdk/v1/yoco-sdk-web.js";
+            sc.onload = function () {
+                w.YocoSDK = w.YocoSDK || function (c) { w.yoco = new w.YocoSDK(c) };
+                w.yoco = new w.YocoSDK({ publicKey: 'pk_test_04c01a4bGNBrnnq06d84' });
+            };
+            var m = d.getElementsByTagName(s)[0]; m.parentNode.insertBefore(sc, m);
+        })(document, 'script', 'yoco-sdk-web');
+    </script>
     <style>
         :root {
             --primary: #003b6f;
@@ -407,6 +417,18 @@
             color: var(--success);
         }
         
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .booking-container {
@@ -530,6 +552,10 @@
                         <span id="summary-property">-</span>
                     </div>
                     <div class="summary-item">
+                        <strong>Materials:</strong>
+                        <span id="summary-materials">-</span>
+                    </div>
+                    <div class="summary-item">
                         <strong>Cleaner:</strong>
                         <span id="summary-cleaner">-</span>
                     </div>
@@ -550,7 +576,7 @@
                         <span>Base Cleaning</span>
                         <span id="base-price">R0</span>
                     </div>
-                    <div class="price-item">
+                    <div class="price-item" id="materials-item" style="display: none;">
                         <span>Materials Fee</span>
                         <span id="materials-price">R0</span>
                     </div>
@@ -617,19 +643,31 @@
     </div>
 
     <script>
-        // Updated with your Google Apps Script URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpb73Y8EmQgD9Idqd1rO76y6Ytu01ZwpdeQUFCpfK_Q7yorR-QNrsBKJgaBTaJMoqk/exec';
+        // Configuration
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz76JtIlrM7vdrxoVzCA4e7NqG9erFcjjeeeMd6ID-MeAoprpq_FgpPAufsm_t54j9A/exec';
         
-        // Replace with your actual Yoco public key
-        const YOCO_PUBLIC_KEY = 'pk_test_your_yoco_public_key_here';
-        
-        let yoco;
         let bookingData = {};
+        let yocoInitialized = false;
 
-        // Initialize Yoco
-        function initYoco() {
-            yoco = new window.YocoSDK({
-                publicKey: YOCO_PUBLIC_KEY
+        // Wait for Yoco SDK to load
+        function waitForYoco() {
+            return new Promise((resolve, reject) => {
+                const checkYoco = () => {
+                    if (window.yoco) {
+                        yocoInitialized = true;
+                        resolve(window.yoco);
+                    } else {
+                        setTimeout(checkYoco, 100);
+                    }
+                };
+                checkYoco();
+                
+                // Timeout after 10 seconds
+                setTimeout(() => {
+                    if (!yocoInitialized) {
+                        reject(new Error('Yoco SDK failed to load'));
+                    }
+                }, 10000);
             });
         }
 
@@ -653,7 +691,27 @@
             'balcony-cleaning': 'Balcony Cleaning'
         };
 
-        function calculatePrice(serviceType, propertySize, date, addons = []) {
+        // Material option prices
+        const materialPrices = {
+            'once-off': {
+                'customer': 0,
+                'we_supply': 150
+            },
+            'recurring': {
+                'customer': 0,
+                'we_supply': 150
+            },
+            'deep': {
+                'customer': 0,
+                'we_supply': 0
+            },
+            'commercial': {
+                'customer': 0,
+                'we_supply': 200
+            }
+        };
+
+        function calculatePrice(serviceType, propertySize, date, materialOption, addons = []) {
             const basePrices = {
                 '1-bed': { 'once-off': 350, 'recurring': 300, 'deep': 1200, 'commercial': 500 },
                 '2-bed': { 'once-off': 450, 'recurring': 400, 'deep': 1750, 'commercial': 700 },
@@ -668,9 +726,9 @@
             let emergencyFee = 0;
             let addonsTotal = 0;
 
-            // Materials fee for once-off and recurring
-            if (serviceType === 'once-off' || serviceType === 'recurring') {
-                materialsFee = 150;
+            // Materials fee based on selection
+            if (materialOption && materialPrices[serviceType]) {
+                materialsFee = materialPrices[serviceType][materialOption] || 0;
             }
 
             // Emergency fee for weekends
@@ -706,6 +764,8 @@
                 clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
             document.getElementById('summary-property').textContent = 
                 clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
+            document.getElementById('summary-materials').textContent = 
+                clientInfo.materialOption ? formatMaterialOption(clientInfo.materialOption) : '-';
             document.getElementById('summary-cleaner').textContent = 
                 clientInfo.cleaner ? formatCleanerName(clientInfo.cleaner) : 'Not selected';
             document.getElementById('summary-date').textContent = 
@@ -718,11 +778,12 @@
             updateAddonsSummary(clientInfo.addons || []);
 
             // Calculate and update prices
-            if (clientInfo.serviceType && clientInfo.propertySize && clientInfo.date) {
+            if (clientInfo.serviceType && clientInfo.propertySize && clientInfo.date && clientInfo.materialOption) {
                 const prices = calculatePrice(
                     clientInfo.serviceType, 
                     clientInfo.propertySize, 
                     clientInfo.date, 
+                    clientInfo.materialOption,
                     clientInfo.addons || []
                 );
                 
@@ -740,6 +801,14 @@
             return serviceType.charAt(0).toUpperCase() + serviceType.slice(1).replace('-', ' ');
         }
 
+        function formatMaterialOption(option) {
+            const options = {
+                'customer': 'Customer Supplies Materials',
+                'we_supply': 'We Supply Materials'
+            };
+            return options[option] || option;
+        }
+
         function formatCleanerName(cleaner) {
             if (cleaner === 'any') return 'Auto-Assign Best Cleaner';
             return cleaner.charAt(0).toUpperCase() + cleaner.slice(1);
@@ -753,7 +822,7 @@
                 return;
             }
 
-            let html = '<div class="summary-item"><strong>Add-ons:</strong></div>';
+            let html = '<div class="summary-item"><strong>Additional Services:</strong></div>';
             addons.forEach(addonId => {
                 html += `
                     <div class="addon-item">
@@ -767,9 +836,17 @@
 
         function updatePriceSummary(prices, addons) {
             document.getElementById('base-price').textContent = `R${prices.base}`;
-            document.getElementById('materials-price').textContent = `R${prices.materials}`;
             document.getElementById('total-price').textContent = `R${prices.total}`;
             document.getElementById('pay-amount').textContent = `R${prices.total}`;
+
+            // Show/hide materials fee
+            const materialsItem = document.getElementById('materials-item');
+            if (prices.materials > 0) {
+                materialsItem.style.display = 'flex';
+                document.getElementById('materials-price').textContent = `R${prices.materials}`;
+            } else {
+                materialsItem.style.display = 'none';
+            }
 
             // Show/hide emergency fee
             const emergencyElement = document.querySelector('.emergency-fee');
@@ -809,15 +886,26 @@
             payButton.disabled = true;
 
             try {
-                // Create token with Yoco
-                const token = await yoco.createToken({
-                    number: document.getElementById('card-number').value.replace(/\s/g, ''),
-                    firstName: bookingData.name.split(' ')[0],
-                    lastName: bookingData.name.split(' ').slice(1).join(' '),
-                    expiry: document.getElementById('card-expiry').value,
-                    cvc: document.getElementById('card-cvc').value
-                });
+                // Wait for Yoco to be ready
+                const yoco = await waitForYoco();
 
+                // Validate card details
+                const cardDetails = {
+                    number: document.getElementById('card-number').value.replace(/\s/g, ''),
+                    expiryMonth: document.getElementById('card-expiry').value.split('/')[0],
+                    expiryYear: '20' + document.getElementById('card-expiry').value.split('/')[1],
+                    cvc: document.getElementById('card-cvc').value,
+                    name: document.getElementById('card-name').value
+                };
+
+                // Validate card details
+                if (!validateCardDetails(cardDetails)) {
+                    throw new Error('Please check your card details and try again');
+                }
+
+                // Create token with Yoco
+                const token = await yoco.createToken(cardDetails);
+                
                 if (token.error) {
                     throw new Error(token.error.message);
                 }
@@ -826,19 +914,13 @@
                 const bookingResponse = await saveBookingToSheets(bookingData, token.id);
                 
                 if (bookingResponse.success) {
-                    // Process payment with Yoco
-                    const paymentResult = await processYocoPayment(bookingData, token.id, bookingResponse.bookingRef);
+                    // For demo purposes, we'll simulate successful payment
+                    // In production, you would process the payment with Yoco here
+                    await simulatePaymentSuccess(bookingResponse.bookingRef);
                     
-                    if (paymentResult.success) {
-                        // Update payment status in Google Sheets
-                        await updatePaymentStatus(bookingResponse.bookingRef, paymentResult.paymentId, 'Paid');
-                        
-                        // Clear storage and redirect
-                        localStorage.removeItem('ngaoyi_booking');
-                        window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
-                    } else {
-                        throw new Error(paymentResult.error || 'Payment failed');
-                    }
+                    // Clear storage and redirect
+                    localStorage.removeItem('ngaoyi_booking');
+                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to save booking');
                 }
@@ -849,6 +931,22 @@
                 payButton.innerHTML = '<i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R' + bookingData.totalAmount + '</span>';
                 payButton.disabled = false;
             }
+        }
+
+        function validateCardDetails(card) {
+            if (!card.number || card.number.length < 13) {
+                return false;
+            }
+            if (!card.expiryMonth || !card.expiryYear) {
+                return false;
+            }
+            if (!card.cvc || card.cvc.length < 3) {
+                return false;
+            }
+            if (!card.name) {
+                return false;
+            }
+            return true;
         }
 
         async function saveBookingToSheets(clientInfo, token) {
@@ -869,25 +967,13 @@
             return await response.json();
         }
 
-        async function processYocoPayment(clientInfo, token, bookingRef) {
-            // In a real implementation, you would call your server to process the payment
-            // For now, we'll simulate a successful payment
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        success: true,
-                        paymentId: 'pay_' + Math.random().toString(36).substr(2, 9)
-                    });
-                }, 2000);
-            });
-        }
-
-        async function updatePaymentStatus(bookingRef, paymentId, status) {
+        async function simulatePaymentSuccess(bookingRef) {
+            // Simulate API call to update payment status
             const payload = {
                 action: 'updatePayment',
                 bookingRef: bookingRef,
-                paymentId: paymentId,
-                status: status
+                paymentId: 'pay_' + Math.random().toString(36).substr(2, 9),
+                status: 'Paid'
             };
 
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -922,10 +1008,23 @@
             e.target.value = value.substring(0, 5);
         });
 
+        // Format CVC - numbers only
+        document.getElementById('card-cvc').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });
+
         // Initialize page
         window.addEventListener('load', function() {
-            initYoco();
             updateSummary();
+            
+            // Check if Yoco is loading
+            waitForYoco().then(() => {
+                console.log('Yoco SDK loaded successfully');
+            }).catch(error => {
+                console.error('Yoco SDK failed to load:', error);
+                document.getElementById('payButton').disabled = true;
+                document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment Unavailable';
+            });
         });
     </script>
 </body>
