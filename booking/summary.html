@@ -5,18 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm & Pay - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Yoco Inline SDK -->
-    <script>
-        (function (d, s, c) {
-            var w = window, p = w.document.location.protocol, sc = d.createElement(s);
-            sc.src = p + "//js.yoco.com/sdk/v1/yoco-sdk-web.js";
-            sc.onload = function () {
-                w.YocoSDK = w.YocoSDK || function (c) { w.yoco = new w.YocoSDK(c) };
-                w.yoco = new w.YocoSDK({ publicKey: 'pk_test_04c01a4bGNBrnnq06d84' });
-            };
-            var m = d.getElementsByTagName(s)[0]; m.parentNode.insertBefore(sc, m);
-        })(document, 'script', 'yoco-sdk-web');
-    </script>
+    <!-- Yoco SDK -->
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
         :root {
             --primary: #003b6f;
@@ -270,6 +260,11 @@
             color: var(--primary);
         }
         
+        .discount-item {
+            color: var(--success);
+            font-weight: 600;
+        }
+        
         .emergency-fee {
             color: var(--warning);
         }
@@ -429,6 +424,21 @@
             margin-bottom: 10px;
         }
         
+        /* Free Booking Notice */
+        .free-booking {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .free-booking i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .booking-container {
@@ -540,6 +550,12 @@
             <h2>Review Your Booking</h2>
             <p class="step-description">Please verify your details and proceed to secure payment</p>
 
+            <div id="freeBookingNotice" class="free-booking" style="display: none;">
+                <i class="fas fa-gift"></i>
+                <h3>Free Booking!</h3>
+                <p>Your discount code covers the full amount. No payment required.</p>
+            </div>
+
             <div class="summary-container">
                 <div class="booking-summary">
                     <h3>Booking Details</h3>
@@ -585,6 +601,10 @@
                         <span id="emergency-price">R0</span>
                     </div>
                     <div id="addons-prices"></div>
+                    <div class="price-item discount-item" id="discount-item" style="display: none;">
+                        <span>Discount</span>
+                        <span id="discount-amount">-R0</span>
+                    </div>
                     <div class="price-total">
                         <strong>Total Amount</strong>
                         <strong id="total-price">R0</strong>
@@ -592,7 +612,7 @@
                 </div>
             </div>
 
-            <div class="payment-section">
+            <div class="payment-section" id="paymentSection">
                 <h3>Payment Method</h3>
                 <div class="payment-options">
                     <div class="payment-option selected" onclick="selectPayment('yoco')">
@@ -634,6 +654,9 @@
                     <button id="payButton" class="btn btn-primary" onclick="processPayment()">
                         <i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R0</span>
                     </button>
+                    <button id="freeBookingButton" class="btn btn-primary" style="display: none; background: linear-gradient(135deg, #28a745, #20c997);" onclick="processFreeBooking()">
+                        <i class="fas fa-check"></i> Confirm Free Booking
+                    </button>
                     <p class="secure-notice">
                         <i class="fas fa-shield-alt"></i> Your payment is secure and encrypted with Yoco
                     </p>
@@ -645,30 +668,18 @@
     <script>
         // Configuration
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz76JtIlrM7vdrxoVzCA4e7NqG9erFcjjeeeMd6ID-MeAoprpq_FgpPAufsm_t54j9A/exec';
+        const YOCO_PUBLIC_KEY = 'pk_live_ddd5e9c6GNBrnnq2c414';
         
         let bookingData = {};
-        let yocoInitialized = false;
+        let yoco;
+        let discountApplied = null;
 
-        // Wait for Yoco SDK to load
-        function waitForYoco() {
-            return new Promise((resolve, reject) => {
-                const checkYoco = () => {
-                    if (window.yoco) {
-                        yocoInitialized = true;
-                        resolve(window.yoco);
-                    } else {
-                        setTimeout(checkYoco, 100);
-                    }
-                };
-                checkYoco();
-                
-                // Timeout after 10 seconds
-                setTimeout(() => {
-                    if (!yocoInitialized) {
-                        reject(new Error('Yoco SDK failed to load'));
-                    }
-                }, 10000);
+        // Initialize Yoco SDK
+        function initYoco() {
+            yoco = new YocoSDK({
+                publicKey: YOCO_PUBLIC_KEY
             });
+            console.log('Yoco SDK initialized');
         }
 
         // Addon prices
@@ -711,7 +722,15 @@
             }
         };
 
-        function calculatePrice(serviceType, propertySize, date, materialOption, addons = []) {
+        // Discount codes
+        const discountCodes = {
+            'lwandle123': {
+                discount: 1.0, // 100% off
+                type: 'percentage'
+            }
+        };
+
+        function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], discount = null) {
             const basePrices = {
                 '1-bed': { 'once-off': 350, 'recurring': 300, 'deep': 1200, 'commercial': 500 },
                 '2-bed': { 'once-off': 450, 'recurring': 400, 'deep': 1750, 'commercial': 700 },
@@ -725,6 +744,7 @@
             let materialsFee = 0;
             let emergencyFee = 0;
             let addonsTotal = 0;
+            let discountAmount = 0;
 
             // Materials fee based on selection
             if (materialOption && materialPrices[serviceType]) {
@@ -743,12 +763,25 @@
                 addonsTotal += addonPrices[addonId] || 0;
             });
 
+            let subtotal = basePrice + materialsFee + emergencyFee + addonsTotal;
+
+            // Apply discount
+            if (discount) {
+                if (discount.type === 'percentage') {
+                    discountAmount = subtotal * discount.discount;
+                }
+            }
+
+            let total = Math.max(0, subtotal - discountAmount);
+
             return {
                 base: basePrice,
                 materials: materialsFee,
                 emergency: emergencyFee,
                 addons: addonsTotal,
-                total: basePrice + materialsFee + emergencyFee + addonsTotal
+                discount: discountAmount,
+                subtotal: subtotal,
+                total: total
             };
         }
 
@@ -757,6 +790,12 @@
             if (!clientInfo.name) {
                 window.location.href = 'index.html';
                 return;
+            }
+
+            // Check for discount
+            const savedDiscount = localStorage.getItem('ngaoyi_discount');
+            if (savedDiscount) {
+                discountApplied = JSON.parse(savedDiscount);
             }
 
             // Update booking details
@@ -784,7 +823,8 @@
                     clientInfo.propertySize, 
                     clientInfo.date, 
                     clientInfo.materialOption,
-                    clientInfo.addons || []
+                    clientInfo.addons || [],
+                    discountApplied
                 );
                 
                 updatePriceSummary(prices, clientInfo.addons || []);
@@ -792,8 +832,22 @@
                 // Save total amount for payment
                 clientInfo.totalAmount = prices.total;
                 clientInfo.prices = prices;
+                clientInfo.discount = discountApplied;
                 localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
                 bookingData = clientInfo;
+
+                // Show/hide payment section based on total
+                if (prices.total === 0 && discountApplied) {
+                    document.getElementById('freeBookingNotice').style.display = 'block';
+                    document.getElementById('paymentSection').style.display = 'none';
+                    document.getElementById('freeBookingButton').style.display = 'inline-flex';
+                    document.getElementById('payButton').style.display = 'none';
+                } else {
+                    document.getElementById('freeBookingNotice').style.display = 'none';
+                    document.getElementById('paymentSection').style.display = 'block';
+                    document.getElementById('freeBookingButton').style.display = 'none';
+                    document.getElementById('payButton').style.display = 'inline-flex';
+                }
             }
         }
 
@@ -818,7 +872,7 @@
             const container = document.getElementById('addons-summary');
             
             if (addons.length === 0) {
-                container.innerHTML = '<div class="summary-item"><strong>Add-ons:</strong> <span>None selected</span></div>';
+                container.innerHTML = '<div class="summary-item"><strong>Additional Services:</strong> <span>None selected</span></div>';
                 return;
             }
 
@@ -857,6 +911,15 @@
                 emergencyElement.style.display = 'none';
             }
 
+            // Show/hide discount
+            const discountItem = document.getElementById('discount-item');
+            if (prices.discount > 0) {
+                discountItem.style.display = 'flex';
+                document.getElementById('discount-amount').textContent = `-R${prices.discount}`;
+            } else {
+                discountItem.style.display = 'none';
+            }
+
             // Update addons prices
             const addonsContainer = document.getElementById('addons-prices');
             if (addons.length > 0) {
@@ -876,8 +939,8 @@
         }
 
         async function processPayment() {
-            if (!bookingData.totalAmount) {
-                alert('Please complete all booking details');
+            if (!bookingData.totalAmount || bookingData.totalAmount === 0) {
+                await processFreeBooking();
                 return;
             }
 
@@ -886,9 +949,6 @@
             payButton.disabled = true;
 
             try {
-                // Wait for Yoco to be ready
-                const yoco = await waitForYoco();
-
                 // Validate card details
                 const cardDetails = {
                     number: document.getElementById('card-number').value.replace(/\s/g, ''),
@@ -920,6 +980,7 @@
                     
                     // Clear storage and redirect
                     localStorage.removeItem('ngaoyi_booking');
+                    localStorage.removeItem('ngaoyi_discount');
                     window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to save booking');
@@ -933,17 +994,50 @@
             }
         }
 
+        async function processFreeBooking() {
+            const button = document.getElementById('freeBookingButton');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            button.disabled = true;
+
+            try {
+                // Save booking to Google Sheets without payment
+                const bookingResponse = await saveBookingToSheets(bookingData, 'FREE_BOOKING');
+                
+                if (bookingResponse.success) {
+                    // Update payment status
+                    await updatePaymentStatus(bookingResponse.bookingRef, 'FREE', 'Paid');
+                    
+                    // Clear storage and redirect
+                    localStorage.removeItem('ngaoyi_booking');
+                    localStorage.removeItem('ngaoyi_discount');
+                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                } else {
+                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                }
+
+            } catch (error) {
+                console.error('Free booking error:', error);
+                alert('Booking failed: ' + error.message);
+                button.innerHTML = '<i class="fas fa-check"></i> Confirm Free Booking';
+                button.disabled = false;
+            }
+        }
+
         function validateCardDetails(card) {
             if (!card.number || card.number.length < 13) {
+                alert('Please enter a valid card number');
                 return false;
             }
-            if (!card.expiryMonth || !card.expiryYear) {
+            if (!card.expiryMonth || !card.expiryYear || card.expiryMonth.length !== 2 || card.expiryYear.length !== 2) {
+                alert('Please enter a valid expiry date (MM/YY)');
                 return false;
             }
             if (!card.cvc || card.cvc.length < 3) {
+                alert('Please enter a valid CVC');
                 return false;
             }
             if (!card.name) {
+                alert('Please enter the name on your card');
                 return false;
             }
             return true;
@@ -985,6 +1079,23 @@
             });
         }
 
+        async function updatePaymentStatus(bookingRef, paymentId, status) {
+            const payload = {
+                action: 'updatePayment',
+                bookingRef: bookingRef,
+                paymentId: paymentId,
+                status: status
+            };
+
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+        }
+
         function selectPayment(method) {
             document.querySelectorAll('.payment-option').forEach(option => {
                 option.classList.remove('selected');
@@ -1015,16 +1126,8 @@
 
         // Initialize page
         window.addEventListener('load', function() {
+            initYoco();
             updateSummary();
-            
-            // Check if Yoco is loading
-            waitForYoco().then(() => {
-                console.log('Yoco SDK loaded successfully');
-            }).catch(error => {
-                console.error('Yoco SDK failed to load:', error);
-                document.getElementById('payButton').disabled = true;
-                document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment Unavailable';
-            });
         });
     </script>
 </body>
