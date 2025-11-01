@@ -21,14 +21,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #001f3f; /* Navy */
-            --primary-light: #003366;
+            --primary: #003b6f; /* Updated to Dark Blue */
+            --primary-light: #0056a3;
             --secondary: #000000; /* Black */
-            --accent: #FFD700; /* Gold accent */
+            --accent: #00c6ff; /* Updated to Bright Cyan */
             --light: #f8f9fa;
-            --dark: #001a33;
-            --gray: #7f8c8d;
-            --light-gray: #ecf0f1;
+            --dark: #00264d;
+            --gray: #6c6c6c; /* Updated to Medium Gray */
+            --light-gray: #e9ecef;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
@@ -41,8 +41,8 @@
         }
         
         body {
-            background-color: var(--light);
-            color: var(--secondary);
+            background-color: white; /* Updated to White background */
+            color: var(--gray); /* Updated to Medium Gray text */
             line-height: 1.6;
             overflow-x: hidden;
         }
@@ -92,7 +92,7 @@
         
         .btn {
             display: inline-block;
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
             padding: 14px 30px;
             border-radius: 50px;
@@ -101,12 +101,12 @@
             transition: var(--transition);
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 31, 63, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
         }
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 31, 63, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 59, 111, 0.4);
         }
         
         .btn-secondary {
@@ -127,13 +127,21 @@
         }
         
         .btn-cleaner {
-            background: linear-gradient(to right, var(--accent), #ffed4e);
+            background: linear-gradient(135deg, var(--accent), #00e5ff);
             color: var(--primary);
         }
         
         .btn-accent {
-            background: linear-gradient(to right, var(--accent), #ffed4e);
+            background: linear-gradient(135deg, var(--accent), #00e5ff);
             color: var(--primary);
+        }
+
+        .btn-booking {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-weight: 700;
+            padding: 16px 35px;
+            font-size: 1.1rem;
         }
         
         /* Header Styles */
@@ -168,7 +176,7 @@
             font-size: 1.5rem;
             margin-right: 10px;
             overflow: hidden;
-            background: linear-gradient(to right, var(--primary), var(--accent));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
         }
         
         .logo-icon img {
@@ -185,6 +193,7 @@
         nav ul {
             display: flex;
             list-style: none;
+            align-items: center;
         }
         
         nav ul li {
@@ -217,6 +226,27 @@
         nav ul li a:hover::after {
             width: 100%;
         }
+
+        .nav-booking-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
+        }
+
+        .nav-booking-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 59, 111, 0.4);
+            color: white;
+        }
+
+        .nav-booking-btn:hover::after {
+            width: 0;
+        }
         
         .mobile-menu {
             display: none;
@@ -225,7 +255,7 @@
             color: var(--primary);
         }
         
-        /* Hero Section - ENHANCED */
+        /* Hero Section - UPDATED */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
@@ -330,10 +360,11 @@
             text-align: center;
             font-weight: 500;
             transition: var(--transition);
+            color: var(--primary);
         }
         
         .area-item:hover {
-            background-color: var(--primary-light);
+            background-color: var(--primary);
             color: white;
             transform: translateY(-3px);
         }
@@ -350,7 +381,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom right, rgba(0, 31, 63, 0.2), rgba(255, 215, 0, 0.2));
+            background: linear-gradient(to bottom right, rgba(0, 59, 111, 0.2), rgba(0, 198, 255, 0.2));
             z-index: 1;
         }
         
@@ -394,7 +425,7 @@
         .feature-icon {
             width: 70px;
             height: 70px;
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -414,9 +445,10 @@
             color: var(--gray);
         }
         
-        /* Services Section - ENHANCED */
+        /* Services Section - UPDATED */
         .services-section {
             padding: 80px 0;
+            background-color: white;
         }
         
         .services-grid {
@@ -438,6 +470,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            border: 1px solid var(--light-gray);
         }
         
         .service-card:hover {
@@ -448,7 +481,7 @@
         .service-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -490,6 +523,7 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
+            color: var(--primary);
         }
         
         .material-option.customer-supply {
@@ -561,7 +595,7 @@
             position: absolute;
             top: 15px;
             right: -30px;
-            background-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent), #00e5ff);
             color: var(--primary);
             padding: 5px 30px;
             transform: rotate(45deg);
@@ -580,6 +614,12 @@
             text-align: center;
             padding: 10px 15px;
             font-size: 0.9rem;
+        }
+
+        .service-booking-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            margin-top: 15px;
         }
         
         /* How It Works Section */
@@ -601,6 +641,7 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             position: relative;
+            border: 1px solid var(--light-gray);
         }
         
         .process-step:hover {
@@ -610,7 +651,7 @@
         .step-number {
             width: 60px;
             height: 60px;
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -636,7 +677,7 @@
             color: var(--gray);
         }
         
-        /* Testimonials Section - ENHANCED */
+        /* Testimonials Section - UPDATED */
         .testimonials-section {
             background-color: var(--light);
             padding: 80px 0;
@@ -661,6 +702,7 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             cursor: pointer;
+            border: 1px solid var(--light-gray);
         }
 
         .testimonial-card:hover {
@@ -683,12 +725,12 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: var(--light-gray);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary);
+            color: white;
             font-weight: bold;
         }
         
@@ -714,6 +756,7 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
         }
         
         .rating-summary h3 {
@@ -803,6 +846,7 @@
             border-radius: 10px;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 1px solid var(--light-gray);
         }
         
         .contact-item:hover {
@@ -810,7 +854,7 @@
         }
         
         .contact-icon {
-            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
             width: 50px;
             height: 50px;
@@ -832,6 +876,7 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
         }
         
         .form-group {
@@ -857,7 +902,7 @@
         .form-control:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 59, 111, 0.1);
         }
         
         textarea.form-control {
@@ -983,6 +1028,54 @@
             transform: scale(1.1);
             box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
         }
+
+        /* Booking CTA Section */
+        .booking-cta-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .booking-cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .booking-cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .booking-cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .booking-features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .booking-feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .booking-feature i {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .booking-feature span {
+            font-weight: 600;
+        }
         
         /* Responsive Styles */
         @media (max-width: 992px) {
@@ -1005,6 +1098,10 @@
             
             .sub-service-list {
                 grid-template-columns: 1fr;
+            }
+
+            .booking-features {
+                gap: 20px;
             }
         }
         
@@ -1032,6 +1129,10 @@
             
             nav ul li {
                 margin: 10px 0;
+            }
+
+            .nav-booking-btn {
+                margin-top: 10px;
             }
             
             .mobile-menu {
@@ -1094,6 +1195,15 @@
             .contact-options {
                 flex-direction: column;
             }
+
+            .booking-cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .booking-features {
+                flex-direction: column;
+                gap: 20px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1102,6 +1212,10 @@
             }
             
             .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .booking-cta-section h2 {
                 font-size: 1.8rem;
             }
         }
@@ -1126,9 +1240,9 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#services">Services</a></li>
                     <li><a href="#why-choose">Why Choose Us</a></li>
-                    <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#testimonials">Testimonials</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="/booking/index.html" class="nav-booking-btn">Book Now</a></li>
                 </ul>
             </nav>
         </div>
@@ -1141,15 +1255,15 @@
                 <h2>Book Trusted Cleaners Instantly – Flexible, Reliable, Local</h2>
                 <p>Ngaoyi Cleaning connects vetted cleaner teams to your home, office, or event. Recurring plans available for busy households and businesses.</p>
                 <div class="hero-btns">
+                    <a href="/booking/index.html" class="btn btn-booking">Book Now Online</a>
                     <a href="#services" class="btn">View Our Services</a>
                     <a href="#contact" class="btn btn-accent">Get Free Quote</a>
-                    <a href="https://www.ngaoyicleaning.co.za/apply/" class="btn btn-cleaner">Join Our Team</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section - UPDATED IMAGE -->
+    <!-- About Section -->
     <section id="about" class="about-section">
         <div class="container">
             <div class="about-content">
@@ -1181,7 +1295,7 @@
         </div>
     </section>
 
-    <!-- Services Section - ENHANCED WITH ICONS -->
+    <!-- Services Section -->
     <section id="services" class="services-section">
         <div class="container">
             <div class="section-title">
@@ -1219,7 +1333,7 @@
                         </div>
                     </div>
                     
-                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Recurring%20Plans%20service.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Book This Plan</a>
+                    <a href="/booking/index.html" class="btn service-booking-btn">Book This Plan</a>
                 </div>
                 
                 <div class="service-card">
@@ -1251,7 +1365,7 @@
                         </div>
                     </div>
                     
-                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Once-Off%20Cleaning%20service.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Book This Service</a>
+                    <a href="/booking/index.html" class="btn service-booking-btn">Book This Service</a>
                 </div>
                 
                 <div class="service-card">
@@ -1280,7 +1394,7 @@
                         </div>
                     </div>
                     
-                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Deep%20Cleaning%20service.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Book Deep Clean</a>
+                    <a href="/booking/index.html" class="btn service-booking-btn">Book Deep Clean</a>
                 </div>
                 
                 <div class="service-card">
@@ -1309,7 +1423,7 @@
                         </div>
                     </div>
                     
-                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I%20need%20urgent%20cleaning%20services.%20Can%20you%20please%20provide%20emergency%20assistance%3F" class="btn btn-emergency" target="_blank">Emergency Booking</a>
+                    <a href="/booking/index.html" class="btn btn-emergency service-booking-btn">Emergency Booking</a>
                 </div>
                 
                 <div class="service-card">
@@ -1339,8 +1453,7 @@
                     </div>
                     
                     <div class="contact-options">
-                        <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Commercial%20Cleaning%20services.%20Can%20you%20please%20provide%20more%20information%3F" class="btn btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="mailto:ngaoyicleaning@gmail.com?subject=Commercial Cleaning Quote Request&body=Hi Ngaoyi Cleaning, I'm interested in your commercial cleaning services. Please provide me with a quote." class="btn btn-email"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="/booking/index.html" class="btn service-booking-btn">Book Commercial</a>
                     </div>
                 </div>
                 
@@ -1370,8 +1483,41 @@
                         </div>
                     </div>
                     
-                    <a href="https://wa.me/27707643709?text=Hi%20Ngaoyi%20Cleaning!%20I'm%20interested%20in%20your%20Add-On%20Services.%20Can%20you%20please%20provide%20more%20information%3F" class="btn" target="_blank">Add to Service</a>
+                    <a href="/booking/index.html" class="btn service-booking-btn">Add to Service</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking CTA Section -->
+    <section class="booking-cta-section">
+        <div class="container">
+            <div class="booking-cta-content">
+                <h2>Ready to Experience Spotless Cleaning?</h2>
+                <p>Book online in minutes and get matched with your perfect cleaner</p>
+                
+                <div class="booking-features">
+                    <div class="booking-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Vetted Cleaners</span>
+                    </div>
+                    <div class="booking-feature">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Secure Payment</span>
+                    </div>
+                    <div class="booking-feature">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Flexible Scheduling</span>
+                    </div>
+                    <div class="booking-feature">
+                        <i class="fas fa-star"></i>
+                        <span>Quality Guaranteed</span>
+                    </div>
+                </div>
+                
+                <a href="/booking/index.html" class="btn btn-booking" style="background: white; color: var(--primary); font-size: 1.2rem; padding: 18px 40px;">
+                    <i class="fas fa-arrow-right"></i> Start Booking Now
+                </a>
             </div>
         </div>
     </section>
@@ -1450,8 +1596,8 @@
                     <div class="step-icon">
                         <i class="fas fa-calendar-plus"></i>
                     </div>
-                    <h3>Book</h3>
-                    <p>Via WhatsApp or our website form. Tell us your cleaning needs and preferred schedule.</p>
+                    <h3>Book Online</h3>
+                    <p>Use our easy online booking system to select your service, schedule, and preferred cleaner.</p>
                 </div>
                 
                 <div class="process-step">
@@ -1484,7 +1630,7 @@
         </div>
     </section>
 
-    <!-- Testimonials Section - ENHANCED WITH 4 REVIEWS -->
+    <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials-section">
         <div class="container testimonials-container">
             <div class="section-title">
@@ -1781,7 +1927,7 @@
                         <li><i class="fas fa-phone"></i> <a href="tel:+27707643709" style="color: #bbb; text-decoration: none;">070 764 3709 (WhatsApp)</a></li>
                         <li><i class="fas fa-envelope"></i> <a href="mailto:ngaoyicleaning@gmail.com" style="color: #bbb; text-decoration: none;">ngaoyicleaning@gmail.com</a></li>
                     </ul>
-                    <a href="#contact" class="btn" style="margin-top: 15px;">Book Your Cleaner</a>
+                    <a href="/booking/index.html" class="btn" style="margin-top: 15px;">Book Online Now</a>
                     <a href="https://www.ngaoyicleaning.co.za/apply/" class="btn btn-cleaner" style="margin-top: 10px;">Join Our Team</a>
                 </div>
             </div>
@@ -1888,6 +2034,15 @@
                     document.querySelector('nav ul').classList.remove('show');
                 }
             });
+        });
+
+        // Set minimum date for preferred date field
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateField = document.getElementById('preferred-date');
+            if (dateField) {
+                const today = new Date().toISOString().split('T')[0];
+                dateField.min = today;
+            }
         });
     </script>
 </body>
