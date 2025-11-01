@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm & Pay - Ngaoyi Cleaning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Yoco SDK -->
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    <style>
+        :root {
+            --primary: #003b6f;
+            --primary-light: #0056a3;
+            --accent: #00c6ff;
+            --text: #6c6c6c;
+            --light: #f8f9fa;
+            --dark: #00264d;
+            --gray: #6c6c6c;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .booking-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .back-home {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            padding: 10px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+        }
+        
+        .back-home:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        /* Progress Steps */
+        .booking-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 50px;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .booking-progress::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--light-gray);
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            border: 3px solid var(--light-gray);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .progress-step.completed .step-number {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .progress-step.active .step-number {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+        
+        .progress-step span {
+            font-size: 0.95rem;
+            color: var(--gray);
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .progress-step.active span {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        /* Main Content */
+        .booking-main {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .booking-main h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .step-description {
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            text-align: center;
+            line-height: 1.7;
+        }
+        
+        /* Summary Container */
+        .summary-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .booking-summary,
+        .price-summary {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .booking-summary h3,
+        .price-summary h3 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .summary-item,
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(108, 108, 108, 0.1);
+        }
+        
+        .summary-item strong,
+        .price-item strong {
+            color: var(--primary);
+        }
+        
+        .addon-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(108, 108, 108, 0.05);
+            font-size: 0.95rem;
+        }
+        
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid var(--primary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .emergency-fee {
+            color: var(--warning);
+        }
+        
+        /* Payment Section */
+        .payment-section {
+            border-top: 2px solid var(--light-gray);
+            padding-top: 40px;
+        }
+        
+        .payment-section h3 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .payment-options {
+            margin-bottom: 40px;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.03), rgba(0, 198, 255, 0.03));
+        }
+        
+        .payment-option i:first-child {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .payment-option span {
+            flex: 1;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        
+        .payment-icons {
+            display: flex;
+            gap: 15px;
+            color: var(--gray);
+            font-size: 1.5rem;
+        }
+        
+        /* Yoco Payment Form */
+        .yoco-form {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.1);
+        }
+        
+        .card-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-actions {
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
+            font-size: 1.1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 59, 111, 0.4);
+        }
+        
+        .btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .secure-notice {
+            text-align: center;
+            color: var(--gray);
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .secure-notice i {
+            color: var(--success);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .booking-container {
+                padding: 15px;
+            }
+            
+            .booking-main {
+                padding: 30px 25px;
+            }
+            
+            .booking-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .summary-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .booking-main h2 {
+                font-size: 1.8rem;
+            }
+            
+            .progress-step span {
+                font-size: 0.85rem;
+            }
+            
+            .step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .card-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .booking-progress {
+                flex-direction: column;
+                gap: 25px;
+                align-items: flex-start;
+            }
+            
+            .booking-progress::before {
+                display: none;
+            }
+            
+            .progress-step {
+                flex-direction: row;
+                gap: 20px;
+                width: 100%;
+            }
+            
+            .step-number {
+                margin-bottom: 0;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .payment-option {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-container">
+        <header class="booking-header">
+            <a href="addons.html" class="back-home">
+                <i class="fas fa-arrow-left"></i> Back to Add-ons
+            </a>
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning">
+                </div>
+                <h1>Ngaoyi Cleaning</h1>
+            </div>
+        </header>
+
+        <div class="booking-progress">
+            <div class="progress-step completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <span>Your Details</span>
+            </div>
+            <div class="progress-step completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <span>Choose Cleaner</span>
+            </div>
+            <div class="progress-step completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <span>Add-ons</span>
+            </div>
+            <div class="progress-step active">
+                <div class="step-number">4</div>
+                <span>Confirm & Pay</span>
+            </div>
+        </div>
+
+        <main class="booking-main">
+            <h2>Review Your Booking</h2>
+            <p class="step-description">Please verify your details and proceed to secure payment</p>
+
+            <div class="summary-container">
+                <div class="booking-summary">
+                    <h3>Booking Details</h3>
+                    <div class="summary-item">
+                        <strong>Service:</strong>
+                        <span id="summary-service">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Property Size:</strong>
+                        <span id="summary-property">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Cleaner:</strong>
+                        <span id="summary-cleaner">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Date:</strong>
+                        <span id="summary-date">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Address:</strong>
+                        <span id="summary-address">-</span>
+                    </div>
+                    <div id="addons-summary"></div>
+                </div>
+
+                <div class="price-summary">
+                    <h3>Price Breakdown</h3>
+                    <div class="price-item">
+                        <span>Base Cleaning</span>
+                        <span id="base-price">R0</span>
+                    </div>
+                    <div class="price-item">
+                        <span>Materials Fee</span>
+                        <span id="materials-price">R0</span>
+                    </div>
+                    <div class="price-item emergency-fee" style="display: none;">
+                        <span>Weekend Surcharge</span>
+                        <span id="emergency-price">R0</span>
+                    </div>
+                    <div id="addons-prices"></div>
+                    <div class="price-total">
+                        <strong>Total Amount</strong>
+                        <strong id="total-price">R0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-section">
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <div class="payment-option selected" onclick="selectPayment('yoco')">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Credit/Debit Card</span>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-amex"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="yoco-form" id="yocoForm">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    
+                    <div class="card-row">
+                        <div class="form-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" class="form-control" placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-expiry">Expiry Date</label>
+                            <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-cvc">CVC</label>
+                            <input type="text" id="card-cvc" class="form-control" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button id="payButton" class="btn btn-primary" onclick="processPayment()">
+                        <i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R0</span>
+                    </button>
+                    <p class="secure-notice">
+                        <i class="fas fa-shield-alt"></i> Your payment is secure and encrypted with Yoco
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Replace with your actual values
+        const YOCO_PUBLIC_KEY = 'pk_test_your_yoco_public_key_here';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        
+        let yoco;
+        let bookingData = {};
+
+        // Initialize Yoco
+        function initYoco() {
+            yoco = new window.YocoSDK({
+                publicKey: YOCO_PUBLIC_KEY
+            });
+        }
+
+        // Addon prices
+        const addonPrices = {
+            'window-cleaning': 150,
+            'oven-cleaning': 180,
+            'fridge-cleaning': 100,
+            'laundry-service': 80,
+            'carpet-cleaning': 200,
+            'balcony-cleaning': 120
+        };
+
+        // Addon names
+        const addonNames = {
+            'window-cleaning': 'Window Cleaning',
+            'oven-cleaning': 'Oven Cleaning',
+            'fridge-cleaning': 'Fridge Cleaning',
+            'laundry-service': 'Laundry Service',
+            'carpet-cleaning': 'Carpet Cleaning',
+            'balcony-cleaning': 'Balcony Cleaning'
+        };
+
+        function calculatePrice(serviceType, propertySize, date, addons = []) {
+            const basePrices = {
+                '1-bed': { 'once-off': 350, 'recurring': 300, 'deep': 1200, 'commercial': 500 },
+                '2-bed': { 'once-off': 450, 'recurring': 400, 'deep': 1750, 'commercial': 700 },
+                '3-bed': { 'once-off': 550, 'recurring': 500, 'deep': 2300, 'commercial': 900 },
+                '4-bed': { 'once-off': 650, 'recurring': 600, 'deep': 2800, 'commercial': 1100 },
+                '5+bed': { 'once-off': 800, 'recurring': 750, 'deep': 3500, 'commercial': 1300 },
+                'office': { 'once-off': 600, 'recurring': 550, 'deep': 2000, 'commercial': 600 }
+            };
+
+            let basePrice = basePrices[propertySize]?.[serviceType] || 0;
+            let materialsFee = 0;
+            let emergencyFee = 0;
+            let addonsTotal = 0;
+
+            // Materials fee for once-off and recurring
+            if (serviceType === 'once-off' || serviceType === 'recurring') {
+                materialsFee = 150;
+            }
+
+            // Emergency fee for weekends
+            const cleaningDate = new Date(date);
+            const dayOfWeek = cleaningDate.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                emergencyFee = basePrice * 0.5;
+            }
+
+            // Calculate addons total
+            addons.forEach(addonId => {
+                addonsTotal += addonPrices[addonId] || 0;
+            });
+
+            return {
+                base: basePrice,
+                materials: materialsFee,
+                emergency: emergencyFee,
+                addons: addonsTotal,
+                total: basePrice + materialsFee + emergencyFee + addonsTotal
+            };
+        }
+
+        function updateSummary() {
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            if (!clientInfo.name) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Update booking details
+            document.getElementById('summary-service').textContent = 
+                clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
+            document.getElementById('summary-property').textContent = 
+                clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
+            document.getElementById('summary-cleaner').textContent = 
+                clientInfo.cleaner ? formatCleanerName(clientInfo.cleaner) : 'Not selected';
+            document.getElementById('summary-date').textContent = 
+                clientInfo.date ? new Date(clientInfo.date).toLocaleDateString('en-ZA', { 
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                }) : '-';
+            document.getElementById('summary-address').textContent = clientInfo.address || '-';
+
+            // Update addons summary
+            updateAddonsSummary(clientInfo.addons || []);
+
+            // Calculate and update prices
+            if (clientInfo.serviceType && clientInfo.propertySize && clientInfo.date) {
+                const prices = calculatePrice(
+                    clientInfo.serviceType, 
+                    clientInfo.propertySize, 
+                    clientInfo.date, 
+                    clientInfo.addons || []
+                );
+                
+                updatePriceSummary(prices, clientInfo.addons || []);
+                
+                // Save total amount for payment
+                clientInfo.totalAmount = prices.total;
+                clientInfo.prices = prices;
+                localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
+                bookingData = clientInfo;
+            }
+        }
+
+        function formatServiceType(serviceType) {
+            return serviceType.charAt(0).toUpperCase() + serviceType.slice(1).replace('-', ' ');
+        }
+
+        function formatCleanerName(cleaner) {
+            if (cleaner === 'any') return 'Auto-Assign Best Cleaner';
+            return cleaner.charAt(0).toUpperCase() + cleaner.slice(1);
+        }
+
+        function updateAddonsSummary(addons) {
+            const container = document.getElementById('addons-summary');
+            
+            if (addons.length === 0) {
+                container.innerHTML = '<div class="summary-item"><strong>Add-ons:</strong> <span>None selected</span></div>';
+                return;
+            }
+
+            let html = '<div class="summary-item"><strong>Add-ons:</strong></div>';
+            addons.forEach(addonId => {
+                html += `
+                    <div class="addon-item">
+                        <span>${addonNames[addonId]}</span>
+                        <span>R${addonPrices[addonId]}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updatePriceSummary(prices, addons) {
+            document.getElementById('base-price').textContent = `R${prices.base}`;
+            document.getElementById('materials-price').textContent = `R${prices.materials}`;
+            document.getElementById('total-price').textContent = `R${prices.total}`;
+            document.getElementById('pay-amount').textContent = `R${prices.total}`;
+
+            // Show/hide emergency fee
+            const emergencyElement = document.querySelector('.emergency-fee');
+            if (prices.emergency > 0) {
+                emergencyElement.style.display = 'flex';
+                document.getElementById('emergency-price').textContent = `R${prices.emergency}`;
+            } else {
+                emergencyElement.style.display = 'none';
+            }
+
+            // Update addons prices
+            const addonsContainer = document.getElementById('addons-prices');
+            if (addons.length > 0) {
+                let addonsHtml = '';
+                addons.forEach(addonId => {
+                    addonsHtml += `
+                        <div class="price-item">
+                            <span>${addonNames[addonId]}</span>
+                            <span>R${addonPrices[addonId]}</span>
+                        </div>
+                    `;
+                });
+                addonsContainer.innerHTML = addonsHtml;
+            } else {
+                addonsContainer.innerHTML = '';
+            }
+        }
+
+        async function processPayment() {
+            if (!bookingData.totalAmount) {
+                alert('Please complete all booking details');
+                return;
+            }
+
+            const payButton = document.getElementById('payButton');
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            payButton.disabled = true;
+
+            try {
+                // Create token with Yoco
+                const token = await yoco.createToken({
+                    number: document.getElementById('card-number').value.replace(/\s/g, ''),
+                    firstName: bookingData.name.split(' ')[0],
+                    lastName: bookingData.name.split(' ').slice(1).join(' '),
+                    expiry: document.getElementById('card-expiry').value,
+                    cvc: document.getElementById('card-cvc').value
+                });
+
+                if (token.error) {
+                    throw new Error(token.error.message);
+                }
+
+                // Save booking to Google Sheets
+                const bookingResponse = await saveBookingToSheets(bookingData, token.id);
+                
+                if (bookingResponse.success) {
+                    // Process payment with Yoco
+                    const paymentResult = await processYocoPayment(bookingData, token.id, bookingResponse.bookingRef);
+                    
+                    if (paymentResult.success) {
+                        // Update payment status in Google Sheets
+                        await updatePaymentStatus(bookingResponse.bookingRef, paymentResult.paymentId, 'Paid');
+                        
+                        // Clear storage and redirect
+                        localStorage.removeItem('ngaoyi_booking');
+                        window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
+                    } else {
+                        throw new Error(paymentResult.error || 'Payment failed');
+                    }
+                } else {
+                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                }
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment failed: ' + error.message);
+                payButton.innerHTML = '<i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R' + bookingData.totalAmount + '</span>';
+                payButton.disabled = false;
+            }
+        }
+
+        async function saveBookingToSheets(clientInfo, token) {
+            const payload = {
+                ...clientInfo,
+                paymentToken: token,
+                action: 'saveBooking'
+            };
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            return await response.json();
+        }
+
+        async function processYocoPayment(clientInfo, token, bookingRef) {
+            // In a real implementation, you would call your server to process the payment
+            // For now, we'll simulate a successful payment
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        success: true,
+                        paymentId: 'pay_' + Math.random().toString(36).substr(2, 9)
+                    });
+                }, 2000);
+            });
+        }
+
+        async function updatePaymentStatus(bookingRef, paymentId, status) {
+            const payload = {
+                action: 'updatePayment',
+                bookingRef: bookingRef,
+                paymentId: paymentId,
+                status: status
+            };
+
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        function selectPayment(method) {
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        // Format card number
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+            value = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = value.substring(0, 19);
+        });
+
+        // Format expiry date
+        document.getElementById('card-expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        });
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            initYoco();
+            updateSummary();
+        });
+    </script>
+</body>
+</html>
