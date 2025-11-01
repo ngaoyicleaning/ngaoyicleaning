@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Your Cleaner - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Maps Places API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
     <style>
         :root {
             --primary: #003b6f;
@@ -278,42 +280,6 @@
             font-size: 1.1rem;
         }
         
-        /* Discount Code */
-        .discount-section {
-            background: var(--light);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--light-gray);
-        }
-        
-        .discount-input-group {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .discount-input-group input {
-            flex: 1;
-        }
-        
-        .discount-message {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-        
-        .discount-message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .discount-message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
         .form-actions {
             margin-top: 40px;
             text-align: center;
@@ -348,15 +314,31 @@
             box-shadow: none;
         }
         
-        .btn-outline {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
         }
         
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
+        /* Address Autocomplete */
+        .pac-container {
+            border-radius: 10px;
+            border: 2px solid var(--light-gray);
+            box-shadow: var(--shadow);
+            margin-top: 5px;
+        }
+        
+        .pac-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--light-gray);
+            cursor: pointer;
+        }
+        
+        .pac-item:hover {
+            background-color: var(--light);
+        }
+        
+        .pac-item-query {
+            color: var(--primary);
+            font-weight: 600;
         }
         
         /* Responsive */
@@ -391,10 +373,6 @@
             
             .material-options {
                 grid-template-columns: 1fr;
-            }
-            
-            .discount-input-group {
-                flex-direction: column;
             }
         }
         
@@ -481,7 +459,8 @@
 
                 <div class="form-group">
                     <label for="address">Street Address *</label>
-                    <textarea id="address" name="address" rows="3" required placeholder="Full street address, suburb, and city"></textarea>
+                    <input type="text" id="address" name="address" required placeholder="Start typing your address...">
+                    <small style="margin-top: 5px; color: var(--gray);">We'll automatically suggest your complete address</small>
                 </div>
 
                 <div class="form-group">
@@ -531,18 +510,6 @@
                     <input type="hidden" id="materialOption" name="materialOption" required>
                 </div>
 
-                <!-- Discount Code Section -->
-                <div class="discount-section">
-                    <label for="discountCode">Discount Code (Optional)</label>
-                    <div class="discount-input-group">
-                        <input type="text" id="discountCode" name="discountCode" placeholder="Enter discount code">
-                        <button type="button" class="btn btn-outline" onclick="applyDiscount()" style="padding: 15px 25px;">
-                            Apply
-                        </button>
-                    </div>
-                    <div id="discountMessage" class="discount-message"></div>
-                </div>
-
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
                         Continue to Choose Cleaner <i class="fas fa-arrow-right"></i>
@@ -553,6 +520,28 @@
     </div>
 
     <script>
+        // Google Maps Autocomplete
+        let autocomplete;
+
+        function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(
+                document.getElementById('address'),
+                {
+                    types: ['address'],
+                    componentRestrictions: {'country': 'za'}
+                }
+            );
+
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    console.log('No details available for input: ' + place.name);
+                    return;
+                }
+                console.log('Address selected:', place.formatted_address);
+            });
+        }
+
         // Set minimum date to today
         document.getElementById('date').min = new Date().toISOString().split('T')[0];
         
@@ -573,14 +562,6 @@
             'commercial': {
                 'customer': 0,
                 'we_supply': 200
-            }
-        };
-
-        // Discount codes
-        const discountCodes = {
-            'lwandle123': {
-                discount: 1.0, // 100% off
-                type: 'percentage'
             }
         };
 
@@ -616,42 +597,6 @@
             document.getElementById('materialOption').value = option;
         }
 
-        function applyDiscount() {
-            const discountCode = document.getElementById('discountCode').value.trim();
-            const messageElement = document.getElementById('discountMessage');
-            
-            if (!discountCode) {
-                showDiscountMessage('Please enter a discount code', 'error');
-                return;
-            }
-            
-            if (discountCodes[discountCode]) {
-                const discount = discountCodes[discountCode];
-                showDiscountMessage(`Discount applied! ${discount.discount * 100}% off`, 'success');
-                // Store discount in localStorage for later use
-                localStorage.setItem('ngaoyi_discount', JSON.stringify({
-                    code: discountCode,
-                    discount: discount.discount,
-                    type: discount.type
-                }));
-            } else {
-                showDiscountMessage('Invalid discount code', 'error');
-                localStorage.removeItem('ngaoyi_discount');
-            }
-        }
-
-        function showDiscountMessage(message, type) {
-            const messageElement = document.getElementById('discountMessage');
-            messageElement.textContent = message;
-            messageElement.className = `discount-message ${type}`;
-            messageElement.style.display = 'block';
-            
-            // Hide message after 5 seconds
-            setTimeout(() => {
-                messageElement.style.display = 'none';
-            }, 5000);
-        }
-
         document.getElementById('clientForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -671,8 +616,7 @@
                 date: document.getElementById('date').value,
                 serviceType: document.getElementById('serviceType').value,
                 propertySize: document.getElementById('propertySize').value,
-                materialOption: document.getElementById('materialOption').value,
-                discountCode: document.getElementById('discountCode').value
+                materialOption: document.getElementById('materialOption').value
             };
             
             // Save to localStorage
@@ -687,14 +631,6 @@
             const serviceType = document.getElementById('serviceType').value;
             if (serviceType) {
                 updateMaterialOptions();
-            }
-            
-            // Load any previously applied discount
-            const savedDiscount = localStorage.getItem('ngaoyi_discount');
-            if (savedDiscount) {
-                const discount = JSON.parse(savedDiscount);
-                document.getElementById('discountCode').value = discount.code;
-                showDiscountMessage(`Discount applied! ${discount.discount * 100}% off`, 'success');
             }
         });
     </script>
