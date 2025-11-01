@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - Ngaoyi Cleaning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #003b6f;
+            --primary-light: #0056a3;
+            --accent: #00c6ff;
+            --text: #6c6c6c;
+            --light: #f8f9fa;
+            --dark: #00264d;
+            --gray: #6c6c6c;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .thank-you-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 60px 40px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--success), #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+            color: white;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+        }
+        
+        .thank-you-container h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .thank-you-container p {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.7;
+        }
+        
+        .confirmation-details {
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .confirmation-details h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 59, 111, 0.1);
+        }
+        
+        .detail-item strong {
+            color: var(--primary);
+        }
+        
+        .next-steps {
+            background: var(--light);
+            padding: 35px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: left;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .next-steps h3 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .next-steps li {
+            padding: 15px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            border-bottom: 1px solid rgba(108, 108, 108, 0.1);
+        }
+        
+        .next-steps li:last-child {
+            border-bottom: none;
+        }
+        
+        .next-steps li i {
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 18px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
+            font-size: 1.1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 59, 111, 0.4);
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .contact-info p {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .contact-info a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .contact-info a:hover {
+            color: var(--accent);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .thank-you-container {
+                margin: 20px auto;
+                padding: 40px 25px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .thank-you-container h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .thank-you-container {
+                padding: 30px 20px;
+            }
+            
+            .success-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            
+            .next-steps {
+                padding: 25px 20px;
+            }
+            
+            .confirmation-details {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thank-you-container">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning">
+            </div>
+            <h1>Ngaoyi Cleaning</h1>
+        </div>
+        
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1>Booking Confirmed!</h1>
+        <p>Thank you for choosing Ngaoyi Cleaning. Your booking has been successfully confirmed and payment received.</p>
+        
+        <div class="confirmation-details">
+            <h3>Booking Summary</h3>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Booking Reference:</strong>
+                    <span>NC-<?php echo rand(100000, 999999); ?></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Payment Status:</strong>
+                    <span style="color: var(--success);">Paid</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <ul>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Confirmation Email</strong><br>
+                        <span>You'll receive a confirmation email within 5 minutes with all booking details</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Team Contact</strong><br>
+                        <span>Our team will contact you within 24 hours to confirm cleaning specifics</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Cleaner Assignment</strong><br>
+                        <span>Your assigned cleaner will arrive at the scheduled time with all equipment</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Service Reminder</strong><br>
+                        <span>We'll send a reminder 24 hours before your scheduled cleaning</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="contact-info">
+            <p><strong>Need to make changes to your booking?</strong></p>
+            <p>Contact us at <a href="tel:+27707643709">070 764 3709</a> or <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a></p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">
+                <i class="fas fa-home"></i> Back to Homepage
+            </a>
+            <a href="https://wa.me/27707643709" class="btn btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+            </a>
+            <a href="/booking/index.html" class="btn btn-outline">
+                <i class="fas fa-plus"></i> Book Another Service
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Clear any remaining booking data
+        try {
+            localStorage.removeItem('ngaoyi_booking');
+        } catch (e) {
+            console.log('Storage cleared');
+        }
+        
+        // Track conversion in analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'conversion', {
+                'send_to': 'G-5V9NJTNT1N',
+                'value': 1.0,
+                'currency': 'ZAR'
+            });
+        }
+        
+        // Generate random booking reference
+        document.querySelector('.detail-item span').textContent = 'NC-' + Math.floor(100000 + Math.random() * 900000);
+    </script>
+</body>
+</html>
