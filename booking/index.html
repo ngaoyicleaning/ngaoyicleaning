@@ -280,6 +280,42 @@
             font-size: 1.1rem;
         }
         
+        /* Discount Code */
+        .discount-section {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .discount-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .discount-input-group input {
+            flex: 1;
+        }
+        
+        .discount-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .discount-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .discount-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
         .form-actions {
             margin-top: 40px;
             text-align: center;
@@ -314,8 +350,15 @@
             box-shadow: none;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
         
         /* Address Autocomplete */
@@ -324,12 +367,14 @@
             border: 2px solid var(--light-gray);
             box-shadow: var(--shadow);
             margin-top: 5px;
+            z-index: 1000;
         }
         
         .pac-item {
             padding: 10px 15px;
             border-bottom: 1px solid var(--light-gray);
             cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         .pac-item:hover {
@@ -373,6 +418,10 @@
             
             .material-options {
                 grid-template-columns: 1fr;
+            }
+            
+            .discount-input-group {
+                flex-direction: column;
             }
         }
         
@@ -510,6 +559,18 @@
                     <input type="hidden" id="materialOption" name="materialOption" required>
                 </div>
 
+                <!-- Discount Code Section -->
+                <div class="discount-section">
+                    <label for="discountCode">Discount Code (Optional)</label>
+                    <div class="discount-input-group">
+                        <input type="text" id="discountCode" name="discountCode" placeholder="Enter discount code">
+                        <button type="button" class="btn btn-outline" onclick="applyDiscount()" style="padding: 15px 25px;">
+                            Apply
+                        </button>
+                    </div>
+                    <div id="discountMessage" class="discount-message"></div>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
                         Continue to Choose Cleaner <i class="fas fa-arrow-right"></i>
@@ -524,21 +585,37 @@
         let autocomplete;
 
         function initAutocomplete() {
+            console.log('Initializing Google Maps Autocomplete...');
+            
+            // Create the autocomplete object, restricting the search to geographical location types.
             autocomplete = new google.maps.places.Autocomplete(
                 document.getElementById('address'),
                 {
-                    types: ['address'],
-                    componentRestrictions: {'country': 'za'}
+                    types: ['geocode', 'establishment'],
+                    componentRestrictions: {'country': 'za'},
+                    fields: ['formatted_address', 'geometry', 'name']
                 }
             );
 
+            // When the user selects an address from the dropdown, populate the address field.
             autocomplete.addListener('place_changed', function() {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
+                    // User entered the name of a Place that was not suggested and
+                    // pressed the Enter key, or the Place Details request failed.
                     console.log('No details available for input: ' + place.name);
                     return;
                 }
-                console.log('Address selected:', place.formatted_address);
+                
+                console.log('Place selected:', place);
+                document.getElementById('address').value = place.formatted_address;
+            });
+
+            // Prevent form submission when pressing Enter on address field
+            document.getElementById('address').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
             });
         }
 
@@ -562,6 +639,14 @@
             'commercial': {
                 'customer': 0,
                 'we_supply': 200
+            }
+        };
+
+        // Discount codes
+        const discountCodes = {
+            'lwandle123': {
+                discount: 1.0, // 100% off
+                type: 'percentage'
             }
         };
 
@@ -597,6 +682,42 @@
             document.getElementById('materialOption').value = option;
         }
 
+        function applyDiscount() {
+            const discountCode = document.getElementById('discountCode').value.trim();
+            const messageElement = document.getElementById('discountMessage');
+            
+            if (!discountCode) {
+                showDiscountMessage('Please enter a discount code', 'error');
+                return;
+            }
+            
+            if (discountCodes[discountCode]) {
+                const discount = discountCodes[discountCode];
+                showDiscountMessage(`Discount applied! ${discount.discount * 100}% off`, 'success');
+                // Store discount in localStorage for later use
+                localStorage.setItem('ngaoyi_discount', JSON.stringify({
+                    code: discountCode,
+                    discount: discount.discount,
+                    type: discount.type
+                }));
+            } else {
+                showDiscountMessage('Invalid discount code', 'error');
+                localStorage.removeItem('ngaoyi_discount');
+            }
+        }
+
+        function showDiscountMessage(message, type) {
+            const messageElement = document.getElementById('discountMessage');
+            messageElement.textContent = message;
+            messageElement.className = `discount-message ${type}`;
+            messageElement.style.display = 'block';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+
         document.getElementById('clientForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -616,7 +737,8 @@
                 date: document.getElementById('date').value,
                 serviceType: document.getElementById('serviceType').value,
                 propertySize: document.getElementById('propertySize').value,
-                materialOption: document.getElementById('materialOption').value
+                materialOption: document.getElementById('materialOption').value,
+                discountCode: document.getElementById('discountCode').value
             };
             
             // Save to localStorage
@@ -632,7 +754,23 @@
             if (serviceType) {
                 updateMaterialOptions();
             }
+            
+            // Load any previously applied discount
+            const savedDiscount = localStorage.getItem('ngaoyi_discount');
+            if (savedDiscount) {
+                const discount = JSON.parse(savedDiscount);
+                document.getElementById('discountCode').value = discount.code;
+                showDiscountMessage(`Discount applied! ${discount.discount * 100}% off`, 'success');
+            }
         });
+
+        // Fallback if Google Maps doesn't load
+        setTimeout(() => {
+            if (!autocomplete) {
+                console.log('Google Maps Autocomplete failed to load, using fallback');
+                document.getElementById('address').placeholder = "Enter your full street address";
+            }
+        }, 3000);
     </script>
 </body>
 </html>
