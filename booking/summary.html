@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Booking - Ngaoyi Cleaning</title>
+    <title>Confirm & Pay - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Yoco Inline SDK -->
+    <script>
+        (function (d, s, c) {
+            var w = window, p = w.document.location.protocol, sc = d.createElement(s);
+            sc.src = p + "//js.yoco.com/sdk/v1/yoco-sdk-web.js";
+            sc.onload = function () {
+                w.YocoSDK = w.YocoSDK || function (c) { w.yoco = new w.YocoSDK(c) };
+                w.yoco = new w.YocoSDK({ publicKey: 'pk_test_04c01a4bGNBrnnq06d84' });
+            };
+            var m = d.getElementsByTagName(s)[0]; m.parentNode.insertBefore(sc, m);
+        })(document, 'script', 'yoco-sdk-web');
+    </script>
     <style>
         :root {
             --primary: #003b6f;
@@ -258,35 +270,111 @@
             color: var(--primary);
         }
         
-        .discount-item {
-            color: var(--success);
-            font-weight: 600;
-        }
-        
         .emergency-fee {
             color: var(--warning);
         }
         
-        /* Confirmation Section */
-        .confirmation-section {
+        /* Payment Section */
+        .payment-section {
             border-top: 2px solid var(--light-gray);
             padding-top: 40px;
-            text-align: center;
         }
         
-        .confirmation-section h3 {
+        .payment-section h3 {
             color: var(--primary);
             margin-bottom: 25px;
             font-size: 1.4rem;
             font-weight: 700;
         }
         
-        .confirmation-actions {
+        .payment-options {
+            margin-bottom: 40px;
+        }
+        
+        .payment-option {
             display: flex;
+            align-items: center;
             gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
+            padding: 25px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.03), rgba(0, 198, 255, 0.03));
+        }
+        
+        .payment-option i:first-child {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .payment-option span {
+            flex: 1;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        
+        .payment-icons {
+            display: flex;
+            gap: 15px;
+            color: var(--gray);
+            font-size: 1.5rem;
+        }
+        
+        /* Yoco Payment Form */
+        .yoco-form {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.1);
+        }
+        
+        .card-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-actions {
+            text-align: center;
         }
         
         .btn {
@@ -318,21 +406,6 @@
             box-shadow: none;
         }
         
-        .btn-success {
-            background: linear-gradient(135deg, #28a745, #20c997);
-        }
-        
-        .btn-outline {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
         .secure-notice {
             text-align: center;
             color: var(--gray);
@@ -354,33 +427,6 @@
         .loading i {
             font-size: 2rem;
             margin-bottom: 10px;
-        }
-        
-        /* Free Booking Notice */
-        .free-booking {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .free-booking i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        
-        /* Success Message */
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #c3e6cb;
-            text-align: center;
-            margin-bottom: 20px;
-            display: none;
         }
         
         /* Responsive */
@@ -418,15 +464,8 @@
                 font-size: 1rem;
             }
             
-            .confirmation-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
+            .card-row {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -449,6 +488,17 @@
             
             .step-number {
                 margin-bottom: 0;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .payment-option {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
             }
         }
     </style>
@@ -482,25 +532,13 @@
             </div>
             <div class="progress-step active">
                 <div class="step-number">4</div>
-                <span>Confirm Booking</span>
+                <span>Confirm & Pay</span>
             </div>
         </div>
 
         <main class="booking-main">
             <h2>Review Your Booking</h2>
-            <p class="step-description">Please verify your details and confirm your booking</p>
-
-            <div id="freeBookingNotice" class="free-booking" style="display: none;">
-                <i class="fas fa-gift"></i>
-                <h3>Free Booking!</h3>
-                <p>Your discount code covers the full amount. No payment required.</p>
-            </div>
-
-            <div id="successMessage" class="success-message">
-                <i class="fas fa-check-circle"></i>
-                <h3>Booking Confirmed!</h3>
-                <p>Your booking has been successfully confirmed. You will receive a confirmation email shortly.</p>
-            </div>
+            <p class="step-description">Please verify your details and proceed to secure payment</p>
 
             <div class="summary-container">
                 <div class="booking-summary">
@@ -547,10 +585,6 @@
                         <span id="emergency-price">R0</span>
                     </div>
                     <div id="addons-prices"></div>
-                    <div class="price-item discount-item" id="discount-item" style="display: none;">
-                        <span>Discount</span>
-                        <span id="discount-amount">-R0</span>
-                    </div>
                     <div class="price-total">
                         <strong>Total Amount</strong>
                         <strong id="total-price">R0</strong>
@@ -558,29 +592,84 @@
                 </div>
             </div>
 
-            <div class="confirmation-section" id="confirmationSection">
-                <h3>Ready to Confirm Your Booking?</h3>
-                <div class="confirmation-actions">
-                    <button id="confirmButton" class="btn btn-success" onclick="confirmBooking()">
-                        <i class="fas fa-check"></i> Confirm Booking
-                    </button>
-                    <button onclick="window.location.href='addons.html'" class="btn btn-outline">
-                        <i class="fas fa-edit"></i> Make Changes
-                    </button>
+            <div class="payment-section">
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <div class="payment-option selected" onclick="selectPayment('yoco')">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Credit/Debit Card</span>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-amex"></i>
+                        </div>
+                    </div>
                 </div>
-                <p class="secure-notice">
-                    <i class="fas fa-shield-alt"></i> Your booking is secure and guaranteed
-                </p>
+
+                <div class="yoco-form" id="yocoForm">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    
+                    <div class="card-row">
+                        <div class="form-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" class="form-control" placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-expiry">Expiry Date</label>
+                            <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-cvc">CVC</label>
+                            <input type="text" id="card-cvc" class="form-control" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button id="payButton" class="btn btn-primary" onclick="processPayment()">
+                        <i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R0</span>
+                    </button>
+                    <p class="secure-notice">
+                        <i class="fas fa-shield-alt"></i> Your payment is secure and encrypted with Yoco
+                    </p>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Configuration - UPDATED URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzpk-3MC0NBC5y5WFFOaV-rfZVpiTAp2uKDR-21k1xcfmvPVD7Ns-XYaphIBg7PVO6/exec';
+        // Configuration
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpb73Y8EmQgD9Idqd1rO76y6Ytu01ZwpdeQUFCpfK_Q7yorR-QNrsBKJgaBTaJMoqk/exec';
         
         let bookingData = {};
-        let discountApplied = null;
+        let yocoInitialized = false;
+
+        // Wait for Yoco SDK to load
+        function waitForYoco() {
+            return new Promise((resolve, reject) => {
+                const checkYoco = () => {
+                    if (window.yoco) {
+                        yocoInitialized = true;
+                        resolve(window.yoco);
+                    } else {
+                        setTimeout(checkYoco, 100);
+                    }
+                };
+                checkYoco();
+                
+                // Timeout after 10 seconds
+                setTimeout(() => {
+                    if (!yocoInitialized) {
+                        reject(new Error('Yoco SDK failed to load'));
+                    }
+                }, 10000);
+            });
+        }
 
         // Addon prices
         const addonPrices = {
@@ -622,15 +711,7 @@
             }
         };
 
-        // Discount codes
-        const discountCodes = {
-            'lwandle123': {
-                discount: 1.0, // 100% off
-                type: 'percentage'
-            }
-        };
-
-        function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], discount = null) {
+        function calculatePrice(serviceType, propertySize, date, materialOption, addons = []) {
             const basePrices = {
                 '1-bed': { 'once-off': 350, 'recurring': 300, 'deep': 1200, 'commercial': 500 },
                 '2-bed': { 'once-off': 450, 'recurring': 400, 'deep': 1750, 'commercial': 700 },
@@ -644,7 +725,6 @@
             let materialsFee = 0;
             let emergencyFee = 0;
             let addonsTotal = 0;
-            let discountAmount = 0;
 
             // Materials fee based on selection
             if (materialOption && materialPrices[serviceType]) {
@@ -663,25 +743,12 @@
                 addonsTotal += addonPrices[addonId] || 0;
             });
 
-            let subtotal = basePrice + materialsFee + emergencyFee + addonsTotal;
-
-            // Apply discount
-            if (discount) {
-                if (discount.type === 'percentage') {
-                    discountAmount = subtotal * discount.discount;
-                }
-            }
-
-            let total = Math.max(0, subtotal - discountAmount);
-
             return {
                 base: basePrice,
                 materials: materialsFee,
                 emergency: emergencyFee,
                 addons: addonsTotal,
-                discount: discountAmount,
-                subtotal: subtotal,
-                total: total
+                total: basePrice + materialsFee + emergencyFee + addonsTotal
             };
         }
 
@@ -690,12 +757,6 @@
             if (!clientInfo.name) {
                 window.location.href = 'index.html';
                 return;
-            }
-
-            // Check for discount
-            const savedDiscount = localStorage.getItem('ngaoyi_discount');
-            if (savedDiscount) {
-                discountApplied = JSON.parse(savedDiscount);
             }
 
             // Update booking details
@@ -723,8 +784,7 @@
                     clientInfo.propertySize, 
                     clientInfo.date, 
                     clientInfo.materialOption,
-                    clientInfo.addons || [],
-                    discountApplied
+                    clientInfo.addons || []
                 );
                 
                 updatePriceSummary(prices, clientInfo.addons || []);
@@ -732,16 +792,8 @@
                 // Save total amount for payment
                 clientInfo.totalAmount = prices.total;
                 clientInfo.prices = prices;
-                clientInfo.discount = discountApplied;
                 localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
                 bookingData = clientInfo;
-
-                // Show/hide free booking notice
-                if (prices.total === 0 && discountApplied) {
-                    document.getElementById('freeBookingNotice').style.display = 'block';
-                } else {
-                    document.getElementById('freeBookingNotice').style.display = 'none';
-                }
             }
         }
 
@@ -766,7 +818,7 @@
             const container = document.getElementById('addons-summary');
             
             if (addons.length === 0) {
-                container.innerHTML = '<div class="summary-item"><strong>Additional Services:</strong> <span>None selected</span></div>';
+                container.innerHTML = '<div class="summary-item"><strong>Add-ons:</strong> <span>None selected</span></div>';
                 return;
             }
 
@@ -785,6 +837,7 @@
         function updatePriceSummary(prices, addons) {
             document.getElementById('base-price').textContent = `R${prices.base}`;
             document.getElementById('total-price').textContent = `R${prices.total}`;
+            document.getElementById('pay-amount').textContent = `R${prices.total}`;
 
             // Show/hide materials fee
             const materialsItem = document.getElementById('materials-item');
@@ -802,15 +855,6 @@
                 document.getElementById('emergency-price').textContent = `R${prices.emergency}`;
             } else {
                 emergencyElement.style.display = 'none';
-            }
-
-            // Show/hide discount
-            const discountItem = document.getElementById('discount-item');
-            if (prices.discount > 0) {
-                discountItem.style.display = 'flex';
-                document.getElementById('discount-amount').textContent = `-R${prices.discount}`;
-            } else {
-                discountItem.style.display = 'none';
             }
 
             // Update addons prices
@@ -831,127 +875,156 @@
             }
         }
 
-        async function confirmBooking() {
-            const confirmButton = document.getElementById('confirmButton');
-            const successMessage = document.getElementById('successMessage');
-            const confirmationSection = document.getElementById('confirmationSection');
+        async function processPayment() {
+            if (!bookingData.totalAmount) {
+                alert('Please complete all booking details');
+                return;
+            }
 
-            confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming...';
-            confirmButton.disabled = true;
+            const payButton = document.getElementById('payButton');
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            payButton.disabled = true;
 
             try {
-                // First save the booking
-                const bookingResponse = await saveBookingToSheets(bookingData);
+                // Wait for Yoco to be ready
+                const yoco = await waitForYoco();
+
+                // Validate card details
+                const cardDetails = {
+                    number: document.getElementById('card-number').value.replace(/\s/g, ''),
+                    expiryMonth: document.getElementById('card-expiry').value.split('/')[0],
+                    expiryYear: '20' + document.getElementById('card-expiry').value.split('/')[1],
+                    cvc: document.getElementById('card-cvc').value,
+                    name: document.getElementById('card-name').value
+                };
+
+                // Validate card details
+                if (!validateCardDetails(cardDetails)) {
+                    throw new Error('Please check your card details and try again');
+                }
+
+                // Create token with Yoco
+                const token = await yoco.createToken(cardDetails);
+                
+                if (token.error) {
+                    throw new Error(token.error.message);
+                }
+
+                // Save booking to Google Sheets
+                const bookingResponse = await saveBookingToSheets(bookingData, token.id);
                 
                 if (bookingResponse.success) {
-                    // Then update the booking status to confirmed
-                    const updateResponse = await updateBookingStatus(bookingResponse.bookingRef, 'Confirmed');
+                    // For demo purposes, we'll simulate successful payment
+                    // In production, you would process the payment with Yoco here
+                    await simulatePaymentSuccess(bookingResponse.bookingRef);
                     
-                    if (updateResponse.success) {
-                        // Show success message
-                        successMessage.style.display = 'block';
-                        confirmationSection.style.display = 'none';
-                        
-                        // Clear storage after delay and redirect
-                        setTimeout(() => {
-                            localStorage.removeItem('ngaoyi_booking');
-                            localStorage.removeItem('ngaoyi_discount');
-                            window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
-                        }, 3000);
-                        
-                    } else {
-                        throw new Error(updateResponse.error || 'Failed to confirm booking');
-                    }
+                    // Clear storage and redirect
+                    localStorage.removeItem('ngaoyi_booking');
+                    window.location.href = `/thankyou.html?ref=${bookingResponse.bookingRef}`;
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to save booking');
                 }
 
             } catch (error) {
-                console.error('Booking confirmation error:', error);
-                alert('Booking failed: ' + error.message);
-                confirmButton.innerHTML = '<i class="fas fa-check"></i> Confirm Booking';
-                confirmButton.disabled = false;
+                console.error('Payment error:', error);
+                alert('Payment failed: ' + error.message);
+                payButton.innerHTML = '<i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R' + bookingData.totalAmount + '</span>';
+                payButton.disabled = false;
             }
         }
 
-        async function saveBookingToSheets(clientInfo) {
+        function validateCardDetails(card) {
+            if (!card.number || card.number.length < 13) {
+                return false;
+            }
+            if (!card.expiryMonth || !card.expiryYear) {
+                return false;
+            }
+            if (!card.cvc || card.cvc.length < 3) {
+                return false;
+            }
+            if (!card.name) {
+                return false;
+            }
+            return true;
+        }
+
+        async function saveBookingToSheets(clientInfo, token) {
             const payload = {
                 ...clientInfo,
+                paymentToken: token,
                 action: 'saveBooking'
             };
 
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('Error saving booking:', error);
-                throw new Error('Failed to connect to booking service. Please check your internet connection and try again.');
-            }
+            return await response.json();
         }
 
-        async function updateBookingStatus(bookingRef, status) {
+        async function simulatePaymentSuccess(bookingRef) {
+            // Simulate API call to update payment status
             const payload = {
-                action: 'updateBooking',
+                action: 'updatePayment',
                 bookingRef: bookingRef,
-                status: status
+                paymentId: 'pay_' + Math.random().toString(36).substr(2, 9),
+                status: 'Paid'
             };
 
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('Error updating booking status:', error);
-                throw new Error('Failed to confirm booking. Please contact support.');
-            }
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
         }
 
-        // Test connection on load
-        async function testConnection() {
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ action: 'testConnection' })
-                });
-                
-                if (response.ok) {
-                    console.log('Connection to Google Apps Script successful');
-                } else {
-                    console.warn('Connection test failed:', response.status);
-                }
-            } catch (error) {
-                console.error('Connection test error:', error);
-            }
+        function selectPayment(method) {
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
         }
+
+        // Format card number
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+            value = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = value.substring(0, 19);
+        });
+
+        // Format expiry date
+        document.getElementById('card-expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        });
+
+        // Format CVC - numbers only
+        document.getElementById('card-cvc').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });
 
         // Initialize page
         window.addEventListener('load', function() {
             updateSummary();
-            testConnection();
+            
+            // Check if Yoco is loading
+            waitForYoco().then(() => {
+                console.log('Yoco SDK loaded successfully');
+            }).catch(error => {
+                console.error('Yoco SDK failed to load:', error);
+                document.getElementById('payButton').disabled = true;
+                document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment Unavailable';
+            });
         });
     </script>
 </body>
