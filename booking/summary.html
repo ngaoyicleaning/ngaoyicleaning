@@ -19,6 +19,7 @@
             --light-gray: #e9ecef;
             --success: #28a745;
             --warning: #ffc107;
+            --danger: #dc3545;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
@@ -249,6 +250,13 @@
             font-size: 0.95rem;
         }
         
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+        }
+        
         .price-total {
             display: flex;
             justify-content: space-between;
@@ -260,8 +268,98 @@
             color: var(--primary);
         }
         
-        .emergency-fee {
-            color: var(--warning);
+        /* Discount Section */
+        .discount-section {
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 2px dashed var(--accent);
+        }
+        
+        .discount-section h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .discount-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .discount-input-group input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+        
+        .discount-input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .discount-input-group button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .discount-input-group button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 59, 111, 0.3);
+        }
+        
+        .discount-input-group button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .discount-message {
+            padding: 12px 18px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .discount-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: flex;
+        }
+        
+        .discount-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: flex;
+        }
+        
+        .discount-message button {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
         }
         
         /* Payment Section */
@@ -381,16 +479,16 @@
             margin-bottom: 15px;
         }
         
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: var(--gray);
-        }
-        
-        .loading i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+        /* Emergency Badge */
+        .emergency-badge {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-left: 8px;
         }
         
         /* Responsive */
@@ -426,6 +524,10 @@
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
+            }
+            
+            .discount-input-group {
+                flex-direction: column;
             }
         }
         
@@ -511,6 +613,10 @@
                         <strong>Frequency:</strong>
                         <span id="summary-frequency">-</span>
                     </div>
+                    <div class="summary-item" id="emergency-type-row" style="display: none;">
+                        <strong>Emergency Type:</strong>
+                        <span id="summary-emergency-type">-</span>
+                    </div>
                     <div class="summary-item">
                         <strong>Property Size:</strong>
                         <span id="summary-property">-</span>
@@ -544,13 +650,13 @@
                         <span>Materials Fee</span>
                         <span id="materials-price">R0</span>
                     </div>
+                    <div class="price-item" id="emergency-item" style="display: none;">
+                        <span style="color: var(--danger); font-weight: 600;">Emergency Surcharge (40%)</span>
+                        <span style="color: var(--danger); font-weight: 600;" id="emergency-price">R0</span>
+                    </div>
                     <div class="price-item" id="weekend-item" style="display: none;">
                         <span>Weekend Surcharge</span>
                         <span id="weekend-price">R0</span>
-                    </div>
-                    <div class="price-item" id="emergency-item" style="display: none;">
-                        <span>Emergency Surcharge (40%)</span>
-                        <span id="emergency-price">R0</span>
                     </div>
                     <div id="addons-prices"></div>
                     <div class="price-row" style="padding-top: 15px; border-top: 1px solid var(--light-gray); margin-top: 10px;">
@@ -566,6 +672,21 @@
                         <strong id="total-price">R0</strong>
                     </div>
                 </div>
+            </div>
+
+            <!-- Discount Code Section -->
+            <div class="discount-section">
+                <h4><i class="fas fa-tag"></i> Have a Discount Code?</h4>
+                <div class="discount-input-group">
+                    <input type="text" 
+                           id="discount-code-input" 
+                           placeholder="Enter discount code" 
+                           maxlength="20">
+                    <button type="button" onclick="applyDiscount()" id="apply-discount-btn">
+                        <i class="fas fa-check"></i> Apply
+                    </button>
+                </div>
+                <div id="discount-message" class="discount-message"></div>
             </div>
 
             <div class="payment-section">
@@ -602,11 +723,12 @@
 
     <script>
         // Configuration
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxROrU7abCVIkZ3OMKOyPwnNDh2cal4oquq9CU3SzTfqmNUlN-re0bJN1OpwAKB25WY/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgBPzE79whwafaZstVZCpXMuD4xg4KqcEN2vAlIpnLbH-SF8emKso9m4mCPTLJdAYn/exec';
         const YOCO_PUBLIC_KEY = 'pk_live_ddd5e9c6GNBrnnq2c414';
         
         let bookingData = {};
         let yoco = null;
+        let appliedDiscount = null;
 
         // Initialize Yoco SDK
         function initYoco() {
@@ -664,26 +786,6 @@
             'balcony-cleaning': 'Balcony Cleaning'
         };
 
-        // Material option prices
-        const materialPrices = {
-            'once-off': {
-                'customer': 0,
-                'we_supply': 150
-            },
-            'recurring': {
-                'customer': 0,
-                'we_supply': 150
-            },
-            'deep': {
-                'customer': 0,
-                'we_supply': 0
-            },
-            'commercial': {
-                'customer': 0,
-                'we_supply': 200
-            }
-        };
-
         function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null, emergencyServiceType = null, discountPercent = 0) {
             const basePrices = {
                 '1-bed': { 
@@ -692,7 +794,8 @@
                     'recurring-weekly': 240,
                     'recurring-biweekly': 300,
                     'recurring-monthly': 360,
-                    'deep': 1200
+                    'deep': 1200,
+                    'emergency': 350
                 },
                 '2-bed': { 
                     'once-off': 450, 
@@ -700,7 +803,8 @@
                     'recurring-weekly': 320,
                     'recurring-biweekly': 400,
                     'recurring-monthly': 480,
-                    'deep': 1750
+                    'deep': 1750,
+                    'emergency': 450
                 },
                 '3-bed': { 
                     'once-off': 550, 
@@ -708,7 +812,8 @@
                     'recurring-weekly': 380,
                     'recurring-biweekly': 470,
                     'recurring-monthly': 560,
-                    'deep': 2300
+                    'deep': 2300,
+                    'emergency': 550
                 },
                 '4-bed': { 
                     'once-off': 650, 
@@ -716,25 +821,38 @@
                     'recurring-weekly': 440,
                     'recurring-biweekly': 540,
                     'recurring-monthly': 640,
-                    'deep': 2800
+                    'deep': 2800,
+                    'emergency': 650
+                },
+                '5+bed': { 
+                    'once-off': 800, 
+                    'recurring': 750,
+                    'recurring-weekly': 600,
+                    'recurring-biweekly': 750,
+                    'recurring-monthly': 900,
+                    'deep': 3500,
+                    'emergency': 800
+                },
+                'office': { 
+                    'once-off': 600, 
+                    'recurring': 550,
+                    'recurring-weekly': 440,
+                    'recurring-biweekly': 550,
+                    'recurring-monthly': 660,
+                    'deep': 2000,
+                    'emergency': 600
                 }
             };
 
             let basePrice = 0;
             let emergencySurcharge = 0;
             
-            // Handle emergency cleaning (uses normal package prices + 40% surcharge)
+            // EMERGENCY SERVICE - Take normal price + 40% surcharge
             if (serviceType === 'emergency' && emergencyServiceType) {
-                // Get the base price from the corresponding normal service
-                if (emergencyServiceType === 'once-off') {
-                    basePrice = basePrices[propertySize]?.['once-off'] || 0;
-                } else if (emergencyServiceType === 'deep') {
-                    basePrice = basePrices[propertySize]?.['deep'] || 0;
-                }
-                // Calculate 40% surcharge separately
-                emergencySurcharge = basePrice * 0.40;
+                basePrice = basePrices[propertySize]?.[emergencyServiceType] || 0;
+                emergencySurcharge = Math.round(basePrice * 0.40);
             } else {
-                // Regular service types
+                // Normal service types
                 let priceKey = serviceType;
                 if (serviceType === 'recurring' && recurringFrequency) {
                     priceKey = 'recurring-' + recurringFrequency.toLowerCase();
@@ -746,11 +864,10 @@
             let weekendSurcharge = 0;
             let addonsTotal = 0;
 
-            // Materials fee based on selection
+            // Materials fee
             if (materialOption) {
-                // For emergency deep cleaning, materials are included
                 if (serviceType === 'emergency' && emergencyServiceType === 'deep') {
-                    materialsFee = 0;
+                    materialsFee = 0; // Deep cleaning includes materials
                 } else if (serviceType === 'emergency' && emergencyServiceType === 'once-off') {
                     materialsFee = materialOption === 'we_supply' ? 150 : 0;
                 } else if (serviceType === 'deep') {
@@ -760,12 +877,12 @@
                 }
             }
 
-            // Weekend surcharge (R50 flat fee, not applicable to recurring or emergency plans)
+            // Weekend surcharge (not for recurring or emergency)
             if (serviceType !== 'recurring' && serviceType !== 'emergency') {
                 const cleaningDate = new Date(date);
                 const dayOfWeek = cleaningDate.getDay();
                 if (dayOfWeek === 0 || dayOfWeek === 6) {
-                    weekendSurcharge = 50; // Flat R50 fee
+                    weekendSurcharge = Math.round(basePrice * 0.5);
                 }
             }
 
@@ -775,7 +892,7 @@
             });
 
             // Calculate subtotal before discount
-            const subtotal = Math.round(basePrice) + Math.round(emergencySurcharge) + materialsFee + weekendSurcharge + addonsTotal;
+            const subtotal = basePrice + emergencySurcharge + materialsFee + weekendSurcharge + addonsTotal;
             
             // Apply discount
             let discountAmount = 0;
@@ -786,16 +903,81 @@
             const total = subtotal - discountAmount;
 
             return {
-                base: Math.round(basePrice),
+                base: basePrice,
                 materials: materialsFee,
                 weekendSurcharge: weekendSurcharge,
-                emergencySurcharge: Math.round(emergencySurcharge),
+                emergencySurcharge: emergencySurcharge,
                 addons: addonsTotal,
                 subtotal: subtotal,
                 discountPercent: discountPercent,
                 discountAmount: discountAmount,
                 total: total
             };
+        }
+
+        // Apply discount code
+        async function applyDiscount() {
+            const codeInput = document.getElementById('discount-code-input');
+            const code = codeInput.value.trim().toUpperCase();
+            const applyBtn = document.getElementById('apply-discount-btn');
+            const messageDiv = document.getElementById('discount-message');
+            
+            if (!code) {
+                showDiscountMessage('Please enter a discount code', 'error');
+                return;
+            }
+            
+            // Disable button and show loading
+            applyBtn.disabled = true;
+            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=validateDiscount&code=${encodeURIComponent(code)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    appliedDiscount = {
+                        code: result.code,
+                        percentage: result.percentage
+                    };
+                    
+                    showDiscountMessage(`✓ ${result.message}`, 'success');
+                    codeInput.disabled = true;
+                    applyBtn.innerHTML = '<i class="fas fa-check"></i> Applied';
+                    
+                    // Recalculate prices with discount
+                    updateSummary();
+                } else {
+                    showDiscountMessage(result.error || 'Invalid discount code', 'error');
+                    applyBtn.disabled = false;
+                    applyBtn.innerHTML = '<i class="fas fa-check"></i> Apply';
+                }
+            } catch (error) {
+                console.error('Error applying discount:', error);
+                showDiscountMessage('Failed to apply discount code. Please try again.', 'error');
+                applyBtn.disabled = false;
+                applyBtn.innerHTML = '<i class="fas fa-check"></i> Apply';
+            }
+        }
+
+        function showDiscountMessage(message, type) {
+            const messageDiv = document.getElementById('discount-message');
+            messageDiv.className = `discount-message ${type}`;
+            messageDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+                ${type === 'success' ? '<button onclick="removeDiscount()"><i class="fas fa-times"></i></button>' : ''}
+            `;
+        }
+
+        function removeDiscount() {
+            appliedDiscount = null;
+            document.getElementById('discount-code-input').value = '';
+            document.getElementById('discount-code-input').disabled = false;
+            document.getElementById('apply-discount-btn').disabled = false;
+            document.getElementById('apply-discount-btn').innerHTML = '<i class="fas fa-check"></i> Apply';
+            document.getElementById('discount-message').style.display = 'none';
+            updateSummary();
         }
 
         function updateSummary() {
@@ -806,13 +988,24 @@
             }
 
             // Update booking details
-            document.getElementById('summary-service').textContent = 
+            document.getElementById('summary-service').innerHTML = 
                 clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
             
             // Show frequency for recurring plans
             if (clientInfo.serviceType === 'recurring' && clientInfo.recurringFrequency) {
                 document.getElementById('summary-frequency').textContent = formatRecurringFrequency(clientInfo.recurringFrequency);
                 document.getElementById('frequency-row').style.display = 'flex';
+            } else {
+                document.getElementById('frequency-row').style.display = 'none';
+            }
+            
+            // Show emergency service type
+            if (clientInfo.serviceType === 'emergency' && clientInfo.emergencyServiceType) {
+                document.getElementById('summary-emergency-type').innerHTML = 
+                    formatServiceType(clientInfo.emergencyServiceType) + '<span class="emergency-badge">EMERGENCY</span>';
+                document.getElementById('emergency-type-row').style.display = 'flex';
+            } else {
+                document.getElementById('emergency-type-row').style.display = 'none';
             }
             
             document.getElementById('summary-property').textContent = 
@@ -847,12 +1040,15 @@
                 
                 updatePriceSummary(prices, clientInfo.addons || []);
                 
-                // Save total amount for payment
+                // Save updated data
                 clientInfo.totalAmount = prices.total;
                 clientInfo.prices = prices;
                 if (appliedDiscount) {
                     clientInfo.discountCode = appliedDiscount.code;
                     clientInfo.discountPercent = appliedDiscount.percentage;
+                } else {
+                    delete clientInfo.discountCode;
+                    delete clientInfo.discountPercent;
                 }
                 localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
                 bookingData = clientInfo;
@@ -860,7 +1056,14 @@
         }
 
         function formatServiceType(serviceType) {
-            return serviceType.charAt(0).toUpperCase() + serviceType.slice(1).replace('-', ' ');
+            const types = {
+                'once-off': 'Once-off Cleaning',
+                'recurring': 'Recurring Plan',
+                'deep': 'Deep Cleaning',
+                'commercial': 'Commercial Cleaning',
+                'emergency': 'Emergency Cleaning'
+            };
+            return types[serviceType] || serviceType.charAt(0).toUpperCase() + serviceType.slice(1);
         }
 
         function formatMaterialOption(option) {
@@ -878,9 +1081,9 @@
 
         function formatRecurringFrequency(frequency) {
             const frequencies = {
-                'weekly': 'Weekly (Save 15%)',
-                'biweekly': 'Bi-weekly (Save 10%)',
-                'monthly': 'Monthly (Save 5%)'
+                'weekly': 'Weekly (Save 20%)',
+                'biweekly': 'Bi-weekly (Best Value)',
+                'monthly': 'Monthly'
             };
             return frequencies[frequency.toLowerCase()] || frequency;
         }
@@ -920,15 +1123,6 @@
                 materialsItem.style.display = 'none';
             }
 
-            // Show/hide weekend surcharge
-            const weekendElement = document.getElementById('weekend-item');
-            if (prices.weekendSurcharge > 0) {
-                weekendElement.style.display = 'flex';
-                document.getElementById('weekend-price').textContent = `R${prices.weekendSurcharge}`;
-            } else {
-                weekendElement.style.display = 'none';
-            }
-
             // Show/hide emergency surcharge
             const emergencyElement = document.getElementById('emergency-item');
             if (prices.emergencySurcharge > 0) {
@@ -936,6 +1130,15 @@
                 document.getElementById('emergency-price').textContent = `R${prices.emergencySurcharge}`;
             } else {
                 emergencyElement.style.display = 'none';
+            }
+
+            // Show/hide weekend surcharge
+            const weekendElement = document.getElementById('weekend-item');
+            if (prices.weekendSurcharge > 0) {
+                weekendElement.style.display = 'flex';
+                document.getElementById('weekend-price').textContent = `R${prices.weekendSurcharge}`;
+            } else {
+                weekendElement.style.display = 'none';
             }
 
             // Show/hide discount
@@ -1072,6 +1275,13 @@
                 document.getElementById('payButton').disabled = true;
                 document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment System Unavailable';
                 alert('Payment system could not be loaded. Please refresh the page and try again.');
+            });
+            
+            // Enable Enter key for discount code
+            document.getElementById('discount-code-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    applyDiscount();
+                }
             });
         });
     </script>
