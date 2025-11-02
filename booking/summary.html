@@ -507,6 +507,10 @@
                         <strong>Service:</strong>
                         <span id="summary-service">-</span>
                     </div>
+                    <div class="summary-item" id="frequency-row" style="display: none;">
+                        <strong>Frequency:</strong>
+                        <span id="summary-frequency">-</span>
+                    </div>
                     <div class="summary-item">
                         <strong>Property Size:</strong>
                         <span id="summary-property">-</span>
@@ -586,7 +590,7 @@
 
     <script>
         // Configuration
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhnEQ6qCJ9BfbqNYOlYd6jU-g4nzIiNGONWev-U_m9I0wa12HYLabaDX14eME2Y63A/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0sTcoPt_TH-Z_znljf6hxLUlp39fZNPC_0KriC3KIu_KbgctAZSfSEg3qYuyYKG4n/exec';
         const YOCO_PUBLIC_KEY = 'pk_live_ddd5e9c6GNBrnnq2c414';
         
         let bookingData = {};
@@ -668,17 +672,71 @@
             }
         };
 
-        function calculatePrice(serviceType, propertySize, date, materialOption, addons = []) {
+        function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null) {
             const basePrices = {
-                '1-bed': { 'once-off': 350, 'recurring': 300, 'deep': 1200, 'commercial': 500 },
-                '2-bed': { 'once-off': 450, 'recurring': 400, 'deep': 1750, 'commercial': 700 },
-                '3-bed': { 'once-off': 550, 'recurring': 500, 'deep': 2300, 'commercial': 900 },
-                '4-bed': { 'once-off': 650, 'recurring': 600, 'deep': 2800, 'commercial': 1100 },
-                '5+bed': { 'once-off': 800, 'recurring': 750, 'deep': 3500, 'commercial': 1300 },
-                'office': { 'once-off': 600, 'recurring': 550, 'deep': 2000, 'commercial': 600 }
+                '1-bed': { 
+                    'once-off': 350, 
+                    'recurring': 300,
+                    'recurring-weekly': 240,
+                    'recurring-biweekly': 300,
+                    'recurring-monthly': 360,
+                    'deep': 1200, 
+                    'commercial': 500 
+                },
+                '2-bed': { 
+                    'once-off': 450, 
+                    'recurring': 400,
+                    'recurring-weekly': 320,
+                    'recurring-biweekly': 400,
+                    'recurring-monthly': 480,
+                    'deep': 1750, 
+                    'commercial': 700 
+                },
+                '3-bed': { 
+                    'once-off': 550, 
+                    'recurring': 500,
+                    'recurring-weekly': 380,
+                    'recurring-biweekly': 470,
+                    'recurring-monthly': 560,
+                    'deep': 2300, 
+                    'commercial': 900 
+                },
+                '4-bed': { 
+                    'once-off': 650, 
+                    'recurring': 600,
+                    'recurring-weekly': 440,
+                    'recurring-biweekly': 540,
+                    'recurring-monthly': 640,
+                    'deep': 2800, 
+                    'commercial': 1100 
+                },
+                '5+bed': { 
+                    'once-off': 800, 
+                    'recurring': 750,
+                    'recurring-weekly': 600,
+                    'recurring-biweekly': 750,
+                    'recurring-monthly': 900,
+                    'deep': 3500, 
+                    'commercial': 1300 
+                },
+                'office': { 
+                    'once-off': 600, 
+                    'recurring': 550,
+                    'recurring-weekly': 440,
+                    'recurring-biweekly': 550,
+                    'recurring-monthly': 660,
+                    'deep': 2000, 
+                    'commercial': 600 
+                }
             };
 
-            let basePrice = basePrices[propertySize]?.[serviceType] || 0;
+            // Determine the price key based on service type and frequency
+            let priceKey = serviceType;
+            if (serviceType === 'recurring' && recurringFrequency) {
+                priceKey = 'recurring-' + recurringFrequency.toLowerCase();
+            }
+
+            let basePrice = basePrices[propertySize]?.[priceKey] || basePrices[propertySize]?.[serviceType] || 0;
             let materialsFee = 0;
             let emergencyFee = 0;
             let addonsTotal = 0;
@@ -686,13 +744,17 @@
             // Materials fee based on selection
             if (materialOption && materialPrices[serviceType]) {
                 materialsFee = materialPrices[serviceType][materialOption] || 0;
+            } else if (materialOption && serviceType === 'recurring' && materialPrices['recurring']) {
+                materialsFee = materialPrices['recurring'][materialOption] || 0;
             }
 
-            // Emergency fee for weekends
-            const cleaningDate = new Date(date);
-            const dayOfWeek = cleaningDate.getDay();
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                emergencyFee = basePrice * 0.5;
+            // Emergency fee for weekends (not applicable to recurring plans)
+            if (serviceType !== 'recurring') {
+                const cleaningDate = new Date(date);
+                const dayOfWeek = cleaningDate.getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    emergencyFee = basePrice * 0.5;
+                }
             }
 
             // Calculate addons total
@@ -719,6 +781,13 @@
             // Update booking details
             document.getElementById('summary-service').textContent = 
                 clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
+            
+            // Show frequency for recurring plans
+            if (clientInfo.serviceType === 'recurring' && clientInfo.recurringFrequency) {
+                document.getElementById('summary-frequency').textContent = formatRecurringFrequency(clientInfo.recurringFrequency);
+                document.getElementById('frequency-row').style.display = 'flex';
+            }
+            
             document.getElementById('summary-property').textContent = 
                 clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
             document.getElementById('summary-materials').textContent = 
@@ -741,7 +810,8 @@
                     clientInfo.propertySize, 
                     clientInfo.date, 
                     clientInfo.materialOption,
-                    clientInfo.addons || []
+                    clientInfo.addons || [],
+                    clientInfo.recurringFrequency || null
                 );
                 
                 updatePriceSummary(prices, clientInfo.addons || []);
@@ -769,6 +839,15 @@
         function formatCleanerName(cleaner) {
             if (cleaner === 'any') return 'Auto-Assign Best Cleaner';
             return cleaner.charAt(0).toUpperCase() + cleaner.slice(1);
+        }
+
+        function formatRecurringFrequency(frequency) {
+            const frequencies = {
+                'weekly': 'Weekly (Save 15%)',
+                'biweekly': 'Bi-weekly (Save 10%)',
+                'monthly': 'Monthly (Save 5%)'
+            };
+            return frequencies[frequency.toLowerCase()] || frequency;
         }
 
         function updateAddonsSummary(addons) {
