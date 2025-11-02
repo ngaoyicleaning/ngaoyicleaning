@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - Ngaoyi Cleaning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #003b6f;
+            --primary-light: #0056a3;
+            --accent: #00c6ff;
+            --text: #6c6c6c;
+            --light: #f8f9fa;
+            --dark: #00264d;
+            --gray: #6c6c6c;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .thank-you-container {
+            max-width: 800px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.2s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--success), #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+            color: white;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+            position: relative;
+            animation: scaleIn 0.5s ease-out 0.4s backwards;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .success-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--success);
+            opacity: 0.3;
+            animation: pulse 2s ease-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .success-icon i {
+            position: relative;
+            z-index: 1;
+            animation: checkmark 0.5s ease-out 0.6s backwards;
+        }
+        
+        @keyframes checkmark {
+            from {
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(10deg);
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        .thank-you-container h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.8s forwards;
+        }
+        
+        .thank-you-container > p {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 1s forwards;
+        }
+        
+        .confirmation-details {
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border-left: 4px solid var(--accent);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 1.2s forwards;
+        }
+        
+        .confirmation-details h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 59, 111, 0.1);
+        }
+        
+        .detail-item strong {
+            color: var(--primary);
+        }
+        
+        .payment-status {
+            color: var(--success);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .payment-status i {
+            font-size: 1.1rem;
+        }
+        
+        .next-steps {
+            background: var(--light);
+            padding: 35px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: left;
+            border: 1px solid var(--light-gray);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 1.4s forwards;
+        }
+        
+        .next-steps h3 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .next-steps li {
+            padding: 15px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            border-bottom: 1px solid rgba(108, 108, 108, 0.1);
+            opacity: 0;
+            animation: slideInLeft 0.4s ease-out forwards;
+        }
+        
+        .next-steps li:nth-child(1) { animation-delay: 1.6s; }
+        .next-steps li:nth-child(2) { animation-delay: 1.7s; }
+        .next-steps li:nth-child(3) { animation-delay: 1.8s; }
+        .next-steps li:nth-child(4) { animation-delay: 1.9s; }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .next-steps li:last-child {
+            border-bottom: none;
+        }
+        
+        .next-steps li i {
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 2s forwards;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 18px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
+            font-size: 1.1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 59, 111, 0.4);
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .btn-whatsapp:hover {
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.1);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 2.2s forwards;
+        }
+        
+        .contact-info p {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .contact-info a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .contact-info a:hover {
+            color: var(--accent);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            position: absolute;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .thank-you-container {
+                padding: 40px 25px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .thank-you-container h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .thank-you-container {
+                padding: 30px 20px;
+            }
+            
+            .success-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+            
+            .next-steps {
+                padding: 25px 20px;
+            }
+            
+            .confirmation-details {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thank-you-container">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning">
+            </div>
+            <h1>Ngaoyi Cleaning</h1>
+        </div>
+        
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1>Booking Confirmed!</h1>
+        <p>Thank you for choosing Ngaoyi Cleaning. Your booking has been successfully confirmed and payment received.</p>
+        
+        <div class="confirmation-details">
+            <h3>Booking Summary</h3>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Booking Reference:</strong>
+                    <span id="booking-ref">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Payment Status:</strong>
+                    <span class="payment-status">
+                        <i class="fas fa-check-circle"></i> Paid
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <ul>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Confirmation Email</strong><br>
+                        <span>You'll receive a confirmation email within 5 minutes with all booking details</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Team Contact</strong><br>
+                        <span>Our team will contact you within 24 hours to confirm cleaning specifics</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Cleaner Assignment</strong><br>
+                        <span>Your assigned cleaner will arrive at the scheduled time with all equipment</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Service Reminder</strong><br>
+                        <span>We'll send a reminder 24 hours before your scheduled cleaning</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="contact-info">
+            <p><strong>Need to make changes to your booking?</strong></p>
+            <p>Contact us at <a href="tel:+27707643709">070 764 3709</a> or <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a></p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">
+                <i class="fas fa-home"></i> Back to Homepage
+            </a>
+            <a href="https://wa.me/27707643709?text=Hi%2C%20I%20just%20completed%20a%20booking%20(Ref%3A%20BOOKING_REF)%20and%20wanted%20to%20confirm%20details" class="btn btn-whatsapp" id="whatsapp-link">
+                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+            </a>
+            <a href="/booking/index.html" class="btn btn-outline">
+                <i class="fas fa-plus"></i> Book Another Service
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Clear any remaining booking data
+        try {
+            localStorage.removeItem('ngaoyi_booking');
+        } catch (e) {
+            console.log('Storage cleared');
+        }
+        
+        // Track conversion in analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'conversion', {
+                'send_to': 'G-5V9NJTNT1N',
+                'value': 1.0,
+                'currency': 'ZAR'
+            });
+        }
+        
+        // Get booking reference from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingRef = urlParams.get('ref');
+        
+        if (bookingRef) {
+            document.getElementById('booking-ref').textContent = bookingRef;
+            
+            // Update WhatsApp link with booking reference
+            const whatsappLink = document.getElementById('whatsapp-link');
+            const currentHref = whatsappLink.getAttribute('href');
+            whatsappLink.setAttribute('href', currentHref.replace('BOOKING_REF', bookingRef));
+        } else {
+            // Generate random booking reference if none provided
+            const randomRef = 'NC-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('booking-ref').textContent = randomRef;
+            
+            const whatsappLink = document.getElementById('whatsapp-link');
+            const currentHref = whatsappLink.getAttribute('href');
+            whatsappLink.setAttribute('href', currentHref.replace('BOOKING_REF', randomRef));
+        }
+        
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#003b6f', '#00c6ff', '#28a745', '#ffc107', '#dc3545'];
+            const confettiCount = 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+        
+        // Trigger confetti after success icon animation
+        setTimeout(createConfetti, 600);
+    </script>
+</body>
+</html>
