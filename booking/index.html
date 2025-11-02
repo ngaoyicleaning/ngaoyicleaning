@@ -235,6 +235,17 @@
             box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.1);
         }
         
+        .emergency-badge {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+        
         /* Material Options */
         .material-options {
             display: grid;
@@ -340,6 +351,43 @@
             color: var(--primary);
             font-weight: 600;
         }
+
+        .emergency-service-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .emergency-service-option {
+            padding: 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            background: white;
+        }
+
+        .emergency-service-option:hover {
+            border-color: #dc3545;
+        }
+
+        .emergency-service-option.selected {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.05), rgba(220, 53, 69, 0.1));
+        }
+
+        .emergency-service-option h4 {
+            color: #dc3545;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .emergency-service-option p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -372,6 +420,10 @@
             }
             
             .material-options {
+                grid-template-columns: 1fr;
+            }
+
+            .emergency-service-options {
                 grid-template-columns: 1fr;
             }
         }
@@ -475,8 +527,24 @@
                         <option value="once-off">Once-Off Cleaning</option>
                         <option value="recurring">Recurring Plan</option>
                         <option value="deep">Deep Cleaning</option>
-                        <option value="commercial">Commercial Cleaning</option>
+                        <option value="emergency">Emergency Cleaning <span class="emergency-badge">+40%</span></option>
                     </select>
+                </div>
+
+                <!-- Emergency Service Type Selection -->
+                <div class="form-group" id="emergencyServiceContainer" style="display: none;">
+                    <label>Emergency Service Type *</label>
+                    <div class="emergency-service-options">
+                        <div class="emergency-service-option" onclick="selectEmergencyService('once-off')">
+                            <h4>Once-Off Emergency</h4>
+                            <p>Immediate one-time cleaning</p>
+                        </div>
+                        <div class="emergency-service-option" onclick="selectEmergencyService('deep')">
+                            <h4>Deep Clean Emergency</h4>
+                            <p>Urgent deep cleaning service</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="emergencyServiceType" name="emergencyServiceType">
                 </div>
 
                 <div class="form-group">
@@ -487,8 +555,6 @@
                         <option value="2-bed">2-Bedroom</option>
                         <option value="3-bed">3-Bedroom</option>
                         <option value="4-bed">4-Bedroom</option>
-                        <option value="5+bed">5+ Bedroom</option>
-                        <option value="office">Office/Commercial</option>
                     </select>
                 </div>
 
@@ -559,25 +625,47 @@
                 'customer': 0,
                 'we_supply': 0 // Included in deep cleaning price
             },
-            'commercial': {
+            'emergency': {
                 'customer': 0,
-                'we_supply': 200
+                'we_supply': 150 // Will be calculated based on emergency service type
             }
         };
 
         function updateMaterialOptions() {
             const serviceType = document.getElementById('serviceType').value;
             const container = document.getElementById('materialOptionsContainer');
+            const emergencyContainer = document.getElementById('emergencyServiceContainer');
             const customerPrice = document.getElementById('customerPrice');
             const weSupplyPrice = document.getElementById('weSupplyPrice');
+
+            // Show/hide emergency service type selection
+            if (serviceType === 'emergency') {
+                emergencyContainer.style.display = 'block';
+            } else {
+                emergencyContainer.style.display = 'none';
+                document.getElementById('emergencyServiceType').value = '';
+                document.querySelectorAll('.emergency-service-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+            }
 
             if (serviceType && materialPrices[serviceType]) {
                 container.style.display = 'block';
                 
                 // Update prices
                 customerPrice.textContent = 'R' + materialPrices[serviceType].customer;
-                weSupplyPrice.textContent = materialPrices[serviceType].we_supply > 0 ? 
-                    '+R' + materialPrices[serviceType].we_supply : 'Included';
+                
+                if (serviceType === 'emergency') {
+                    const emergencyType = document.getElementById('emergencyServiceType').value;
+                    if (emergencyType === 'deep') {
+                        weSupplyPrice.textContent = 'Included';
+                    } else {
+                        weSupplyPrice.textContent = '+R' + materialPrices[serviceType].we_supply;
+                    }
+                } else {
+                    weSupplyPrice.textContent = materialPrices[serviceType].we_supply > 0 ? 
+                        '+R' + materialPrices[serviceType].we_supply : 'Included';
+                }
                 
                 // Clear previous selection
                 document.querySelectorAll('.material-option').forEach(option => {
@@ -597,12 +685,30 @@
             document.getElementById('materialOption').value = option;
         }
 
+        function selectEmergencyService(serviceType) {
+            document.querySelectorAll('.emergency-service-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            document.getElementById('emergencyServiceType').value = serviceType;
+            
+            // Update material prices when emergency service type changes
+            updateMaterialOptions();
+        }
+
         document.getElementById('clientForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validate material option if required
             const serviceType = document.getElementById('serviceType').value;
-            if ((serviceType === 'once-off' || serviceType === 'recurring' || serviceType === 'commercial') && 
+            
+            // Validate emergency service type if emergency is selected
+            if (serviceType === 'emergency' && !document.getElementById('emergencyServiceType').value) {
+                alert('Please select an emergency service type');
+                return;
+            }
+            
+            // Validate material option if required
+            if ((serviceType === 'once-off' || serviceType === 'recurring' || serviceType === 'emergency') && 
                 !document.getElementById('materialOption').value) {
                 alert('Please select who will supply the cleaning materials');
                 return;
@@ -616,7 +722,8 @@
                 date: document.getElementById('date').value,
                 serviceType: document.getElementById('serviceType').value,
                 propertySize: document.getElementById('propertySize').value,
-                materialOption: document.getElementById('materialOption').value
+                materialOption: document.getElementById('materialOption').value,
+                emergencyServiceType: document.getElementById('emergencyServiceType').value || null
             };
             
             // Save to localStorage
