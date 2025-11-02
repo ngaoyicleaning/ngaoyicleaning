@@ -544,11 +544,23 @@
                         <span>Materials Fee</span>
                         <span id="materials-price">R0</span>
                     </div>
-                    <div class="price-item emergency-fee" style="display: none;">
+                    <div class="price-item" id="weekend-item" style="display: none;">
                         <span>Weekend Surcharge</span>
+                        <span id="weekend-price">R0</span>
+                    </div>
+                    <div class="price-item" id="emergency-item" style="display: none;">
+                        <span>Emergency Surcharge (40%)</span>
                         <span id="emergency-price">R0</span>
                     </div>
                     <div id="addons-prices"></div>
+                    <div class="price-row" style="padding-top: 15px; border-top: 1px solid var(--light-gray); margin-top: 10px;">
+                        <span style="font-weight: 600;">Subtotal</span>
+                        <span style="font-weight: 600;" id="subtotal-price">R0</span>
+                    </div>
+                    <div class="price-item" id="discount-item" style="display: none; color: #28a745;">
+                        <span>Discount (<span id="discount-percent">0</span>%)</span>
+                        <span id="discount-amount">-R0</span>
+                    </div>
                     <div class="price-total">
                         <strong>Total Amount</strong>
                         <strong id="total-price">R0</strong>
@@ -672,7 +684,7 @@
             }
         };
 
-        function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null) {
+        function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null, emergencyServiceType = null, discountPercent = 0) {
             const basePrices = {
                 '1-bed': { 
                     'once-off': 350, 
@@ -680,8 +692,7 @@
                     'recurring-weekly': 240,
                     'recurring-biweekly': 300,
                     'recurring-monthly': 360,
-                    'deep': 1200, 
-                    'commercial': 500 
+                    'deep': 1200
                 },
                 '2-bed': { 
                     'once-off': 450, 
@@ -689,8 +700,7 @@
                     'recurring-weekly': 320,
                     'recurring-biweekly': 400,
                     'recurring-monthly': 480,
-                    'deep': 1750, 
-                    'commercial': 700 
+                    'deep': 1750
                 },
                 '3-bed': { 
                     'once-off': 550, 
@@ -698,8 +708,7 @@
                     'recurring-weekly': 380,
                     'recurring-biweekly': 470,
                     'recurring-monthly': 560,
-                    'deep': 2300, 
-                    'commercial': 900 
+                    'deep': 2300
                 },
                 '4-bed': { 
                     'once-off': 650, 
@@ -707,53 +716,56 @@
                     'recurring-weekly': 440,
                     'recurring-biweekly': 540,
                     'recurring-monthly': 640,
-                    'deep': 2800, 
-                    'commercial': 1100 
-                },
-                '5+bed': { 
-                    'once-off': 800, 
-                    'recurring': 750,
-                    'recurring-weekly': 600,
-                    'recurring-biweekly': 750,
-                    'recurring-monthly': 900,
-                    'deep': 3500, 
-                    'commercial': 1300 
-                },
-                'office': { 
-                    'once-off': 600, 
-                    'recurring': 550,
-                    'recurring-weekly': 440,
-                    'recurring-biweekly': 550,
-                    'recurring-monthly': 660,
-                    'deep': 2000, 
-                    'commercial': 600 
+                    'deep': 2800
                 }
             };
 
-            // Determine the price key based on service type and frequency
-            let priceKey = serviceType;
-            if (serviceType === 'recurring' && recurringFrequency) {
-                priceKey = 'recurring-' + recurringFrequency.toLowerCase();
+            let basePrice = 0;
+            let emergencySurcharge = 0;
+            
+            // Handle emergency cleaning (uses normal package prices + 40% surcharge)
+            if (serviceType === 'emergency' && emergencyServiceType) {
+                // Get the base price from the corresponding normal service
+                if (emergencyServiceType === 'once-off') {
+                    basePrice = basePrices[propertySize]?.['once-off'] || 0;
+                } else if (emergencyServiceType === 'deep') {
+                    basePrice = basePrices[propertySize]?.['deep'] || 0;
+                }
+                // Calculate 40% surcharge separately
+                emergencySurcharge = basePrice * 0.40;
+            } else {
+                // Regular service types
+                let priceKey = serviceType;
+                if (serviceType === 'recurring' && recurringFrequency) {
+                    priceKey = 'recurring-' + recurringFrequency.toLowerCase();
+                }
+                basePrice = basePrices[propertySize]?.[priceKey] || basePrices[propertySize]?.[serviceType] || 0;
             }
 
-            let basePrice = basePrices[propertySize]?.[priceKey] || basePrices[propertySize]?.[serviceType] || 0;
             let materialsFee = 0;
-            let emergencyFee = 0;
+            let weekendSurcharge = 0;
             let addonsTotal = 0;
 
             // Materials fee based on selection
-            if (materialOption && materialPrices[serviceType]) {
-                materialsFee = materialPrices[serviceType][materialOption] || 0;
-            } else if (materialOption && serviceType === 'recurring' && materialPrices['recurring']) {
-                materialsFee = materialPrices['recurring'][materialOption] || 0;
+            if (materialOption) {
+                // For emergency deep cleaning, materials are included
+                if (serviceType === 'emergency' && emergencyServiceType === 'deep') {
+                    materialsFee = 0;
+                } else if (serviceType === 'emergency' && emergencyServiceType === 'once-off') {
+                    materialsFee = materialOption === 'we_supply' ? 150 : 0;
+                } else if (serviceType === 'deep') {
+                    materialsFee = 0; // Deep cleaning includes materials
+                } else if (materialOption === 'we_supply') {
+                    materialsFee = 150;
+                }
             }
 
-            // Emergency fee for weekends (not applicable to recurring plans)
-            if (serviceType !== 'recurring') {
+            // Weekend surcharge (R50 flat fee, not applicable to recurring or emergency plans)
+            if (serviceType !== 'recurring' && serviceType !== 'emergency') {
                 const cleaningDate = new Date(date);
                 const dayOfWeek = cleaningDate.getDay();
                 if (dayOfWeek === 0 || dayOfWeek === 6) {
-                    emergencyFee = basePrice * 0.5;
+                    weekendSurcharge = 50; // Flat R50 fee
                 }
             }
 
@@ -762,12 +774,27 @@
                 addonsTotal += addonPrices[addonId] || 0;
             });
 
+            // Calculate subtotal before discount
+            const subtotal = Math.round(basePrice) + Math.round(emergencySurcharge) + materialsFee + weekendSurcharge + addonsTotal;
+            
+            // Apply discount
+            let discountAmount = 0;
+            if (discountPercent > 0 && discountPercent <= 100) {
+                discountAmount = Math.round(subtotal * (discountPercent / 100));
+            }
+            
+            const total = subtotal - discountAmount;
+
             return {
-                base: basePrice,
+                base: Math.round(basePrice),
                 materials: materialsFee,
-                emergency: emergencyFee,
+                weekendSurcharge: weekendSurcharge,
+                emergencySurcharge: Math.round(emergencySurcharge),
                 addons: addonsTotal,
-                total: basePrice + materialsFee + emergencyFee + addonsTotal
+                subtotal: subtotal,
+                discountPercent: discountPercent,
+                discountAmount: discountAmount,
+                total: total
             };
         }
 
@@ -805,13 +832,17 @@
 
             // Calculate and update prices
             if (clientInfo.serviceType && clientInfo.propertySize && clientInfo.date && clientInfo.materialOption) {
+                const discountPercent = appliedDiscount ? appliedDiscount.percentage : 0;
+                
                 const prices = calculatePrice(
                     clientInfo.serviceType, 
                     clientInfo.propertySize, 
                     clientInfo.date, 
                     clientInfo.materialOption,
                     clientInfo.addons || [],
-                    clientInfo.recurringFrequency || null
+                    clientInfo.recurringFrequency || null,
+                    clientInfo.emergencyServiceType || null,
+                    discountPercent
                 );
                 
                 updatePriceSummary(prices, clientInfo.addons || []);
@@ -819,6 +850,10 @@
                 // Save total amount for payment
                 clientInfo.totalAmount = prices.total;
                 clientInfo.prices = prices;
+                if (appliedDiscount) {
+                    clientInfo.discountCode = appliedDiscount.code;
+                    clientInfo.discountPercent = appliedDiscount.percentage;
+                }
                 localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
                 bookingData = clientInfo;
             }
@@ -872,6 +907,7 @@
 
         function updatePriceSummary(prices, addons) {
             document.getElementById('base-price').textContent = `R${prices.base}`;
+            document.getElementById('subtotal-price').textContent = `R${prices.subtotal}`;
             document.getElementById('total-price').textContent = `R${prices.total}`;
             document.getElementById('pay-amount').textContent = `R${prices.total}`;
 
@@ -884,13 +920,32 @@
                 materialsItem.style.display = 'none';
             }
 
-            // Show/hide emergency fee
-            const emergencyElement = document.querySelector('.emergency-fee');
-            if (prices.emergency > 0) {
+            // Show/hide weekend surcharge
+            const weekendElement = document.getElementById('weekend-item');
+            if (prices.weekendSurcharge > 0) {
+                weekendElement.style.display = 'flex';
+                document.getElementById('weekend-price').textContent = `R${prices.weekendSurcharge}`;
+            } else {
+                weekendElement.style.display = 'none';
+            }
+
+            // Show/hide emergency surcharge
+            const emergencyElement = document.getElementById('emergency-item');
+            if (prices.emergencySurcharge > 0) {
                 emergencyElement.style.display = 'flex';
-                document.getElementById('emergency-price').textContent = `R${prices.emergency}`;
+                document.getElementById('emergency-price').textContent = `R${prices.emergencySurcharge}`;
             } else {
                 emergencyElement.style.display = 'none';
+            }
+
+            // Show/hide discount
+            const discountElement = document.getElementById('discount-item');
+            if (prices.discountAmount > 0) {
+                discountElement.style.display = 'flex';
+                document.getElementById('discount-percent').textContent = prices.discountPercent;
+                document.getElementById('discount-amount').textContent = `-R${prices.discountAmount}`;
+            } else {
+                discountElement.style.display = 'none';
             }
 
             // Update addons prices
