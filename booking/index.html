@@ -388,6 +388,59 @@
             color: var(--gray);
             font-size: 0.85rem;
         }
+
+        /* Time Slot Options */
+        .time-slot-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .time-slot-option {
+            padding: 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            background: white;
+        }
+
+        .time-slot-option:hover {
+            border-color: var(--accent);
+        }
+
+        .time-slot-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+        }
+
+        .time-slot-option.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: var(--light-gray);
+        }
+
+        .time-slot-option.unavailable:hover {
+            border-color: var(--light-gray);
+        }
+
+        .time-slot-option h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .time-slot-option.unavailable h4 {
+            color: var(--gray);
+        }
+
+        .time-slot-option p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin: 0;
+        }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -424,6 +477,10 @@
             }
 
             .emergency-service-options {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slot-options {
                 grid-template-columns: 1fr;
             }
         }
@@ -517,7 +574,17 @@
 
                 <div class="form-group">
                     <label for="date">Preferred Cleaning Date *</label>
-                    <input type="date" id="date" name="date" required min="">
+                    <input type="date" id="date" name="date" required min="" onchange="updateTimeSlots()">
+                </div>
+
+                <!-- Time Slot Selection -->
+                <div class="form-group" id="timeSlotContainer" style="display: none;">
+                    <label>Preferred Time Slot *</label>
+                    <div class="time-slot-options" id="timeSlotOptions">
+                        <!-- Time slots will be dynamically populated -->
+                    </div>
+                    <input type="hidden" id="timeSlot" name="timeSlot" required>
+                    <small style="margin-top: 5px; color: var(--gray);">Select your preferred cleaning time</small>
                 </div>
 
                 <div class="form-group">
@@ -611,6 +678,13 @@
         // Set minimum date to today
         document.getElementById('date').min = new Date().toISOString().split('T')[0];
         
+        // Time slots configuration
+        const TIME_SLOTS = [
+            { value: '09:00', label: '9:00 AM' },
+            { value: '11:00', label: '11:00 AM' },
+            { value: '13:00', label: '1:00 PM' }
+        ];
+
         // Material option prices based on service type
         const materialPrices = {
             'once-off': {
@@ -630,6 +704,52 @@
                 'we_supply': 150 // Will be calculated based on emergency service type
             }
         };
+
+        function updateTimeSlots() {
+            const date = document.getElementById('date').value;
+            const container = document.getElementById('timeSlotContainer');
+            const optionsContainer = document.getElementById('timeSlotOptions');
+            
+            if (date) {
+                container.style.display = 'block';
+                
+                // Clear previous options
+                optionsContainer.innerHTML = '';
+                
+                // Create time slot options
+                TIME_SLOTS.forEach(slot => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'time-slot-option';
+                    optionDiv.onclick = function() { selectTimeSlot(slot.value); };
+                    
+                    const slotTitle = document.createElement('h4');
+                    slotTitle.textContent = slot.label;
+                    
+                    const slotDesc = document.createElement('p');
+                    slotDesc.textContent = 'Available';
+                    
+                    optionDiv.appendChild(slotTitle);
+                    optionDiv.appendChild(slotDesc);
+                    optionsContainer.appendChild(optionDiv);
+                });
+                
+                // Clear previous selection
+                document.querySelectorAll('.time-slot-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.getElementById('timeSlot').value = '';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function selectTimeSlot(slot) {
+            document.querySelectorAll('.time-slot-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            document.getElementById('timeSlot').value = slot;
+        }
 
         function updateMaterialOptions() {
             const serviceType = document.getElementById('serviceType').value;
@@ -700,6 +820,19 @@
             e.preventDefault();
             
             const serviceType = document.getElementById('serviceType').value;
+            const date = document.getElementById('date').value;
+            const timeSlot = document.getElementById('timeSlot').value;
+            
+            // Validate date and time slot
+            if (!date) {
+                alert('Please select a cleaning date');
+                return;
+            }
+            
+            if (!timeSlot) {
+                alert('Please select a time slot');
+                return;
+            }
             
             // Validate emergency service type if emergency is selected
             if (serviceType === 'emergency' && !document.getElementById('emergencyServiceType').value) {
@@ -719,8 +852,9 @@
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 address: document.getElementById('address').value,
-                date: document.getElementById('date').value,
-                serviceType: document.getElementById('serviceType').value,
+                date: date,
+                timeSlot: timeSlot,
+                serviceType: serviceType,
                 propertySize: document.getElementById('propertySize').value,
                 materialOption: document.getElementById('materialOption').value,
                 emergencyServiceType: document.getElementById('emergencyServiceType').value || null
@@ -738,6 +872,12 @@
             const serviceType = document.getElementById('serviceType').value;
             if (serviceType) {
                 updateMaterialOptions();
+            }
+            
+            // Check if date is already selected and update time slots
+            const date = document.getElementById('date').value;
+            if (date) {
+                updateTimeSlots();
             }
         });
     </script>
