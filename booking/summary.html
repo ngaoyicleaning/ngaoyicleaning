@@ -932,7 +932,7 @@
 
     <script>
         // Configuration
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlbIZW9Cw4LR_d0RthRqm9PSRXFa_bzILnyhU9iANqgcAKO_TbM4cwQF5PGHGkLY1_/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJO9x05VQU57vGMTi4RUj2Vv1ooqwsnNlWw-ONGfrxlMBvuHZ13QZb-ERnOmos2r04/exec';
         const YOCO_PUBLIC_KEY = 'pk_live_ddd5e9c6GNBrnnq2c414';
         
         let bookingData = {};
@@ -1569,7 +1569,50 @@
             }
         }
 
-        async function saveBookingToSheets(clientInfo, paymentToken) {
+        // Charge the card using Yoco API
+        async function chargeCard(paymentToken, amount) {
+            console.log('Charging card with token:', paymentToken);
+            
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify({
+                        action: 'processPayment',
+                        paymentToken: paymentToken,
+                        amount: amount,
+                        customerName: bookingData.name,
+                        customerEmail: bookingData.email
+                    }),
+                    redirect: 'follow'
+                });
+
+                const textResponse = await response.text();
+                console.log('Charge response:', textResponse);
+                
+                try {
+                    const jsonResponse = JSON.parse(textResponse);
+                    return jsonResponse;
+                } catch (parseError) {
+                    console.error('Could not parse charge response');
+                    return {
+                        success: false,
+                        error: 'Invalid response from payment processor'
+                    };
+                }
+                
+            } catch (error) {
+                console.error('Charge card error:', error);
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        async function saveBookingToSheets(clientInfo, paymentToken, chargeId) {
             // Prepare payload
             const payload = {
                 name: clientInfo.name,
@@ -1587,6 +1630,7 @@
                 discountCode: clientInfo.discountCode || '',
                 discountPercent: clientInfo.discountPercent || 0,
                 paymentToken: paymentToken,
+                chargeId: chargeId,  // Add charge ID
                 paymentStatus: 'Paid',
                 action: 'saveBooking'
             };
