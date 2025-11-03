@@ -16,7 +16,6 @@
             --light: #f8f9fa;
             --dark: #00264d;
             --gray: #6c6c6c;
-            --light-gray: #e9ecef;
             --success: #28a745;
             --warning: #ffc107;
             --danger: #dc3545;
@@ -931,48 +930,16 @@
     </div>
 
     <script>
-        // Configuration
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzs8INTISMHdDQSsCQL1vVg6NxO48Retcogr02geRoohpZK31ZcCWOgo2N-jfI7DlJd/exec';
+        // Configuration - UPDATE THIS WITH YOUR GAS DEPLOYMENT URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsS3BshaeUuIf3BaonalZ4SJwIwesbwCxpd4TY_0kk_vr36HojGs_xvvTl8fNDho8/exec';
         
         let bookingData = {};
         let yoco = null;
         let appliedDiscount = null;
-        let config = {};
-
-        // Load configuration from Google Apps Script
-        async function loadConfig() {
-            try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getConfig`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    config = result;
-                    console.log('🔧 Payment Mode:', config.yocoMode.toUpperCase());
-                    console.log('🔑 Using public key:', config.yocoPublicKey.substring(0, 15) + '...');
-                    
-                    if (config.yocoMode === 'test') {
-                        console.log('💳 TEST MODE: Use card 4242 4242 4242 4242 for testing');
-                    } else {
-                        console.warn('⚠️ LIVE MODE: Real cards will be charged!');
-                    }
-                    
-                    return true;
-                }
-            } catch (error) {
-                console.error('Failed to load config:', error);
-            }
-            
-            // Fallback to default config
-            config = {
-                yocoPublicKey: 'pk_test_ed3c54a6gOol69qa7f37',
-                yocoMode: 'test',
-                companyName: 'Ngaoyi Cleaning',
-                companyEmail: 'ngaoyicleaning@gmail.com'
-            };
-            
-            console.log('Using fallback configuration');
-            return true;
-        }
+        let config = {
+            yocoPublicKey: 'pk_live_ddd5e9c6GNBrnnq2c414', // Test key - replace with your live key
+            yocoMode: 'test'
+        };
 
         // Initialize Yoco SDK
         function initYoco() {
@@ -980,10 +947,10 @@
                 yoco = new YocoSDK({
                     publicKey: config.yocoPublicKey
                 });
-                console.log('Yoco SDK initialized successfully');
+                console.log('✅ Yoco SDK initialized successfully');
                 return true;
             } else {
-                console.error('Yoco SDK not loaded or missing public key');
+                console.error('❌ Yoco SDK not loaded or missing public key');
                 return false;
             }
         }
@@ -1461,22 +1428,12 @@
         }
 
         async function handlePaymentSuccess(result, payButton, originalButtonHTML) {
-            console.log('Payment token received:', result.id);
+            console.log('✅ Payment token received:', result.id);
             payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing payment...';
             
             try {
-                // Charge the card
-                const chargeResult = await chargeCard(result.id, bookingData.totalAmount);
-                
-                if (!chargeResult.success) {
-                    throw new Error(chargeResult.error || 'Payment processing failed');
-                }
-                
-                console.log('Card charged successfully:', chargeResult.chargeId);
-                payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving booking...';
-                
-                // Save booking with the charge ID
-                const bookingResponse = await saveBookingToSheets(bookingData, result.id, chargeResult.chargeId);
+                // Save booking with payment token
+                const bookingResponse = await saveBookingToSheets(bookingData, result.id);
                 
                 if (bookingResponse.success) {
                     // Clear storage and redirect
@@ -1494,7 +1451,7 @@
         }
 
         function handlePaymentError(error, payButton, originalButtonHTML) {
-            console.error('Yoco payment error:', error);
+            console.error('❌ Yoco payment error:', error);
             
             // Determine error type
             const errorMessage = error.message || 'Payment failed';
@@ -1612,50 +1569,7 @@
             }
         }
 
-        // Charge the card using Yoco API
-        async function chargeCard(paymentToken, amount) {
-            console.log('Charging card with token:', paymentToken);
-            
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8',
-                    },
-                    body: JSON.stringify({
-                        action: 'processPayment',
-                        paymentToken: paymentToken,
-                        amount: amount,
-                        customerName: bookingData.name,
-                        customerEmail: bookingData.email
-                    }),
-                    redirect: 'follow'
-                });
-
-                const textResponse = await response.text();
-                console.log('Charge response:', textResponse);
-                
-                try {
-                    const jsonResponse = JSON.parse(textResponse);
-                    return jsonResponse;
-                } catch (parseError) {
-                    console.error('Could not parse charge response');
-                    return {
-                        success: false,
-                        error: 'Invalid response from payment processor'
-                    };
-                }
-                
-            } catch (error) {
-                console.error('Charge card error:', error);
-                return {
-                    success: false,
-                    error: error.message
-                };
-            }
-        }
-
-        async function saveBookingToSheets(clientInfo, paymentToken, chargeId) {
+        async function saveBookingToSheets(clientInfo, paymentToken) {
             // Prepare payload
             const payload = {
                 name: clientInfo.name,
@@ -1673,135 +1587,51 @@
                 discountCode: clientInfo.discountCode || '',
                 discountPercent: clientInfo.discountPercent || 0,
                 paymentToken: paymentToken,
-                chargeId: chargeId,
-                paymentStatus: 'Paid',
+                paymentStatus: 'Pending',
                 action: 'saveBooking'
             };
 
-            console.log('Saving booking with payload:', payload);
+            console.log('📤 Saving booking with payload:', payload);
 
-            // Try multiple times with different methods
-            let attempts = 0;
-            const maxAttempts = 3;
-            
-            while (attempts < maxAttempts) {
-                attempts++;
-                console.log(`Attempt ${attempts} of ${maxAttempts}`);
-                
-                try {
-                    const response = await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'text/plain;charset=utf-8',
-                        },
-                        body: JSON.stringify(payload),
-                        redirect: 'follow'
-                    });
-
-                    const textResponse = await response.text();
-                    console.log('Response text:', textResponse);
-                    
-                    // Try to parse as JSON
-                    try {
-                        const jsonResponse = JSON.parse(textResponse);
-                        console.log('Parsed response:', jsonResponse);
-                        
-                        if (jsonResponse.success && jsonResponse.bookingRef) {
-                            console.log('✓ Booking saved successfully with ref:', jsonResponse.bookingRef);
-                            return {
-                                success: true,
-                                bookingRef: jsonResponse.bookingRef
-                            };
-                        }
-                    } catch (parseError) {
-                        console.log('Response is not JSON, trying next attempt...');
-                    }
-                    
-                } catch (error) {
-                    console.error(`Attempt ${attempts} failed:`, error);
-                }
-                
-                // Wait before retry
-                if (attempts < maxAttempts) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                }
-            }
-            
-            // All attempts failed - use fallback but still try to log
-            console.log('All fetch attempts failed, using fallback method');
-            const fallbackRef = await generateAndLogBooking(payload);
-            return {
-                success: true,
-                bookingRef: fallbackRef
-            };
-        }
-        
-        // Generate unique booking reference and try to log via form submission
-        async function generateAndLogBooking(payload) {
-            // Generate unique booking reference
-            const timestamp = Date.now();
-            const random = Math.floor(Math.random() * 1000);
-            const bookingRef = 'NC-' + timestamp.toString().slice(-6) + random.toString().padStart(3, '0');
-            
-            console.log('Generated fallback booking ref:', bookingRef);
-            
-            // Try to save via hidden form submission
             try {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = GOOGLE_SCRIPT_URL;
-                form.target = 'booking_iframe_' + Date.now();
-                form.style.display = 'none';
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                console.log('📥 Booking save response:', result);
                 
-                // Add booking reference to payload
-                payload.fallbackBookingRef = bookingRef;
-                
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'data';
-                input.value = JSON.stringify(payload);
-                form.appendChild(input);
-                
-                const iframe = document.createElement('iframe');
-                iframe.name = form.target;
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-                
-                document.body.appendChild(form);
-                form.submit();
-                
-                console.log('Fallback form submitted');
-                
-                // Clean up after delay
-                setTimeout(() => {
-                    try {
-                        document.body.removeChild(form);
-                        document.body.removeChild(iframe);
-                    } catch (e) {
-                        console.log('Cleanup error:', e);
-                    }
-                }, 3000);
+                if (result.success && result.bookingRef) {
+                    console.log('✅ Booking saved successfully with ref:', result.bookingRef);
+                    return {
+                        success: true,
+                        bookingRef: result.bookingRef
+                    };
+                } else {
+                    throw new Error(result.error || 'Failed to save booking');
+                }
                 
             } catch (error) {
-                console.error('Form submission error:', error);
+                console.error('❌ Booking save error:', error);
+                throw new Error('Failed to save booking: ' + error.message);
             }
-            
-            return bookingRef;
         }
 
         // Initialize page
         window.addEventListener('load', async function() {
-            // Load configuration first
-            await loadConfig();
-            
             // Update summary
             updateSummary();
             
             // Initialize Yoco
             waitForYoco().then(() => {
-                console.log('Yoco SDK ready for payment');
+                console.log('✅ Yoco SDK ready for payment');
             }).catch(error => {
-                console.error('Yoco SDK failed to load:', error);
+                console.error('❌ Yoco SDK failed to load:', error);
                 document.getElementById('payButton').disabled = true;
                 document.getElementById('payButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Payment System Unavailable';
                 alert('Payment system could not be loaded. Please refresh the page and try again.');
