@@ -53,7 +53,7 @@
         .payment-message { padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
         .payment-message-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         
-        .test-mode-banner { background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 30px; text-align: center; color: #856404; font-weight: 600; }
+        .test-mode-banner { background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 30px; text-align: center; color: #856404; font-weight: 600; display: none; }
         
         @media (max-width: 768px) {
             .summary-container { grid-template-columns: 1fr; }
@@ -67,10 +67,6 @@
                 <h1>Ngaoyi Cleaning</h1>
             </div>
         </header>
-
-        <div id="test-mode-banner" class="test-mode-banner" style="display: none;">
-            <i class="fas fa-info-circle"></i> TEST MODE: Use card 4242 4242 4242 4242 for testing (no real charges)
-        </div>
 
         <main class="booking-main">
             <h2>Review Your Booking</h2>
@@ -133,15 +129,13 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzV3DY8ruKTY_5r_5qy1WSfCkvQ489MLRDZvMVGW6J44mx8H8GksNlR2WI9DiyPkiA-/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5sAQ_79UHyVqQyjhQBZHnMMGXGYVGX8B2SvoAXUtapHHLB5euNuVildBInngOaJR0/exec';
         
-        const YOCO_KEYS = {
-            test: 'pk_test_ed3c54a6gOol69qa7f37',
-            live: 'pk_live_ddd5e9c6GNBrnnq2c414'
-        };
+        // YOCO LIVE MODE - Real cards will be charged
+        const YOCO_PUBLIC_KEY = 'pk_live_ddd5e9c6GNBrnnq2c414';
         
-        let YOCO_MODE = 'test';
-        let YOCO_PUBLIC_KEY = YOCO_KEYS.test;
+        console.log('⚠️ LIVE MODE: Real cards will be charged!');
+        
         let bookingData = {};
         let yoco = null;
         let appliedDiscount = null;
@@ -149,7 +143,7 @@
         async function initYoco() {
             if (typeof YocoSDK !== 'undefined') {
                 yoco = new YocoSDK({ publicKey: YOCO_PUBLIC_KEY });
-                console.log('✓ Yoco initialized:', YOCO_MODE, 'mode');
+                console.log('✓ Yoco initialized - LIVE MODE');
                 return true;
             }
             return false;
@@ -395,21 +389,6 @@
         }
 
         window.addEventListener('load', async function() {
-            // Check mode from backend
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getMode');
-                const result = await response.json();
-                if (result.success) {
-                    YOCO_MODE = result.mode;
-                    YOCO_PUBLIC_KEY = YOCO_KEYS[YOCO_MODE];
-                    if (YOCO_MODE === 'test') {
-                        document.getElementById('test-mode-banner').style.display = 'block';
-                    }
-                }
-            } catch (e) {
-                console.log('Using default test mode');
-            }
-
             updateSummary();
             waitForYoco().catch(error => {
                 document.getElementById('payButton').disabled = true;
