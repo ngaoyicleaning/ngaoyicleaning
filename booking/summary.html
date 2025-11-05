@@ -937,7 +937,7 @@
         let yoco = null;
         let appliedDiscount = null;
         let config = {
-            yocoPublicKey: 'pk_live_6d6373c9oWD3O3l181a4', // Test key - replace with your live key
+            yocoPublicKey: 'pk_live_6d6373c9oWD3O3l181a4', // Your live Yoco public key
             yocoMode: 'live'
         };
 
@@ -1147,6 +1147,11 @@
             
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=validateDiscount&code=${encodeURIComponent(code)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1487,7 +1492,7 @@
             // Generic error
             payButton.innerHTML = originalButtonHTML;
             payButton.disabled = false;
-            showPaymentMessage('Payment failed: ' + errorMessage + '. Please try again or contact support.', 'error');
+                showPaymentMessage('Payment failed: ' + errorMessage + '. Please try again or contact support.', 'error');
         }
 
         // Show payment message
@@ -1598,10 +1603,14 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
 
                 const result = await response.json();
                 console.log('📥 Booking save response:', result);
