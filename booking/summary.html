@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm & Pay - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Yoco SDK -->
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
         :root {
             --primary: #003b6f;
@@ -41,13 +43,14 @@
             min-height: 100vh;
         }
         
+        /* Header */
         .booking-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40px;
             padding: 20px 0;
-            border-bottom: 1px solid var(--light);
+            border-bottom: 1px solid #e0e0e0;
         }
         
         .back-home {
@@ -85,6 +88,7 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: 1.5rem;
         }
         
         .logo h1 {
@@ -93,77 +97,7 @@
             font-weight: 700;
         }
         
-        .booking-progress {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 50px;
-            position: relative;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .booking-progress::before {
-            content: '';
-            position: absolute;
-            top: 25px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background-color: #e0e0e0;
-            z-index: 1;
-        }
-        
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            flex: 1;
-        }
-        
-        .step-number {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: white;
-            color: var(--gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            border: 3px solid #e0e0e0;
-            transition: var(--transition);
-        }
-        
-        .progress-step.completed .step-number {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .progress-step.active .step-number {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border-color: var(--primary);
-            transform: scale(1.1);
-        }
-        
-        .progress-step span {
-            font-size: 0.95rem;
-            color: var(--gray);
-            font-weight: 600;
-            text-align: center;
-        }
-        
-        .progress-step.active span {
-            color: var(--primary);
-            font-weight: 700;
-        }
-        
+        /* Main Content */
         .booking-main {
             background: white;
             padding: 50px;
@@ -188,6 +122,7 @@
             line-height: 1.7;
         }
         
+        /* Summary Container */
         .summary-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -222,17 +157,9 @@
             border-bottom: 1px solid rgba(108, 108, 108, 0.1);
         }
         
-        .summary-item strong {
+        .summary-item strong,
+        .price-item strong {
             color: var(--primary);
-        }
-        
-        .addon-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(108, 108, 108, 0.05);
-            font-size: 0.95rem;
         }
         
         .price-total {
@@ -246,6 +173,7 @@
             color: var(--primary);
         }
         
+        /* Discount Section */
         .discount-section {
             background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
             padding: 25px;
@@ -329,16 +257,7 @@
             display: flex;
         }
         
-        .discount-message button {
-            margin-left: auto;
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 0;
-        }
-        
+        /* Payment Section */
         .payment-section {
             border-top: 2px solid #e0e0e0;
             padding-top: 40px;
@@ -351,37 +270,19 @@
             font-weight: 700;
         }
         
-        .payment-options {
-            margin-bottom: 40px;
-        }
-        
-        .payment-option {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 25px;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            background: white;
-        }
-        
-        .payment-option i:first-child {
-            font-size: 2rem;
-            color: var(--primary);
-        }
-        
-        .payment-option span {
-            flex: 1;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--primary);
-        }
-        
-        .payment-icons {
-            display: flex;
-            gap: 15px;
+        .payment-info {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
             color: var(--gray);
-            font-size: 1.5rem;
+        }
+        
+        .payment-info i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
         }
         
         .form-actions {
@@ -428,28 +329,11 @@
             color: var(--success);
         }
         
-        .payment-info {
-            background: var(--light);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: center;
-            color: var(--gray);
-        }
-        
-        .payment-info i {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .payment-message {
+        /* Alert Messages */
+        .alert {
             padding: 15px 20px;
             border-radius: 10px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
             animation: slideDown 0.3s ease-out;
         }
         
@@ -464,60 +348,41 @@
             }
         }
         
-        .payment-message i:first-child {
-            font-size: 1.3rem;
-            flex-shrink: 0;
-        }
-        
-        .payment-message span {
-            flex: 1;
-            font-weight: 500;
-        }
-        
-        .payment-message button {
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 5px;
-            opacity: 0.7;
-            transition: var(--transition);
-        }
-        
-        .payment-message button:hover {
-            opacity: 1;
-        }
-        
-        .payment-message-error {
+        .alert-error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
         
-        .payment-message-info {
+        .alert-info {
             background: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
         
-        .payment-message-success {
+        .alert-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
         
-        .emergency-badge {
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
             display: inline-block;
-            background: var(--danger);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-left: 8px;
         }
         
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
             .booking-container {
                 padding: 15px;
@@ -541,10 +406,6 @@
             .booking-main h2 {
                 font-size: 1.8rem;
             }
-            
-            .discount-input-group {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
@@ -552,36 +413,21 @@
     <div class="booking-container">
         <header class="booking-header">
             <a href="addons.html" class="back-home">
-                <i class="fas fa-arrow-left"></i> Back to Add-ons
+                <i class="fas fa-arrow-left"></i> Back
             </a>
             <div class="logo">
-                <div class="logo-icon">NC</div>
+                <div class="logo-icon">
+                    NC
+                </div>
                 <h1>Ngaoyi Cleaning</h1>
             </div>
         </header>
 
-        <div class="booking-progress">
-            <div class="progress-step completed">
-                <div class="step-number"><i class="fas fa-check"></i></div>
-                <span>Your Details</span>
-            </div>
-            <div class="progress-step completed">
-                <div class="step-number"><i class="fas fa-check"></i></div>
-                <span>Choose Cleaner</span>
-            </div>
-            <div class="progress-step completed">
-                <div class="step-number"><i class="fas fa-check"></i></div>
-                <span>Add-ons</span>
-            </div>
-            <div class="progress-step active">
-                <div class="step-number">4</div>
-                <span>Confirm & Pay</span>
-            </div>
-        </div>
-
         <main class="booking-main">
             <h2>Review Your Booking</h2>
             <p class="step-description">Please verify your details and proceed to secure payment</p>
+
+            <div id="alertContainer"></div>
 
             <div class="summary-container">
                 <div class="booking-summary">
@@ -590,14 +436,6 @@
                         <strong>Service:</strong>
                         <span id="summary-service">-</span>
                     </div>
-                    <div class="summary-item" id="frequency-row" style="display: none;">
-                        <strong>Frequency:</strong>
-                        <span id="summary-frequency">-</span>
-                    </div>
-                    <div class="summary-item" id="emergency-type-row" style="display: none;">
-                        <strong>Emergency Type:</strong>
-                        <span id="summary-emergency-type">-</span>
-                    </div>
                     <div class="summary-item">
                         <strong>Property Size:</strong>
                         <span id="summary-property">-</span>
@@ -605,10 +443,6 @@
                     <div class="summary-item">
                         <strong>Materials:</strong>
                         <span id="summary-materials">-</span>
-                    </div>
-                    <div class="summary-item">
-                        <strong>Cleaner:</strong>
-                        <span id="summary-cleaner">-</span>
                     </div>
                     <div class="summary-item">
                         <strong>Date:</strong>
@@ -640,10 +474,6 @@
                         <span id="weekend-price">R0</span>
                     </div>
                     <div id="addons-prices"></div>
-                    <div class="price-item" style="padding-top: 15px; border-top: 1px solid #e0e0e0; margin-top: 10px;">
-                        <span style="font-weight: 600;">Subtotal</span>
-                        <span style="font-weight: 600;" id="subtotal-price">R0</span>
-                    </div>
                     <div class="price-item" id="discount-item" style="display: none; color: #28a745;">
                         <span>Discount (<span id="discount-percent">0</span>%)</span>
                         <span id="discount-amount">-R0</span>
@@ -655,6 +485,7 @@
                 </div>
             </div>
 
+            <!-- Discount Code Section -->
             <div class="discount-section">
                 <h4><i class="fas fa-tag"></i> Have a Discount Code?</h4>
                 <div class="discount-input-group">
@@ -671,27 +502,16 @@
 
             <div class="payment-section">
                 <h3>Payment Method</h3>
-                <div class="payment-options">
-                    <div class="payment-option">
-                        <i class="fas fa-credit-card"></i>
-                        <span>Credit/Debit Card</span>
-                        <div class="payment-icons">
-                            <i class="fab fa-cc-visa"></i>
-                            <i class="fab fa-cc-mastercard"></i>
-                            <i class="fab fa-cc-amex"></i>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="payment-info">
                     <i class="fas fa-shield-alt"></i>
                     <p><strong>Secure Payment with Yoco</strong></p>
-                    <p>When you click "Proceed to Secure Checkout", you'll be redirected to Yoco's secure payment page to complete your transaction safely.</p>
+                    <p>When you click "Pay Now", a secure payment window will open where you can safely enter your card details.</p>
                 </div>
 
                 <div class="form-actions">
                     <button id="payButton" class="btn" onclick="processPayment()">
-                        <i class="fas fa-lock"></i> Proceed to Secure Checkout - <span id="pay-amount">R0</span>
+                        <i class="fas fa-lock"></i> Pay Now - <span id="pay-amount">R0</span>
                     </button>
                     <p class="secure-notice">
                         <i class="fas fa-shield-alt"></i> Your payment is secure and encrypted with Yoco
@@ -702,12 +522,19 @@
     </div>
 
     <script>
-        // Configuration
+        // ============================================
+        // CONFIGURATION - UPDATE THIS WITH YOUR DEPLOYMENT URL
+        // ============================================
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzwzdx8pdZnAp_YSe_cRUhwIuY6KOsYh13r6ITnuU1OsIee9F7zxOq9m10841QzGKiIg/exec';
         
+        // ============================================
+        // GLOBAL VARIABLES
+        // ============================================
         let bookingData = {};
+        let yoco = null;
         let appliedDiscount = null;
-
+        
+        // Addon prices
         const addonPrices = {
             'window-cleaning': 150,
             'oven-cleaning': 180,
@@ -716,7 +543,8 @@
             'carpet-cleaning': 200,
             'balcony-cleaning': 120
         };
-
+        
+        // Addon names
         const addonNames = {
             'window-cleaning': 'Window Cleaning',
             'oven-cleaning': 'Oven Cleaning',
@@ -726,43 +554,81 @@
             'balcony-cleaning': 'Balcony Cleaning'
         };
 
-        // Enhanced validation function
-        function validateBookingData() {
-            const requiredFields = ['name', 'email', 'phone', 'address', 'date', 'serviceType', 'propertySize', 'materialOption'];
-            const missingFields = requiredFields.filter(field => !bookingData[field]);
-            
-            if (missingFields.length > 0) {
-                throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+        // ============================================
+        // YOCO SDK INITIALIZATION
+        // ============================================
+        function initYoco() {
+            if (typeof YocoSDK !== 'undefined') {
+                yoco = new YocoSDK({
+                    publicKey: 'pk_live_6d6373c9oWD3O3l181a4'
+                });
+                console.log('✅ Yoco SDK initialized successfully');
+                return true;
+            } else {
+                console.error('❌ Yoco SDK not loaded');
+                return false;
             }
-            
-            if (!bookingData.totalAmount || bookingData.totalAmount < 2.00) {
-                throw new Error('Invalid total amount. Minimum payment is R2.00');
-            }
-            
-            // Validate email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(bookingData.email)) {
-                throw new Error('Please enter a valid email address');
-            }
-            
-            // Validate phone (basic)
-            const phoneRegex = /^[\d\s+\-()]{10,}$/;
-            const cleanPhone = bookingData.phone.replace(/\s/g, '');
-            if (!phoneRegex.test(cleanPhone) || cleanPhone.length < 10) {
-                throw new Error('Please enter a valid phone number (at least 10 digits)');
-            }
-            
-            return true;
         }
 
+        function waitForYoco() {
+            return new Promise((resolve, reject) => {
+                const maxAttempts = 50;
+                let attempts = 0;
+                
+                const checkYoco = () => {
+                    attempts++;
+                    if (typeof YocoSDK !== 'undefined') {
+                        if (initYoco()) {
+                            resolve(yoco);
+                        } else {
+                            reject(new Error('Failed to initialize Yoco SDK'));
+                        }
+                    } else if (attempts < maxAttempts) {
+                        setTimeout(checkYoco, 100);
+                    } else {
+                        reject(new Error('Yoco SDK failed to load'));
+                    }
+                };
+                
+                checkYoco();
+            });
+        }
+
+        // ============================================
+        // PRICE CALCULATION
+        // ============================================
         function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null, emergencyServiceType = null, discountPercent = 0) {
             const basePrices = {
-                '1-bed': { 'once-off': 350, 'recurring-weekly': 240, 'recurring-biweekly': 300, 'recurring-monthly': 360, 'deep': 1200, 'emergency': 350 },
-                '2-bed': { 'once-off': 450, 'recurring-weekly': 320, 'recurring-biweekly': 400, 'recurring-monthly': 480, 'deep': 1750, 'emergency': 450 },
-                '3-bed': { 'once-off': 550, 'recurring-weekly': 380, 'recurring-biweekly': 470, 'recurring-monthly': 560, 'deep': 2300, 'emergency': 550 },
-                '4-bed': { 'once-off': 650, 'recurring-weekly': 440, 'recurring-biweekly': 540, 'recurring-monthly': 640, 'deep': 2800, 'emergency': 650 },
-                '5+bed': { 'once-off': 800, 'recurring-weekly': 600, 'recurring-biweekly': 750, 'recurring-monthly': 900, 'deep': 3500, 'emergency': 800 },
-                'office': { 'once-off': 600, 'recurring-weekly': 440, 'recurring-biweekly': 550, 'recurring-monthly': 660, 'deep': 2000, 'emergency': 600 }
+                '1-bed': { 
+                    'once-off': 350, 'recurring': 300, 'recurring-weekly': 240,
+                    'recurring-biweekly': 300, 'recurring-monthly': 360,
+                    'deep': 1200, 'emergency': 350
+                },
+                '2-bed': { 
+                    'once-off': 450, 'recurring': 400, 'recurring-weekly': 320,
+                    'recurring-biweekly': 400, 'recurring-monthly': 480,
+                    'deep': 1750, 'emergency': 450
+                },
+                '3-bed': { 
+                    'once-off': 550, 'recurring': 500, 'recurring-weekly': 380,
+                    'recurring-biweekly': 470, 'recurring-monthly': 560,
+                    'deep': 2300, 'emergency': 550
+                },
+                '4-bed': { 
+                    'once-off': 650, 'recurring': 600, 'recurring-weekly': 440,
+                    'recurring-biweekly': 540, 'recurring-monthly': 640,
+                    'deep': 2800, 'emergency': 650
+                },
+                '5+bed': { 
+                    'once-off': 800, 'recurring': 750, 'recurring-weekly': 600,
+                    'recurring-biweekly': 750, 'recurring-monthly': 900,
+                    'deep': 3500, 'emergency': 800
+                },
+                'office': { 
+                    'once-off': 600, 'recurring': 550, 'recurring-weekly': 440,
+                    'recurring-biweekly': 550, 'recurring-monthly': 660,
+                    'deep': 2000, 'emergency': 600
+                }
             };
 
             let basePrice = 0;
@@ -776,17 +642,19 @@
                 if (serviceType === 'recurring' && recurringFrequency) {
                     priceKey = 'recurring-' + recurringFrequency.toLowerCase();
                 }
-                basePrice = basePrices[propertySize]?.[priceKey] || 0;
+                basePrice = basePrices[propertySize]?.[priceKey] || basePrices[propertySize]?.[serviceType] || 0;
             }
 
             let materialsFee = 0;
+            let weekendSurcharge = 0;
+            let addonsTotal = 0;
+
             if (materialOption === 'we_supply') {
                 if (serviceType !== 'deep' && !(serviceType === 'emergency' && emergencyServiceType === 'deep')) {
                     materialsFee = 150;
                 }
             }
 
-            let weekendSurcharge = 0;
             if (serviceType !== 'recurring' && serviceType !== 'emergency') {
                 const cleaningDate = new Date(date);
                 const dayOfWeek = cleaningDate.getDay();
@@ -795,18 +663,18 @@
                 }
             }
 
-            let addonsTotal = 0;
             addons.forEach(addonId => {
                 addonsTotal += addonPrices[addonId] || 0;
             });
 
             const subtotal = basePrice + emergencySurcharge + materialsFee + weekendSurcharge + addonsTotal;
+            
             let discountAmount = 0;
             if (discountPercent > 0 && discountPercent <= 100) {
                 discountAmount = Math.round(subtotal * (discountPercent / 100));
             }
             
-            const total = Math.max(0, subtotal - discountAmount);
+            const total = subtotal - discountAmount;
 
             return {
                 base: basePrice,
@@ -821,6 +689,9 @@
             };
         }
 
+        // ============================================
+        // DISCOUNT CODE HANDLING
+        // ============================================
         async function applyDiscount() {
             const codeInput = document.getElementById('discount-code-input');
             const code = codeInput.value.trim().toUpperCase();
@@ -832,7 +703,7 @@
             }
             
             applyBtn.disabled = true;
-            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            applyBtn.innerHTML = '<span class="spinner"></span> Checking...';
             
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=validateDiscount&code=${encodeURIComponent(code)}`);
@@ -852,6 +723,7 @@
                     showDiscountMessage(`✓ ${result.message}`, 'success');
                     codeInput.disabled = true;
                     applyBtn.innerHTML = '<i class="fas fa-check"></i> Applied';
+                    
                     updateSummary();
                 } else {
                     showDiscountMessage(result.error || 'Invalid discount code', 'error');
@@ -872,55 +744,34 @@
             messageDiv.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
                 <span>${message}</span>
-                ${type === 'success' ? '<button onclick="removeDiscount()"><i class="fas fa-times"></i></button>' : ''}
             `;
         }
 
-        function removeDiscount() {
-            appliedDiscount = null;
-            document.getElementById('discount-code-input').value = '';
-            document.getElementById('discount-code-input').disabled = false;
-            document.getElementById('apply-discount-btn').disabled = false;
-            document.getElementById('apply-discount-btn').innerHTML = '<i class="fas fa-check"></i> Apply';
-            document.getElementById('discount-message').style.display = 'none';
-            updateSummary();
-        }
-
+        // ============================================
+        // SUMMARY UPDATE
+        // ============================================
         function updateSummary() {
             const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            
             if (!clientInfo.name) {
-                window.location.href = 'index.html';
+                showAlert('Please complete your booking details first', 'error');
                 return;
             }
 
-            document.getElementById('summary-service').innerHTML = 
+            document.getElementById('summary-service').textContent = 
                 clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
-            
-            if (clientInfo.serviceType === 'recurring' && clientInfo.recurringFrequency) {
-                document.getElementById('summary-frequency').textContent = formatRecurringFrequency(clientInfo.recurringFrequency);
-                document.getElementById('frequency-row').style.display = 'flex';
-            } else {
-                document.getElementById('frequency-row').style.display = 'none';
-            }
-            
-            if (clientInfo.serviceType === 'emergency' && clientInfo.emergencyServiceType) {
-                document.getElementById('summary-emergency-type').innerHTML = 
-                    formatServiceType(clientInfo.emergencyServiceType) + '<span class="emergency-badge">EMERGENCY</span>';
-                document.getElementById('emergency-type-row').style.display = 'flex';
-            } else {
-                document.getElementById('emergency-type-row').style.display = 'none';
-            }
             
             document.getElementById('summary-property').textContent = 
                 clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
+            
             document.getElementById('summary-materials').textContent = 
                 clientInfo.materialOption ? formatMaterialOption(clientInfo.materialOption) : '-';
-            document.getElementById('summary-cleaner').textContent = 
-                clientInfo.cleaner ? formatCleanerName(clientInfo.cleaner) : 'Not selected';
+            
             document.getElementById('summary-date').textContent = 
                 clientInfo.date ? new Date(clientInfo.date).toLocaleDateString('en-ZA', { 
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
                 }) : '-';
+            
             document.getElementById('summary-address').textContent = clientInfo.address || '-';
 
             updateAddonsSummary(clientInfo.addons || []);
@@ -946,9 +797,6 @@
                 if (appliedDiscount) {
                     clientInfo.discountCode = appliedDiscount.code;
                     clientInfo.discountPercent = appliedDiscount.percentage;
-                } else {
-                    delete clientInfo.discountCode;
-                    delete clientInfo.discountPercent;
                 }
                 localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
                 bookingData = clientInfo;
@@ -960,10 +808,9 @@
                 'once-off': 'Once-off Cleaning',
                 'recurring': 'Recurring Plan',
                 'deep': 'Deep Cleaning',
-                'commercial': 'Commercial Cleaning',
                 'emergency': 'Emergency Cleaning'
             };
-            return types[serviceType] || serviceType.charAt(0).toUpperCase() + serviceType.slice(1);
+            return types[serviceType] || serviceType;
         }
 
         function formatMaterialOption(option) {
@@ -972,20 +819,6 @@
                 'we_supply': 'We Supply Materials'
             };
             return options[option] || option;
-        }
-
-        function formatCleanerName(cleaner) {
-            if (cleaner === 'any') return 'Auto-Assign Best Cleaner';
-            return cleaner.charAt(0).toUpperCase() + cleaner.slice(1);
-        }
-
-        function formatRecurringFrequency(frequency) {
-            const frequencies = {
-                'weekly': 'Weekly (Save 20%)',
-                'biweekly': 'Bi-weekly (Best Value)',
-                'monthly': 'Monthly'
-            };
-            return frequencies[frequency.toLowerCase()] || frequency;
         }
 
         function updateAddonsSummary(addons) {
@@ -999,7 +832,7 @@
             let html = '<div class="summary-item"><strong>Additional Services:</strong></div>';
             addons.forEach(addonId => {
                 html += `
-                    <div class="addon-item">
+                    <div class="summary-item">
                         <span>${addonNames[addonId]}</span>
                         <span>R${addonPrices[addonId]}</span>
                     </div>
@@ -1010,7 +843,6 @@
 
         function updatePriceSummary(prices, addons) {
             document.getElementById('base-price').textContent = `R${prices.base}`;
-            document.getElementById('subtotal-price').textContent = `R${prices.subtotal}`;
             document.getElementById('total-price').textContent = `R${prices.total}`;
             document.getElementById('pay-amount').textContent = `R${prices.total}`;
 
@@ -1064,236 +896,282 @@
             }
         }
 
-        function generateBookingRef() {
-            const timestamp = Date.now().toString().slice(-6);
-            const random = Math.floor(100 + Math.random() * 900);
-            return `NCL-${timestamp}${random}`;
-        }
-
-        // ENHANCED PAYMENT FUNCTION WITH COMPLETE ERROR HANDLING
+        // ============================================
+        // PAYMENT PROCESSING
+        // ============================================
         async function processPayment() {
-            console.log('=== PAYMENT PROCESS STARTED ===');
-            
+            if (!bookingData.totalAmount) {
+                showAlert('Please complete all booking details', 'error');
+                return;
+            }
+
             const payButton = document.getElementById('payButton');
             const originalButtonHTML = payButton.innerHTML;
+            payButton.innerHTML = '<span class="spinner"></span> Loading payment...';
+            payButton.disabled = true;
+
+            try {
+                // Ensure Yoco is loaded
+                if (!yoco) {
+                    await waitForYoco();
+                }
+
+                if (!yoco) {
+                    throw new Error('Payment system not available. Please refresh the page.');
+                }
+
+                // Open Yoco popup for secure payment
+                yoco.showPopup({
+                    amountInCents: Math.round(bookingData.totalAmount * 100),
+                    currency: 'ZAR',
+                    name: 'Ngaoyi Cleaning',
+                    description: `${formatServiceType(bookingData.serviceType)} - ${bookingData.propertySize}`,
+                    callback: async function (result) {
+                        if (result.error) {
+                            handlePaymentError(result.error, payButton, originalButtonHTML);
+                        } else {
+                            await handlePaymentSuccess(result, payButton, originalButtonHTML);
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                payButton.innerHTML = originalButtonHTML;
+                payButton.disabled = false;
+                showAlert('Payment system error: ' + error.message + '. Please refresh and try again.', 'error');
+            }
+        }
+
+        async function handlePaymentSuccess(result, payButton, originalButtonHTML) {
+            console.log('✅ Payment token received:', result.id);
+            payButton.innerHTML = '<span class="spinner"></span> Processing payment...';
             
             try {
-                // Update booking data first
-                updateSummary();
+                // Save booking with payment token
+                const bookingResponse = await saveBookingToSheets(bookingData, result.id);
                 
-                // Validate everything before proceeding
-                validateBookingData();
-                
-                console.log('✅ Validation passed, creating checkout...');
-                console.log('Booking Data:', bookingData);
-                console.log('Total Amount:', bookingData.totalAmount);
+                if (bookingResponse.success) {
+                    // Clear storage and redirect
+                    localStorage.removeItem('ngaoyi_booking');
+                    window.location.href = `thankyou.html?ref=${bookingResponse.bookingRef}`;
+                } else {
+                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                }
+            } catch (error) {
+                console.error('Payment processing error:', error);
+                payButton.innerHTML = originalButtonHTML;
+                payButton.disabled = false;
+                showAlert('Payment processing failed: ' + error.message + '. Please contact support.', 'error');
+            }
+        }
 
-                // Update button state
-                payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating secure checkout...';
-                payButton.disabled = true;
+        function handlePaymentError(error, payButton, originalButtonHTML) {
+            console.error('❌ Yoco payment error:', error);
+            
+            const errorMessage = error.message || 'Payment failed';
+            const errorCode = error.code || 'unknown';
+            
+            payButton.innerHTML = originalButtonHTML;
+            payButton.disabled = false;
+            
+            // Check if user cancelled
+            if (errorCode === 'popup_closed' || errorMessage.toLowerCase().includes('cancel')) {
+                showAlert('Payment cancelled. You can try again when ready.', 'info');
+                return;
+            }
+            
+            // Check for declined payment
+            if (errorCode === 'card_declined' || errorMessage.toLowerCase().includes('decline')) {
+                showAlert('Card declined: ' + errorMessage + '. Please try a different card.', 'error');
+                return;
+            }
+            
+            // Generic error
+            showAlert('Payment failed: ' + errorMessage + '. Please try again.', 'error');
+        }
 
-                // Generate booking reference
-                const bookingRef = bookingData.bookingRef || generateBookingRef();
-                
-                // Prepare checkout payload
-                const checkoutPayload = {
-                    action: 'createCheckout',
-                    amount: bookingData.totalAmount,
-                    bookingData: {
-                        bookingRef: bookingRef,
-                        name: bookingData.name,
-                        email: bookingData.email,
-                        phone: bookingData.phone,
-                        address: bookingData.address,
-                        date: bookingData.date,
-                        timeSlot: bookingData.timeSlot || '09:00',
-                        serviceType: bookingData.serviceType,
-                        propertySize: bookingData.propertySize,
-                        materialOption: bookingData.materialOption,
-                        cleaner: bookingData.cleaner || 'any',
-                        addons: bookingData.addons || [],
-                        notes: bookingData.notes || '',
-                        recurringFrequency: bookingData.recurringFrequency || null,
-                        emergencyServiceType: bookingData.emergencyServiceType || null,
-                        discountCode: bookingData.discountCode || '',
-                        discountPercent: bookingData.discountPercent || 0
-                    }
-                };
+        async function saveBookingToSheets(clientInfo, paymentToken) {
+            const payload = {
+                name: clientInfo.name,
+                email: clientInfo.email,
+                phone: clientInfo.phone,
+                address: clientInfo.address,
+                date: clientInfo.date,
+                serviceType: clientInfo.serviceType,
+                propertySize: clientInfo.propertySize,
+                materialOption: clientInfo.materialOption,
+                cleaner: clientInfo.cleaner || 'any',
+                addons: clientInfo.addons || [],
+                recurringFrequency: clientInfo.recurringFrequency || null,
+                emergencyServiceType: clientInfo.emergencyServiceType || null,
+                discountCode: clientInfo.discountCode || '',
+                discountPercent: clientInfo.discountPercent || 0,
+                totalAmount: clientInfo.totalAmount,
+                paymentToken: paymentToken,
+                paymentStatus: 'Pending',
+                action: 'saveBooking'
+            };
 
-                console.log('📤 Sending checkout payload:', checkoutPayload);
+            console.log('📤 Saving booking with payload:', payload);
 
-                // Make API call with timeout and CORS mode
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-
+            try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify(checkoutPayload),
-                    mode: 'cors',
-                    signal: controller.signal
+                    body: JSON.stringify(payload)
                 });
-
-                clearTimeout(timeoutId);
-
-                console.log('📥 Received response, status:', response.status);
-                console.log('Response OK:', response.ok);
-
-                // Get response as text first to handle both JSON and HTML responses
-                const responseText = await response.text();
-                console.log('Raw response:', responseText);
 
                 if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
-                // Try to parse JSON
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    console.error('❌ JSON parse error:', parseError);
-                    console.error('Raw response that failed to parse:', responseText);
-                    throw new Error('Invalid response from server. Please check your connection and try again.');
-                }
-
-                console.log('Parsed result:', result);
-
-                if (result.success && result.redirectUrl) {
-                    console.log('✅ Checkout created successfully!');
-                    console.log('Checkout ID:', result.checkoutId);
-                    console.log('Redirect URL:', result.redirectUrl);
-                    
-                    // Save booking reference
-                    localStorage.setItem('lastBookingRef', result.bookingRef || bookingRef);
-                    
-                    // Show success message
-                    showPaymentMessage('✓ Payment session created! Redirecting to secure checkout...', 'success');
-                    
-                    // Redirect after brief delay
-                    setTimeout(() => {
-                        window.location.href = result.redirectUrl;
-                    }, 1000);
-                    
+                const result = await response.json();
+                console.log('📥 Booking save response:', result);
+                
+                if (result.success && result.bookingRef) {
+                    console.log('✅ Booking saved successfully with ref:', result.bookingRef);
+                    return {
+                        success: true,
+                        bookingRef: result.bookingRef
+                    };
                 } else {
-                    const errorMsg = result.error || result.message || 'Unknown error from payment gateway';
-                    console.error('❌ Checkout failed:', errorMsg);
-                    throw new Error(errorMsg);
+                    throw new Error(result.error || 'Failed to save booking');
                 }
-
+                
             } catch (error) {
-                console.error('💥 PAYMENT ERROR:', error);
-                
-                // Restore button
-                payButton.innerHTML = originalButtonHTML;
-                payButton.disabled = false;
-                
-                // Show user-friendly error message
-                let userMessage = 'Payment setup failed: ';
-                
-                if (error.name === 'AbortError') {
-                    userMessage += 'Request timed out. Please check your internet connection and try again.';
-                } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                    userMessage += 'Network error. Please check your internet connection.';
-                } else if (error.message.includes('Missing required fields')) {
-                    userMessage += 'Please complete all booking details before payment.';
-                } else if (error.message.includes('Invalid total amount')) {
-                    userMessage += 'Invalid payment amount. Please refresh the page and try again.';
-                } else {
-                    userMessage += error.message;
-                }
-                
-                showPaymentMessage(userMessage, 'error');
+                console.error('❌ Booking save error:', error);
+                throw new Error('Failed to save booking: ' + error.message);
             }
         }
 
-        function showPaymentMessage(message, type) {
-            const existingMsg = document.querySelector('.payment-message');
-            if (existingMsg) {
-                existingMsg.remove();
-            }
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `payment-message payment-message-${type}`;
-            messageDiv.innerHTML = `
+        // ============================================
+        // ALERT MESSAGES
+        // ============================================
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
                 <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'info' ? 'info-circle' : 'check-circle'}"></i>
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+                ${message}
             `;
             
-            const paymentSection = document.querySelector('.payment-section');
-            paymentSection.insertBefore(messageDiv, paymentSection.firstChild);
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
             
+            // Auto-remove after 10 seconds for info/success messages
             if (type !== 'error') {
                 setTimeout(() => {
-                    if (messageDiv.parentElement) {
-                        messageDiv.remove();
-                    }
+                    alertDiv.remove();
                 }, 10000);
             }
+            
+            // Scroll to alert
+            alertContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // Debug helper function
-        async function debugPayment() {
-            console.log('=== PAYMENT DEBUG INFO ===');
-            console.log('Booking Data:', bookingData);
-            console.log('Total Amount:', bookingData.totalAmount);
-            console.log('API Endpoint:', GOOGLE_SCRIPT_URL);
-            
-            // Test minimal payload
-            const testPayload = {
-                action: 'createCheckout',
-                amount: 2.00,
-                bookingData: {
-                    bookingRef: 'TEST-' + Date.now(),
-                    name: 'Test Customer',
-                    email: 'test@example.com',
-                    phone: '0123456789',
-                    address: '123 Test St',
-                    date: new Date().toISOString().split('T')[0],
-                    timeSlot: '09:00',
-                    serviceType: 'once-off',
-                    propertySize: '2-bed',
-                    materialOption: 'customer',
-                    cleaner: 'any',
-                    addons: []
-                }
-            };
+        // ============================================
+        // CONNECTION TEST
+        // ============================================
+        async function testConnection() {
+            console.log('🧪 Testing connection to:', GOOGLE_SCRIPT_URL);
             
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(testPayload)
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=test`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
                 
-                const text = await response.text();
-                console.log('Test Response:', text);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Connection test result:', result);
+                
+                if (result.success) {
+                    console.log('✅ API connection successful!');
+                    return true;
+                } else {
+                    console.error('❌ API returned error:', result.error);
+                    return false;
+                }
+                
             } catch (error) {
-                console.error('Test failed:', error);
+                console.error('❌ Connection test failed:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack
+                });
+                
+                showAlert(
+                    `Connection failed: ${error.message}\n\n` +
+                    `Please check:\n` +
+                    `1. Your Google Apps Script is deployed as Web App\n` +
+                    `2. Access is set to "Anyone"\n` +
+                    `3. The deployment URL is correct\n\n` +
+                    `Current URL: ${GOOGLE_SCRIPT_URL}`,
+                    'error'
+                );
+                
+                return false;
             }
         }
 
-        // Initialize on page load
-        window.addEventListener('load', function() {
-            console.log('=== PAYMENT PAGE LOADED ===');
-            console.log('API URL:', GOOGLE_SCRIPT_URL);
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        window.addEventListener('load', async function() {
+            console.log('🚀 Initializing payment page...');
             
+            // Check if script URL is configured
+            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                showAlert('⚠️ Configuration Error: Please update GOOGLE_SCRIPT_URL in the script', 'error');
+                document.getElementById('payButton').disabled = true;
+                return;
+            }
+            
+            console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
+            
+            // Test connection to Google Apps Script
+            console.log('🔌 Testing connection to backend...');
+            const connectionOk = await testConnection();
+            
+            if (!connectionOk) {
+                document.getElementById('payButton').disabled = true;
+                return;
+            }
+            
+            // Update summary
             updateSummary();
             
+            // Initialize Yoco
+            try {
+                await waitForYoco();
+                console.log('✅ Yoco SDK ready for payment');
+            } catch (error) {
+                console.error('❌ Yoco SDK failed to load:', error);
+                showAlert('Payment system could not be loaded. Please refresh the page.', 'error');
+                document.getElementById('payButton').disabled = true;
+            }
+            
+            // Enable Enter key for discount code
             document.getElementById('discount-code-input').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     applyDiscount();
                 }
             });
             
-            // Test API connection
-            fetch(`${GOOGLE_SCRIPT_URL}?action=test`, { mode: 'cors' })
-                .then(r => console.log('API test response status:', r.status))
-                .catch(e => console.log('API test failed:', e));
+            console.log('✅ Payment page initialized successfully');
         });
     </script>
 </body>
