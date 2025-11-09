@@ -905,6 +905,12 @@
                 return;
             }
 
+            // Validate minimum amount (Yoco requires minimum R1.00)
+            if (bookingData.totalAmount < 1) {
+                showAlert('Minimum payment amount is R1.00', 'error');
+                return;
+            }
+
             const payButton = document.getElementById('payButton');
             const originalButtonHTML = payButton.innerHTML;
             payButton.innerHTML = '<span class="spinner"></span> Loading payment...';
@@ -920,23 +926,41 @@
                     throw new Error('Payment system not available. Please refresh the page.');
                 }
 
-                // Open Yoco popup for secure payment
+                console.log('💳 Opening Yoco payment popup...');
+                console.log('Amount in cents:', Math.round(bookingData.totalAmount * 100));
+                console.log('Amount in Rands:', bookingData.totalAmount);
+
+                // Open Yoco popup with correct configuration
                 yoco.showPopup({
-                    amountInCents: Math.round(bookingData.totalAmount * 100),
+                    amountInCents: Math.round(bookingData.totalAmount * 100), // Amount in cents
                     currency: 'ZAR',
                     name: 'Ngaoyi Cleaning',
                     description: `${formatServiceType(bookingData.serviceType)} - ${bookingData.propertySize}`,
+                    // Add metadata for tracking
+                    metadata: {
+                        customer_name: bookingData.name,
+                        customer_email: bookingData.email,
+                        service_type: bookingData.serviceType,
+                        property_size: bookingData.propertySize
+                    },
                     callback: async function (result) {
+                        console.log('💳 Yoco callback received');
+                        console.log('Result:', result);
+                        
                         if (result.error) {
+                            console.error('❌ Payment error:', result.error);
                             handlePaymentError(result.error, payButton, originalButtonHTML);
                         } else {
+                            console.log('✅ Payment token received:', result.id);
                             await handlePaymentSuccess(result, payButton, originalButtonHTML);
                         }
                     }
                 });
 
+                console.log('✅ Yoco popup opened successfully');
+
             } catch (error) {
-                console.error('Payment error:', error);
+                console.error('💥 Payment initialization error:', error);
                 payButton.innerHTML = originalButtonHTML;
                 payButton.disabled = false;
                 showAlert('Payment system error: ' + error.message + '. Please refresh and try again.', 'error');
@@ -1014,23 +1038,45 @@
             };
 
             console.log('📤 Saving booking with payload:', payload);
+            console.log('📍 Sending to URL:', GOOGLE_SCRIPT_URL);
 
             try {
+                // Use fetch with proper error handling
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+                
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Content-Type': 'text/plain;charset=utf-8'
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
+                clearTimeout(timeoutId);
+                
+                console.log('📥 Response status:', response.status);
+                console.log('📥 Response type:', response.type);
 
-                const result = await response.json();
-                console.log('📥 Booking save response:', result);
+                // Try to parse JSON response
+                const contentType = response.headers.get('content-type');
+                console.log('📥 Content-Type:', contentType);
+                
+                let result;
+                if (contentType && contentType.includes('application/json')) {
+                    result = await response.json();
+                } else {
+                    const text = await response.text();
+                    console.log('📥 Raw response:', text);
+                    try {
+                        result = JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Invalid response format from server');
+                    }
+                }
+                
+                console.log('📥 Parsed result:', result);
                 
                 if (result.success && result.bookingRef) {
                     console.log('✅ Booking saved successfully with ref:', result.bookingRef);
@@ -1044,7 +1090,22 @@
                 
             } catch (error) {
                 console.error('❌ Booking save error:', error);
-                throw new Error('Failed to save booking: ' + error.message);
+                
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timed out. Please check your internet connection and try again.');
+                }
+                
+                if (error.message.includes('Failed to fetch')) {
+                    throw new Error(
+                        'Cannot connect to server. Please verify:\n' +
+                        '1. Google Apps Script is deployed as Web App\n' +
+                        '2. Access is set to "Anyone"\n' +
+                        '3. The deployment URL is correct\n\n' +
+                        'URL: ' + GOOGLE_SCRIPT_URL
+                    );
+                }
+                
+                throw new Error(error.message || 'Failed to save booking');
             }
         }
 
