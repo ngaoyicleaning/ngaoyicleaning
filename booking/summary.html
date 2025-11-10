@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm & Pay - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Yoco SDK -->
-    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
         :root {
             --primary: #003b6f;
@@ -506,7 +504,7 @@
                 <div class="payment-info">
                     <i class="fas fa-shield-alt"></i>
                     <p><strong>Secure Payment with Yoco</strong></p>
-                    <p>When you click "Pay Now", a secure payment window will open where you can safely enter your card details.</p>
+                    <p>When you click "Pay Now", you will be redirected to a secure payment page where you can safely enter your card details.</p>
                 </div>
 
                 <div class="form-actions">
@@ -531,7 +529,6 @@
         // GLOBAL VARIABLES
         // ============================================
         let bookingData = {};
-        let yoco = null;
         let appliedDiscount = null;
         
         // Addon prices
@@ -553,46 +550,6 @@
             'carpet-cleaning': 'Carpet Cleaning',
             'balcony-cleaning': 'Balcony Cleaning'
         };
-
-        // ============================================
-        // YOCO SDK INITIALIZATION
-        // ============================================
-        function initYoco() {
-            if (typeof YocoSDK !== 'undefined') {
-                yoco = new YocoSDK({
-                    publicKey: 'pk_live_6d6373c9oWD3O3l181a4'
-                });
-                console.log('✅ Yoco SDK initialized successfully');
-                return true;
-            } else {
-                console.error('❌ Yoco SDK not loaded');
-                return false;
-            }
-        }
-
-        function waitForYoco() {
-            return new Promise((resolve, reject) => {
-                const maxAttempts = 50;
-                let attempts = 0;
-                
-                const checkYoco = () => {
-                    attempts++;
-                    if (typeof YocoSDK !== 'undefined') {
-                        if (initYoco()) {
-                            resolve(yoco);
-                        } else {
-                            reject(new Error('Failed to initialize Yoco SDK'));
-                        }
-                    } else if (attempts < maxAttempts) {
-                        setTimeout(checkYoco, 100);
-                    } else {
-                        reject(new Error('Yoco SDK failed to load'));
-                    }
-                };
-                
-                checkYoco();
-            });
-        }
 
         // ============================================
         // PRICE CALCULATION
@@ -897,7 +854,7 @@
         }
 
         // ============================================
-        // PAYMENT PROCESSING
+        // PAYMENT PROCESSING - SIMPLE REDIRECT FLOW
         // ============================================
         async function processPayment() {
             if (!bookingData.totalAmount) {
@@ -913,109 +870,39 @@
 
             const payButton = document.getElementById('payButton');
             const originalButtonHTML = payButton.innerHTML;
-            payButton.innerHTML = '<span class="spinner"></span> Loading payment...';
+            payButton.innerHTML = '<span class="spinner"></span> Creating payment...';
             payButton.disabled = true;
 
             try {
-                // Ensure Yoco is loaded
-                if (!yoco) {
-                    await waitForYoco();
-                }
-
-                if (!yoco) {
-                    throw new Error('Payment system not available. Please refresh the page.');
-                }
-
-                console.log('💳 Opening Yoco payment popup...');
-                console.log('Amount in cents:', Math.round(bookingData.totalAmount * 100));
-                console.log('Amount in Rands:', bookingData.totalAmount);
-
-                // Open Yoco popup with correct configuration
-                yoco.showPopup({
-                    amountInCents: Math.round(bookingData.totalAmount * 100), // Amount in cents
-                    currency: 'ZAR',
-                    name: 'Ngaoyi Cleaning',
-                    description: `${formatServiceType(bookingData.serviceType)} - ${bookingData.propertySize}`,
-                    // Add metadata for tracking
-                    metadata: {
-                        customer_name: bookingData.name,
-                        customer_email: bookingData.email,
-                        service_type: bookingData.serviceType,
-                        property_size: bookingData.propertySize
-                    },
-                    callback: async function (result) {
-                        console.log('💳 Yoco callback received');
-                        console.log('Result:', result);
-                        
-                        if (result.error) {
-                            console.error('❌ Payment error:', result.error);
-                            handlePaymentError(result.error, payButton, originalButtonHTML);
-                        } else {
-                            console.log('✅ Payment token received:', result.id);
-                            await handlePaymentSuccess(result, payButton, originalButtonHTML);
-                        }
-                    }
-                });
-
-                console.log('✅ Yoco popup opened successfully');
-
-            } catch (error) {
-                console.error('💥 Payment initialization error:', error);
-                payButton.innerHTML = originalButtonHTML;
-                payButton.disabled = false;
-                showAlert('Payment system error: ' + error.message + '. Please refresh and try again.', 'error');
-            }
-        }
-
-        async function handlePaymentSuccess(result, payButton, originalButtonHTML) {
-            console.log('✅ Payment token received:', result.id);
-            payButton.innerHTML = '<span class="spinner"></span> Processing payment...';
-            
-            try {
-                // Save booking with payment token
-                const bookingResponse = await saveBookingToSheets(bookingData, result.id);
+                console.log('🛒 Creating checkout session...');
                 
-                if (bookingResponse.success) {
-                    // Clear storage and redirect
-                    localStorage.removeItem('ngaoyi_booking');
-                    window.location.href = `thankyou.html?ref=${bookingResponse.bookingRef}`;
+                // Save booking and get redirect URL
+                const bookingResponse = await saveBookingToSheets(bookingData);
+                
+                if (bookingResponse.success && bookingResponse.redirectUrl) {
+                    console.log('✅ Checkout created, redirecting to:', bookingResponse.redirectUrl);
+                    
+                    // Show success message
+                    showAlert('Redirecting to secure payment page...', 'success');
+                    
+                    // Wait a moment then redirect
+                    setTimeout(() => {
+                        window.location.href = bookingResponse.redirectUrl;
+                    }, 1000);
+                    
                 } else {
-                    throw new Error(bookingResponse.error || 'Failed to save booking');
+                    throw new Error(bookingResponse.error || 'Failed to create payment session');
                 }
+                
             } catch (error) {
-                console.error('Payment processing error:', error);
+                console.error('💥 Payment error:', error);
                 payButton.innerHTML = originalButtonHTML;
                 payButton.disabled = false;
-                showAlert('Payment processing failed: ' + error.message + '. Please contact support.', 'error');
+                showAlert('Payment failed: ' + error.message, 'error');
             }
         }
 
-        function handlePaymentError(error, payButton, originalButtonHTML) {
-            console.error('❌ Yoco payment error:', error);
-            
-            const errorMessage = error.message || 'Payment failed';
-            const errorCode = error.code || 'unknown';
-            
-            payButton.innerHTML = originalButtonHTML;
-            payButton.disabled = false;
-            
-            // Check if user cancelled
-            if (errorCode === 'popup_closed' || errorMessage.toLowerCase().includes('cancel')) {
-                showAlert('Payment cancelled. You can try again when ready.', 'info');
-                return;
-            }
-            
-            // Check for declined payment
-            if (errorCode === 'card_declined' || errorMessage.toLowerCase().includes('decline')) {
-                showAlert('Card declined: ' + errorMessage + '. Please try a different card.', 'error');
-                return;
-            }
-            
-            // Generic error
-            showAlert('Payment failed: ' + errorMessage + '. Please try again.', 'error');
-        }
-
-        async function saveBookingToSheets(clientInfo, paymentToken) {
+        async function saveBookingToSheets(clientInfo) {
             const payload = {
                 name: clientInfo.name,
                 email: clientInfo.email,
@@ -1032,8 +919,6 @@
                 discountCode: clientInfo.discountCode || '',
                 discountPercent: clientInfo.discountPercent || 0,
                 totalAmount: clientInfo.totalAmount,
-                paymentToken: paymentToken,
-                paymentStatus: 'Pending',
                 action: 'saveBooking'
             };
 
@@ -1041,7 +926,6 @@
             console.log('📍 Sending to URL:', GOOGLE_SCRIPT_URL);
 
             try {
-                // Use fetch with proper error handling
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
                 
@@ -1057,18 +941,14 @@
                 clearTimeout(timeoutId);
                 
                 console.log('📥 Response status:', response.status);
-                console.log('📥 Response type:', response.type);
-
-                // Try to parse JSON response
-                const contentType = response.headers.get('content-type');
-                console.log('📥 Content-Type:', contentType);
                 
                 let result;
+                const contentType = response.headers.get('content-type');
+                
                 if (contentType && contentType.includes('application/json')) {
                     result = await response.json();
                 } else {
                     const text = await response.text();
-                    console.log('📥 Raw response:', text);
                     try {
                         result = JSON.parse(text);
                     } catch (e) {
@@ -1078,14 +958,15 @@
                 
                 console.log('📥 Parsed result:', result);
                 
-                if (result.success && result.bookingRef) {
-                    console.log('✅ Booking saved successfully with ref:', result.bookingRef);
+                if (result.success && result.redirectUrl) {
+                    console.log('✅ Booking saved successfully, redirect URL:', result.redirectUrl);
                     return {
                         success: true,
+                        redirectUrl: result.redirectUrl,
                         bookingRef: result.bookingRef
                     };
                 } else {
-                    throw new Error(result.error || 'Failed to save booking');
+                    throw new Error(result.error || 'Failed to create payment session');
                 }
                 
             } catch (error) {
@@ -1105,7 +986,7 @@
                     );
                 }
                 
-                throw new Error(error.message || 'Failed to save booking');
+                throw new Error(error.message || 'Failed to create payment session');
             }
         }
 
@@ -1168,11 +1049,6 @@
                 
             } catch (error) {
                 console.error('❌ Connection test failed:', error);
-                console.error('Error details:', {
-                    message: error.message,
-                    name: error.name,
-                    stack: error.stack
-                });
                 
                 showAlert(
                     `Connection failed: ${error.message}\n\n` +
@@ -1195,7 +1071,7 @@
             console.log('🚀 Initializing payment page...');
             
             // Check if script URL is configured
-            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+            if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzzwzdx8pdZnAp_YSe_cRUhwIuY6KOsYh13r6ITnuU1OsIee9F7zxOq9m10841QzGKiIg/exec') {
                 showAlert('⚠️ Configuration Error: Please update GOOGLE_SCRIPT_URL in the script', 'error');
                 document.getElementById('payButton').disabled = true;
                 return;
@@ -1214,16 +1090,6 @@
             
             // Update summary
             updateSummary();
-            
-            // Initialize Yoco
-            try {
-                await waitForYoco();
-                console.log('✅ Yoco SDK ready for payment');
-            } catch (error) {
-                console.error('❌ Yoco SDK failed to load:', error);
-                showAlert('Payment system could not be loaded. Please refresh the page.', 'error');
-                document.getElementById('payButton').disabled = true;
-            }
             
             // Enable Enter key for discount code
             document.getElementById('discount-code-input').addEventListener('keypress', function(e) {
