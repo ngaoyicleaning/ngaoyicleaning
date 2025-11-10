@@ -447,6 +447,10 @@
                         <span id="summary-date">-</span>
                     </div>
                     <div class="summary-item">
+                        <strong>Time Slot:</strong>
+                        <span id="summary-time">-</span>
+                    </div>
+                    <div class="summary-item">
                         <strong>Address:</strong>
                         <span id="summary-address">-</span>
                     </div>
@@ -521,7 +525,7 @@
 
     <script>
         // ============================================
-        // CONFIGURATION - UPDATE THIS WITH YOUR DEPLOYMENT URL
+        // CONFIGURATION
         // ============================================
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzwzdx8pdZnAp_YSe_cRUhwIuY6KOsYh13r6ITnuU1OsIee9F7zxOq9m10841QzGKiIg/exec';
         
@@ -549,6 +553,13 @@
             'laundry-service': 'Laundry Service',
             'carpet-cleaning': 'Carpet Cleaning',
             'balcony-cleaning': 'Balcony Cleaning'
+        };
+
+        // Time slot names
+        const timeSlotNames = {
+            'morning': 'Morning (8:00 AM - 12:00 PM)',
+            'afternoon': 'Afternoon (12:00 PM - 4:00 PM)',
+            'evening': 'Evening (4:00 PM - 8:00 PM)'
         };
 
         // ============================================
@@ -729,6 +740,10 @@
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
                 }) : '-';
             
+            // Display time slot
+            document.getElementById('summary-time').textContent = 
+                clientInfo.timeSlot ? formatTimeSlot(clientInfo.timeSlot) : '-';
+            
             document.getElementById('summary-address').textContent = clientInfo.address || '-';
 
             updateAddonsSummary(clientInfo.addons || []);
@@ -776,6 +791,10 @@
                 'we_supply': 'We Supply Materials'
             };
             return options[option] || option;
+        }
+
+        function formatTimeSlot(timeSlot) {
+            return timeSlotNames[timeSlot] || timeSlot;
         }
 
         function updateAddonsSummary(addons) {
@@ -909,6 +928,7 @@
                 phone: clientInfo.phone,
                 address: clientInfo.address,
                 date: clientInfo.date,
+                timeSlot: clientInfo.timeSlot, // Include time slot
                 serviceType: clientInfo.serviceType,
                 propertySize: clientInfo.propertySize,
                 materialOption: clientInfo.materialOption,
@@ -1069,13 +1089,6 @@
         // ============================================
         window.addEventListener('load', async function() {
             console.log('🚀 Initializing payment page...');
-            
-            // Check if script URL is configured
-            if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzzwzdx8pdZnAp_YSe_cRUhwIuY6KOsYh13r6ITnuU1OsIee9F7zxOq9m10841QzGKiIg/exec') {
-                showAlert('⚠️ Configuration Error: Please update GOOGLE_SCRIPT_URL in the script', 'error');
-                document.getElementById('payButton').disabled = true;
-                return;
-            }
             
             console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
             
