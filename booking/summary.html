@@ -333,9 +333,6 @@
             border-radius: 10px;
             margin-bottom: 20px;
             animation: slideDown 0.3s ease-out;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
         @keyframes slideDown {
@@ -408,43 +405,6 @@
                 font-size: 1.8rem;
             }
         }
-
-        /* Customer Info Section */
-        .customer-section {
-            background: var(--light);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .customer-section h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .customer-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .customer-detail {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .customer-detail strong {
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .customer-detail span {
-            color: var(--gray);
-            font-size: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -466,25 +426,6 @@
             <p class="step-description">Please verify your details and proceed to secure payment</p>
 
             <div id="alertContainer"></div>
-
-            <!-- Customer Information -->
-            <div class="customer-section">
-                <h3><i class="fas fa-user"></i> Customer Information</h3>
-                <div class="customer-details">
-                    <div class="customer-detail">
-                        <strong>Full Name</strong>
-                        <span id="customer-name">-</span>
-                    </div>
-                    <div class="customer-detail">
-                        <strong>Email Address</strong>
-                        <span id="customer-email">-</span>
-                    </div>
-                    <div class="customer-detail">
-                        <strong>Phone Number</strong>
-                        <span id="customer-phone">-</span>
-                    </div>
-                </div>
-            </div>
 
             <div class="summary-container">
                 <div class="booking-summary">
@@ -514,10 +455,6 @@
                         <span id="summary-address">-</span>
                     </div>
                     <div id="addons-summary"></div>
-                    <div class="summary-item" id="cleaner-summary" style="display: none;">
-                        <strong>Preferred Cleaner:</strong>
-                        <span id="summary-cleaner">-</span>
-                    </div>
                 </div>
 
                 <div class="price-summary">
@@ -590,7 +527,7 @@
         // ============================================
         // CONFIGURATION
         // ============================================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5hHXIFuqsdPtAVKnln3t3mkwLdrGnHG5aIT77KpQywb2Pdwvw94Z1MVL-3_iua75Tvw/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4IqXaIJk6fAgwj3ZuIrVmOV9ZzV9wk8aJS26bJLQnxI72JBUI-bJlhosNFwAXEZVoWw/exec';
         
         // ============================================
         // GLOBAL VARIABLES
@@ -623,14 +560,6 @@
             'morning': 'Morning (8:00 AM - 12:00 PM)',
             'afternoon': 'Afternoon (12:00 PM - 4:00 PM)',
             'evening': 'Evening (4:00 PM - 8:00 PM)'
-        };
-
-        // Service type names
-        const serviceTypeNames = {
-            'once-off': 'Once-off Cleaning',
-            'recurring': 'Recurring Cleaning',
-            'deep': 'Deep Cleaning',
-            'emergency': 'Emergency Cleaning'
         };
 
         // ============================================
@@ -794,20 +723,11 @@
             
             if (!clientInfo.name) {
                 showAlert('Please complete your booking details first', 'error');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
                 return;
             }
 
-            // Update customer information
-            document.getElementById('customer-name').textContent = clientInfo.name || '-';
-            document.getElementById('customer-email').textContent = clientInfo.email || '-';
-            document.getElementById('customer-phone').textContent = clientInfo.phone || '-';
-
-            // Update booking details
             document.getElementById('summary-service').textContent = 
-                clientInfo.serviceType ? serviceTypeNames[clientInfo.serviceType] || clientInfo.serviceType : '-';
+                clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
             
             document.getElementById('summary-property').textContent = 
                 clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
@@ -820,20 +740,11 @@
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
                 }) : '-';
             
+            // Display time slot
             document.getElementById('summary-time').textContent = 
-                clientInfo.timeSlot ? timeSlotNames[clientInfo.timeSlot] || clientInfo.timeSlot : '-';
+                clientInfo.timeSlot ? formatTimeSlot(clientInfo.timeSlot) : '-';
             
             document.getElementById('summary-address').textContent = clientInfo.address || '-';
-
-            // Update cleaner information if available
-            const cleanerSummary = document.getElementById('cleaner-summary');
-            const summaryCleaner = document.getElementById('summary-cleaner');
-            if (clientInfo.cleaner && clientInfo.cleaner !== 'any') {
-                cleanerSummary.style.display = 'flex';
-                summaryCleaner.textContent = clientInfo.cleaner;
-            } else {
-                cleanerSummary.style.display = 'none';
-            }
 
             updateAddonsSummary(clientInfo.addons || []);
 
@@ -864,12 +775,26 @@
             }
         }
 
+        function formatServiceType(serviceType) {
+            const types = {
+                'once-off': 'Once-off Cleaning',
+                'recurring': 'Recurring Plan',
+                'deep': 'Deep Cleaning',
+                'emergency': 'Emergency Cleaning'
+            };
+            return types[serviceType] || serviceType;
+        }
+
         function formatMaterialOption(option) {
             const options = {
                 'customer': 'Customer Supplies Materials',
                 'we_supply': 'We Supply Materials'
             };
             return options[option] || option;
+        }
+
+        function formatTimeSlot(timeSlot) {
+            return timeSlotNames[timeSlot] || timeSlot;
         }
 
         function updateAddonsSummary(addons) {
@@ -948,7 +873,7 @@
         }
 
         // ============================================
-        // PAYMENT PROCESSING
+        // PAYMENT PROCESSING - SIMPLE REDIRECT FLOW
         // ============================================
         async function processPayment() {
             if (!bookingData.totalAmount) {
@@ -982,7 +907,7 @@
                     // Wait a moment then redirect
                     setTimeout(() => {
                         window.location.href = bookingResponse.redirectUrl;
-                    }, 1500);
+                    }, 1000);
                     
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to create payment session');
@@ -1010,8 +935,8 @@
                 materialOption: clientInfo.materialOption,
                 cleaner: clientInfo.cleaner || 'any',
                 addons: clientInfo.addons || [],
-                recurringFrequency: clientInfo.recurringFrequency || null,
-                emergencyServiceType: clientInfo.emergencyServiceType || null,
+                recurringFrequency: clientInfo.recurringFrequency || '',
+                emergencyServiceType: clientInfo.emergencyServiceType || '',
                 discountCode: clientInfo.discountCode || '',
                 discountPercent: clientInfo.discountPercent || 0,
                 totalAmount: clientInfo.totalAmount
@@ -1022,7 +947,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 second timeout
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
                 
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
