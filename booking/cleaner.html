@@ -16,6 +16,8 @@
             --gray: #6c6c6c;
             --light-gray: #e9ecef;
             --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
@@ -197,6 +199,45 @@
             line-height: 1.7;
         }
         
+        /* Booking Info Banner */
+        .booking-info-banner {
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .booking-info-banner h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .booking-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .booking-detail strong {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .booking-detail span {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
         /* Cleaner Selection */
         .cleaners-grid {
             display: grid;
@@ -230,6 +271,18 @@
             box-shadow: 0 10px 30px rgba(0, 59, 111, 0.1);
         }
         
+        .cleaner-card.unavailable {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+        
+        .cleaner-card.unavailable:hover {
+            transform: none;
+            border-color: var(--light-gray);
+            box-shadow: none;
+        }
+        
         .cleaner-image {
             width: 100px;
             height: 100px;
@@ -246,6 +299,10 @@
         
         .cleaner-card.selected .cleaner-image {
             border-color: var(--primary);
+        }
+        
+        .cleaner-card.unavailable .cleaner-image {
+            border-color: var(--gray);
         }
         
         .cleaner-image img {
@@ -270,6 +327,10 @@
             font-weight: 700;
         }
         
+        .cleaner-card.unavailable .cleaner-info h3 {
+            color: var(--gray);
+        }
+        
         .cleaner-rating {
             display: flex;
             align-items: center;
@@ -289,10 +350,37 @@
             font-size: 1rem;
         }
         
+        .cleaner-card.unavailable .cleaner-specialty {
+            color: var(--gray);
+        }
+        
         .cleaner-areas {
             font-size: 0.95rem;
             color: var(--gray);
             line-height: 1.5;
+        }
+        
+        .availability-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .available {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .unavailable {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         
         .select-indicator {
@@ -305,6 +393,10 @@
             color: var(--success);
         }
         
+        .cleaner-card.unavailable .select-indicator {
+            color: var(--gray);
+        }
+        
         .loading {
             text-align: center;
             padding: 40px;
@@ -314,6 +406,35 @@
         .loading i {
             font-size: 2rem;
             margin-bottom: 15px;
+        }
+        
+        .refresh-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .refresh-btn {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .refresh-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .form-actions {
@@ -348,6 +469,40 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: slideDown 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
         }
         
         /* Responsive */
@@ -458,6 +613,36 @@
             <h2>Select Your Preferred Cleaner</h2>
             <p class="step-description">All our cleaners are vetted, trained, and insured for your peace of mind</p>
 
+            <!-- Booking Info Banner -->
+            <div class="booking-info-banner">
+                <h4><i class="fas fa-info-circle"></i> Your Booking Details</h4>
+                <div class="booking-details">
+                    <div class="booking-detail">
+                        <strong>Service Date</strong>
+                        <span id="booking-date">-</span>
+                    </div>
+                    <div class="booking-detail">
+                        <strong>Time Slot</strong>
+                        <span id="booking-time">-</span>
+                    </div>
+                    <div class="booking-detail">
+                        <strong>Service Area</strong>
+                        <span id="booking-area">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <div class="refresh-section">
+                <button class="refresh-btn" onclick="loadAvailableCleaners()" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh Availability
+                </button>
+                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--gray);">
+                    Last updated: <span id="lastUpdated">-</span>
+                </p>
+            </div>
+
             <div class="cleaners-grid" id="cleanersContainer">
                 <div class="loading">
                     <i class="fas fa-spinner fa-spin"></i>
@@ -466,7 +651,7 @@
             </div>
 
             <div class="form-actions">
-                <button id="continueBtn" class="btn btn-primary" disabled onclick="proceedToAddons()">
+                <button id="continueBtn" class="btn" disabled onclick="proceedToAddons()">
                     Continue to Add-ons <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
@@ -474,33 +659,115 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhnEQ6qCJ9BfbqNYOlYd6jU-g4nzIiNGONWev-U_m9I0wa12HYLabaDX14eME2Y63A/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznQXsXJZsg1rir7GBb9wTrRLeDLMhkBxha9x8leoGoAPMQSpvPH1zoJF_CdbhWpBOzTw/exec';
         let selectedCleaner = null;
+        let availableCleaners = [];
 
-        // Load cleaners from Google Sheets
-        async function loadCleanersFromSheets() {
+        // Format time slot for display
+        function formatTimeSlot(timeSlot) {
+            const timeSlotNames = {
+                'morning': 'Morning (8:00 AM - 12:00 PM)',
+                'afternoon': 'Afternoon (12:00 PM - 4:00 PM)',
+                'evening': 'Evening (4:00 PM - 8:00 PM)'
+            };
+            return timeSlotNames[timeSlot] || timeSlot;
+        }
+
+        // Extract area from address
+        function extractAreaFromAddress(address) {
+            const areas = ['Pretoria East', 'Centurion', 'Johannesburg North', 'Sandton', 'Pretoria Central', 'Hatfield'];
+            for (const area of areas) {
+                if (address.toLowerCase().includes(area.toLowerCase())) {
+                    return area;
+                }
+            }
+            return 'General Area';
+        }
+
+        // Update booking info banner
+        function updateBookingInfo() {
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            
+            if (clientInfo.date) {
+                document.getElementById('booking-date').textContent = 
+                    new Date(clientInfo.date).toLocaleDateString('en-ZA', { 
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                    });
+            }
+            
+            if (clientInfo.timeSlot) {
+                document.getElementById('booking-time').textContent = formatTimeSlot(clientInfo.timeSlot);
+            }
+            
+            if (clientInfo.address) {
+                document.getElementById('booking-area').textContent = extractAreaFromAddress(clientInfo.address);
+            }
+        }
+
+        // Load available cleaners based on booking details
+        async function loadAvailableCleaners() {
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            const refreshBtn = document.getElementById('refreshBtn');
+            
+            if (!clientInfo.date || !clientInfo.timeSlot) {
+                showAlert('Please complete your booking details first', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            refreshBtn.disabled = true;
+            refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL);
+                const area = extractAreaFromAddress(clientInfo.address);
+                const url = `${GOOGLE_SCRIPT_URL}?action=getAvailableCleaners&date=${encodeURIComponent(clientInfo.date)}&timeSlot=${encodeURIComponent(clientInfo.timeSlot)}&area=${encodeURIComponent(area)}`;
+                
+                console.log('🔍 Fetching available cleaners:', url);
+                
+                const response = await fetch(url);
                 const data = await response.json();
                 
                 if (data.success) {
-                    displayCleaners(data.cleaners);
+                    availableCleaners = data.availableCleaners || [];
+                    displayCleaners(availableCleaners);
+                    showAlert(`Found ${availableCleaners.length} available cleaners for your booking`, 'info');
                 } else {
-                    showError('Failed to load cleaners. Please try again.');
+                    throw new Error(data.error || 'Failed to load cleaners');
                 }
+                
             } catch (error) {
                 console.error('Error loading cleaners:', error);
-                showError('Failed to load cleaners. Using default options.');
+                showAlert('Failed to load cleaner availability. Please try again.', 'warning');
                 displayDefaultCleaners();
+            } finally {
+                refreshBtn.disabled = false;
+                refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Availability';
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
             }
         }
 
         function displayCleaners(cleaners) {
             const container = document.getElementById('cleanersContainer');
-            container.innerHTML = '';
             
-            // Add auto-assign option
-            container.innerHTML += `
+            if (cleaners.length === 0) {
+                container.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-user-slash"></i>
+                        <p>No cleaners available for your selected date and time</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">
+                            Please try a different date/time or choose auto-assign for the best match
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            
+            // Add auto-assign option (always available)
+            html += `
                 <div class="cleaner-card" onclick="selectCleaner('any')">
                     <div class="cleaner-image">
                         <div class="auto-assign-icon">
@@ -517,9 +784,12 @@
                             <i class="fas fa-star"></i>
                             <span>4.8 (150+ reviews)</span>
                         </div>
-                        <p class="cleaner-specialty">Let us match you with the best available cleaner for your area and needs</p>
+                        <p class="cleaner-specialty">Let us match you with the best available cleaner</p>
                         <div class="cleaner-areas">
                             <strong>Benefits:</strong> Fastest booking, optimal matching, guaranteed quality
+                        </div>
+                        <div class="availability-status available">
+                            <i class="fas fa-check-circle"></i> Always Available
                         </div>
                     </div>
                     <div class="select-indicator">
@@ -528,12 +798,19 @@
                 </div>
             `;
             
-            // Add cleaners from database
+            // Add available cleaners from database
             cleaners.forEach(cleaner => {
-                container.innerHTML += `
-                    <div class="cleaner-card" onclick="selectCleaner('${cleaner.id}')">
+                const isAvailable = cleaner.status === 'Available';
+                const availabilityClass = isAvailable ? 'available' : 'unavailable';
+                const availabilityText = isAvailable ? 'Available' : 'Currently Unavailable';
+                
+                html += `
+                    <div class="cleaner-card ${!isAvailable ? 'unavailable' : ''}" 
+                         onclick="${isAvailable ? `selectCleaner('${cleaner.id}')` : ''}">
                         <div class="cleaner-image">
-                            <img src="${cleaner.photo}" alt="${cleaner.name}" onerror="this.src='https://via.placeholder.com/150/003b6f/ffffff?text=${cleaner.name.charAt(0)}'">
+                            <img src="${cleaner.photoUrl || 'https://via.placeholder.com/150/003b6f/ffffff?text=' + cleaner.name.charAt(0)}" 
+                                 alt="${cleaner.name}" 
+                                 onerror="this.src='https://via.placeholder.com/150/003b6f/ffffff?text=${cleaner.name.charAt(0)}'">
                         </div>
                         <div class="cleaner-info">
                             <h3>${cleaner.name}</h3>
@@ -543,7 +820,11 @@
                             </div>
                             <p class="cleaner-specialty">${cleaner.specialty}</p>
                             <div class="cleaner-areas">
-                                <strong>Areas:</strong> ${cleaner.areas}
+                                <strong>Areas:</strong> ${cleaner.areas.join(', ')}
+                            </div>
+                            <div class="availability-status ${availabilityClass}">
+                                <i class="fas fa-${isAvailable ? 'check' : 'clock'}-circle"></i> 
+                                ${availabilityText}
                             </div>
                         </div>
                         <div class="select-indicator">
@@ -552,60 +833,8 @@
                     </div>
                 `;
             });
-        }
-
-        function displayDefaultCleaners() {
-            const container = document.getElementById('cleanersContainer');
-            container.innerHTML = `
-                <div class="cleaner-card" onclick="selectCleaner('any')">
-                    <div class="cleaner-image">
-                        <div class="auto-assign-icon">
-                            <i class="fas fa-random"></i>
-                        </div>
-                    </div>
-                    <div class="cleaner-info">
-                        <h3>Auto-Assign Best Cleaner</h3>
-                        <div class="cleaner-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.8 (150+ reviews)</span>
-                        </div>
-                        <p class="cleaner-specialty">Let us match you with the best available cleaner for your area and needs</p>
-                        <div class="cleaner-areas">
-                            <strong>Benefits:</strong> Fastest booking, optimal matching, guaranteed quality
-                        </div>
-                    </div>
-                    <div class="select-indicator">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                </div>
-                <div class="cleaner-card" onclick="selectCleaner('thandeka')">
-                    <div class="cleaner-image">
-                        <img src="/assets/cleaners/thandeka.jpg" alt="Thandeka" onerror="this.src='https://via.placeholder.com/150/003b6f/ffffff?text=T'">
-                    </div>
-                    <div class="cleaner-info">
-                        <h3>Thandeka</h3>
-                        <div class="cleaner-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.5 (28 reviews)</span>
-                        </div>
-                        <p class="cleaner-specialty">Specializes in deep cleaning and recurring plans</p>
-                        <div class="cleaner-areas">
-                            <strong>Areas:</strong> Sandton, Fourways, Randburg
-                        </div>
-                    </div>
-                    <div class="select-indicator">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                </div>
-            `;
+            
+            container.innerHTML = html;
         }
 
         function generateStarRating(rating) {
@@ -629,8 +858,8 @@
             return stars;
         }
 
-        function selectCleaner(cleanerName) {
-            selectedCleaner = cleanerName;
+        function selectCleaner(cleanerId) {
+            selectedCleaner = cleanerId;
             
             // Update UI
             document.querySelectorAll('.cleaner-card').forEach(card => {
@@ -640,6 +869,8 @@
             
             // Enable continue button
             document.getElementById('continueBtn').disabled = false;
+            
+            console.log('✅ Selected cleaner:', cleanerId);
         }
 
         function proceedToAddons() {
@@ -647,34 +878,80 @@
                 // Save cleaner selection
                 const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
                 clientInfo.cleaner = selectedCleaner;
+                
+                // If a specific cleaner was selected, store their details
+                if (selectedCleaner !== 'any') {
+                    const selectedCleanerData = availableCleaners.find(c => c.id === selectedCleaner);
+                    if (selectedCleanerData) {
+                        clientInfo.selectedCleanerName = selectedCleanerData.name;
+                        clientInfo.selectedCleanerRating = selectedCleanerData.rating;
+                    }
+                }
+                
                 localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
+                
+                console.log('💾 Saved cleaner selection:', clientInfo.cleaner);
                 
                 // Redirect to add-ons
                 window.location.href = 'addons.html';
             }
         }
 
-        function showError(message) {
-            const container = document.getElementById('cleanersContainer');
-            container.innerHTML = `
-                <div class="loading">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>${message}</p>
-                    <button onclick="loadCleanersFromSheets()" class="btn" style="margin-top: 15px;">
-                        <i class="fas fa-redo"></i> Try Again
-                    </button>
-                </div>
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
             `;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto-remove after 8 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 8000);
         }
 
-        // Load client info to show context and load cleaners
+        // Auto-refresh availability every 2 minutes
+        function startAutoRefresh() {
+            setInterval(() => {
+                if (document.visibilityState === 'visible') {
+                    console.log('🔄 Auto-refreshing cleaner availability...');
+                    loadAvailableCleaners();
+                }
+            }, 120000); // 2 minutes
+        }
+
+        // Load client info and available cleaners
         window.addEventListener('load', function() {
             const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            
             if (!clientInfo.name) {
                 window.location.href = 'index.html';
                 return;
             }
-            loadCleanersFromSheets();
+            
+            // Update booking info banner
+            updateBookingInfo();
+            
+            // Load available cleaners
+            loadAvailableCleaners();
+            
+            // Start auto-refresh
+            startAutoRefresh();
+            
+            console.log('🚀 Cleaner selection page initialized');
+        });
+
+        // Refresh when page becomes visible
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                console.log('📄 Page visible, refreshing availability...');
+                loadAvailableCleaners();
+            }
         });
     </script>
 </body>
