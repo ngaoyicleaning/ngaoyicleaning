@@ -637,9 +637,9 @@
 
     <script>
         // ============================================
-        // CONFIGURATION
+        // CONFIGURATION - UPDATED WITH YOUR CORRECT URL
         // ============================================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI9024dSXCxhy3dITCaudt5-InTwFu7bjDR0eYtcnZgMrwvUv1dabIoTKqFjQP9r_Q/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznQXsXJZsg1rir7GBb9wTrRLeDLMhkBxha9x8leoGoAPMQSpvPH1zoJF_CdbhWpBOzTw/exec';
         
         // ============================================
         // GLOBAL VARIABLES
@@ -1018,6 +1018,7 @@
 
             try {
                 console.log('🛒 Creating checkout session...');
+                console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
                 
                 // Show processing modal
                 document.getElementById('paymentModal').style.display = 'flex';
