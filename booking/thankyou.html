@@ -241,6 +241,17 @@
             color: var(--primary);
         }
         
+        .booking-reference {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 59, 111, 0.3);
+        }
+        
         .payment-status {
             color: var(--success);
             font-weight: 600;
@@ -390,7 +401,31 @@
         .contact-info a:hover {
             color: var(--accent);
         }
-        
+
+        /* Copy reference button */
+        .copy-reference {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            transition: var(--transition);
+        }
+
+        .copy-reference:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .copy-reference.copied {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .thank-you-container {
@@ -463,13 +498,26 @@
             <div class="details-grid">
                 <div class="detail-item">
                     <strong>Booking Reference:</strong>
-                    <span id="booking-ref">Loading...</span>
+                    <span>
+                        <span class="booking-reference" id="booking-ref-display">Loading...</span>
+                        <button class="copy-reference" onclick="copyBookingReference()" id="copy-btn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </span>
                 </div>
                 <div class="detail-item">
                     <strong>Payment Status:</strong>
                     <span class="payment-status">
                         <i class="fas fa-check-circle"></i> Paid
                     </span>
+                </div>
+                <div class="detail-item">
+                    <strong>Confirmation Email:</strong>
+                    <span>Sent to your email</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Booking Date:</strong>
+                    <span id="booking-date">-</span>
                 </div>
             </div>
         </div>
@@ -511,13 +559,16 @@
         <div class="contact-info">
             <p><strong>Need to make changes to your booking?</strong></p>
             <p>Contact us at <a href="tel:+27707643709">070 764 3709</a> or <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a></p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Please have your booking reference ready: <strong id="reference-for-contact">-</strong>
+            </p>
         </div>
         
         <div class="action-buttons">
             <a href="/" class="btn">
                 <i class="fas fa-home"></i> Back to Homepage
             </a>
-            <a href="https://wa.me/27707643709?text=Hi%2C%20I%20just%20completed%20a%20booking%20(Ref%3A%20BOOKING_REF)%20and%20wanted%20to%20confirm%20details" class="btn btn-whatsapp" id="whatsapp-link">
+            <a href="#" class="btn btn-whatsapp" id="whatsapp-link">
                 <i class="fab fa-whatsapp"></i> Message on WhatsApp
             </a>
             <a href="/booking/index.html" class="btn btn-outline">
@@ -526,87 +577,214 @@
         </div>
     </div>
 
-    <!-- Audio element for success sound -->
-    <audio id="successSound" preload="auto">
-        <source src="https://drive.google.com/uc?export=download&id=1DPZlwyzxUI9rw4i5uInA8tIVt1sBOk1f" type="audio/mpeg">
-    </audio>
-
     <script>
-        // Clear any remaining booking data
-        try {
-            localStorage.removeItem('ngaoyi_booking');
-        } catch (e) {
-            console.log('Storage cleared');
+        // ============================================
+        // BOOKING REFERENCE HANDLING
+        // ============================================
+
+        function getBookingReference() {
+            // Try multiple methods to get the booking reference
+            let bookingRef = '';
+            
+            // 1. Check URL parameters first
+            const urlParams = new URLSearchParams(window.location.search);
+            bookingRef = urlParams.get('ref') || urlParams.get('bookingRef') || urlParams.get('reference');
+            
+            // 2. Check localStorage for the last booking reference
+            if (!bookingRef) {
+                try {
+                    bookingRef = localStorage.getItem('last_booking_ref');
+                } catch (e) {
+                    console.log('Could not access localStorage');
+                }
+            }
+            
+            // 3. Check sessionStorage
+            if (!bookingRef) {
+                try {
+                    bookingRef = sessionStorage.getItem('last_booking_ref');
+                } catch (e) {
+                    console.log('Could not access sessionStorage');
+                }
+            }
+            
+            // 4. Generate a temporary reference if none found
+            if (!bookingRef) {
+                bookingRef = 'NC-' + Math.floor(100000 + Math.random() * 900000);
+                console.log('Generated temporary reference:', bookingRef);
+            }
+            
+            return bookingRef;
         }
-        
-        // Track conversion in analytics
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'conversion', {
-                'send_to': 'G-5V9NJTNT1N',
-                'value': 1.0,
-                'currency': 'ZAR'
+
+        function updatePageWithBookingReference(bookingRef) {
+            // Update the main booking reference display
+            document.getElementById('booking-ref-display').textContent = bookingRef;
+            document.getElementById('reference-for-contact').textContent = bookingRef;
+            
+            // Update WhatsApp link
+            const whatsappLink = document.getElementById('whatsapp-link');
+            const whatsappMessage = `Hi, I just completed a booking (Ref: ${bookingRef}) and wanted to confirm details`;
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            whatsappLink.href = `https://wa.me/27707643709?text=${encodedMessage}`;
+            
+            console.log('✅ Page updated with booking reference:', bookingRef);
+        }
+
+        function copyBookingReference() {
+            const bookingRef = document.getElementById('booking-ref-display').textContent;
+            const copyBtn = document.getElementById('copy-btn');
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(bookingRef).then(() => {
+                // Show success state
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+                
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = bookingRef;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
             });
         }
-        
-        // Get booking reference from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const bookingRef = urlParams.get('ref');
-        
-        if (bookingRef) {
-            document.getElementById('booking-ref').textContent = bookingRef;
+
+        function updateBookingDate() {
+            // Try to get booking date from various sources
+            let bookingDate = '';
             
-            // Update WhatsApp link with booking reference
-            const whatsappLink = document.getElementById('whatsapp-link');
-            const currentHref = whatsappLink.getAttribute('href');
-            whatsappLink.setAttribute('href', currentHref.replace('BOOKING_REF', bookingRef));
-        } else {
-            // Generate random booking reference if none provided
-            const randomRef = 'NC-' + Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('booking-ref').textContent = randomRef;
+            try {
+                // Check localStorage for booking data
+                const bookingData = localStorage.getItem('ngaoyi_booking');
+                if (bookingData) {
+                    const parsedData = JSON.parse(bookingData);
+                    if (parsedData.date) {
+                        bookingDate = new Date(parsedData.date).toLocaleDateString('en-ZA', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    }
+                }
+            } catch (e) {
+                console.log('Could not retrieve booking date from storage');
+            }
             
-            const whatsappLink = document.getElementById('whatsapp-link');
-            const currentHref = whatsappLink.getAttribute('href');
-            whatsappLink.setAttribute('href', currentHref.replace('BOOKING_REF', randomRef));
+            // If no date found, use today's date
+            if (!bookingDate) {
+                bookingDate = new Date().toLocaleDateString('en-ZA', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            document.getElementById('booking-date').textContent = bookingDate;
         }
-        
-        // Play success sound when the success icon appears
+
+        // ============================================
+        // ANALYTICS AND TRACKING
+        // ============================================
+
+        function trackConversion(bookingRef) {
+            // Track conversion in Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'conversion', {
+                    'send_to': 'G-5V9NJTNT1N',
+                    'value': 1.0,
+                    'currency': 'ZAR',
+                    'transaction_id': bookingRef
+                });
+            }
+            
+            // Track in Facebook Pixel if available
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Purchase', {
+                    value: 1.0,
+                    currency: 'ZAR',
+                    content_ids: [bookingRef],
+                    content_type: 'product'
+                });
+            }
+            
+            console.log('📊 Conversion tracked for booking:', bookingRef);
+        }
+
+        // ============================================
+        // PAGE INITIALIZATION
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Success page initialized');
+            
+            // Get and display booking reference
+            const bookingRef = getBookingReference();
+            updatePageWithBookingReference(bookingRef);
+            updateBookingDate();
+            
+            // Track conversion
+            trackConversion(bookingRef);
+            
+            // Clear booking data from localStorage (keep reference for future use)
+            try {
+                // Only clear the main booking data, keep the reference
+                localStorage.removeItem('ngaoyi_booking');
+                console.log('🧹 Booking data cleared from localStorage');
+            } catch (e) {
+                console.log('Could not clear booking data from storage');
+            }
+            
+            // Play success sound (if available)
+            playSuccessSound();
+        });
+
         function playSuccessSound() {
-            const audio = document.getElementById('successSound');
-            if (audio) {
-                // Set volume to a pleasant level (30%)
-                audio.volume = 0.3;
+            // Simple success sound using Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
                 
-                // Play the full 2000ms audio clip
-                const playPromise = audio.play();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
                 
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log('Audio play failed:', error);
-                    });
-                }
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Web Audio API not supported');
             }
         }
-        
-        // Play sound when the success icon animation starts (after 400ms delay)
-        setTimeout(playSuccessSound, 400);
-        
-        // Enable audio on user interaction (for browsers that require it)
-        let audioEnabled = false;
-        
-        function enableAudio() {
-            if (!audioEnabled) {
-                audioEnabled = true;
-                const audio = document.getElementById('successSound');
-                if (audio) {
-                    audio.volume = 0.3;
-                }
-            }
-        }
-        
-        // Listen for user interaction
-        document.addEventListener('click', enableAudio);
-        document.addEventListener('touchstart', enableAudio);
-        document.addEventListener('keydown', enableAudio);
+
+        // Enable audio on user interaction
+        document.addEventListener('click', function() {
+            // This ensures audio can play on subsequent interactions
+        });
     </script>
 </body>
 </html>
