@@ -426,6 +426,34 @@
             color: white;
         }
 
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        @keyframes loadingDots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Error state */
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #c62828;
+            margin: 20px 0;
+            text-align: left;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .thank-you-container {
@@ -493,13 +521,45 @@
         <h1>Booking Confirmed!</h1>
         <p>Thank you for choosing Ngaoyi Cleaning. Your booking has been successfully confirmed and payment received.</p>
         
-        <div class="confirmation-details">
+        <!-- Loading State -->
+        <div id="loading-state" class="confirmation-details">
+            <h3>Loading Booking Details</h3>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Booking Reference:</strong>
+                    <span class="loading">Loading</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Payment Status:</strong>
+                    <span class="loading">Loading</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Service Type:</strong>
+                    <span class="loading">Loading</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Booking Date:</strong>
+                    <span class="loading">Loading</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Total Amount:</strong>
+                    <span class="loading">Loading</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Property Size:</strong>
+                    <span class="loading">Loading</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actual Booking Details (hidden initially) -->
+        <div id="booking-details" class="confirmation-details" style="display: none;">
             <h3>Booking Summary</h3>
             <div class="details-grid">
                 <div class="detail-item">
                     <strong>Booking Reference:</strong>
                     <span>
-                        <span class="booking-reference" id="booking-ref-display">Loading...</span>
+                        <span class="booking-reference" id="booking-ref-display">-</span>
                         <button class="copy-reference" onclick="copyBookingReference()" id="copy-btn">
                             <i class="fas fa-copy"></i> Copy
                         </button>
@@ -508,16 +568,24 @@
                 <div class="detail-item">
                     <strong>Payment Status:</strong>
                     <span class="payment-status">
-                        <i class="fas fa-check-circle"></i> Paid
+                        <i class="fas fa-check-circle"></i> <span id="payment-status-text">Paid</span>
                     </span>
                 </div>
                 <div class="detail-item">
-                    <strong>Confirmation Email:</strong>
-                    <span>Sent to your email</span>
+                    <strong>Service Type:</strong>
+                    <span id="service-type">-</span>
                 </div>
                 <div class="detail-item">
                     <strong>Booking Date:</strong>
                     <span id="booking-date">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Total Amount:</strong>
+                    <span id="total-amount">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Property Size:</strong>
+                    <span id="property-size">-</span>
                 </div>
             </div>
         </div>
@@ -529,7 +597,7 @@
                     <i class="fas fa-check-circle"></i>
                     <div>
                         <strong>Confirmation Email</strong><br>
-                        <span>You'll receive a confirmation email within 5 minutes with all booking details</span>
+                        <span>You'll receive a confirmation email with all booking details</span>
                     </div>
                 </li>
                 <li>
@@ -579,61 +647,144 @@
 
     <script>
         // ============================================
-        // BOOKING REFERENCE HANDLING
+        // CONFIGURATION
         // ============================================
 
-        function getBookingReference() {
-            // Try multiple methods to get the booking reference
-            let bookingRef = '';
-            
-            // 1. Check URL parameters first
-            const urlParams = new URLSearchParams(window.location.search);
-            bookingRef = urlParams.get('ref') || urlParams.get('bookingRef') || urlParams.get('reference');
-            
-            // 2. Check localStorage for the last booking reference
-            if (!bookingRef) {
-                try {
-                    bookingRef = localStorage.getItem('last_booking_ref');
-                } catch (e) {
-                    console.log('Could not access localStorage');
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // Replace with your actual Apps Script URL
+
+        // ============================================
+        // BOOKING DATA FETCHING
+        // ============================================
+
+        async function fetchBookingData(checkoutId) {
+            try {
+                console.log('🔍 Fetching booking data for checkout:', checkoutId);
+                
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkPayment&checkoutId=${checkoutId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
+                const data = await response.json();
+                console.log('📦 Received booking data:', data);
+                
+                return data;
+            } catch (error) {
+                console.error('❌ Error fetching booking data:', error);
+                throw error;
             }
-            
-            // 3. Check sessionStorage
-            if (!bookingRef) {
-                try {
-                    bookingRef = sessionStorage.getItem('last_booking_ref');
-                } catch (e) {
-                    console.log('Could not access sessionStorage');
-                }
-            }
-            
-            // 4. Generate a temporary reference if none found
-            if (!bookingRef) {
-                bookingRef = 'NC-' + Math.floor(100000 + Math.random() * 900000);
-                console.log('Generated temporary reference:', bookingRef);
-            }
-            
-            return bookingRef;
         }
 
-        function updatePageWithBookingReference(bookingRef) {
+        async function getBookingData() {
+            // Get checkout ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const checkoutId = urlParams.get('checkoutId');
+            
+            if (!checkoutId) {
+                throw new Error('No checkout ID found in URL parameters');
+            }
+            
+            // Try to fetch from Apps Script API
+            const response = await fetchBookingData(checkoutId);
+            
+            if (response.success && response.bookingRef) {
+                return {
+                    bookingRef: response.bookingRef,
+                    paymentStatus: response.paymentStatus,
+                    checkoutId: checkoutId,
+                    // Additional data would come from your spreadsheet
+                    serviceType: 'Loading...',
+                    bookingDate: 'Loading...',
+                    totalAmount: 'Loading...',
+                    propertySize: 'Loading...'
+                };
+            } else {
+                throw new Error(response.error || 'Failed to fetch booking data');
+            }
+        }
+
+        // ============================================
+        // PAGE UPDATING FUNCTIONS
+        // ============================================
+
+        function updatePageWithBookingData(bookingData) {
             // Update the main booking reference display
-            document.getElementById('booking-ref-display').textContent = bookingRef;
-            document.getElementById('reference-for-contact').textContent = bookingRef;
+            document.getElementById('booking-ref-display').textContent = bookingData.bookingRef;
+            document.getElementById('reference-for-contact').textContent = bookingData.bookingRef;
+            
+            // Update payment status
+            document.getElementById('payment-status-text').textContent = bookingData.paymentStatus === 'approved' ? 'Paid' : bookingData.paymentStatus;
+            
+            // Update service type
+            document.getElementById('service-type').textContent = formatServiceType(bookingData.serviceType);
+            
+            // Update booking date
+            document.getElementById('booking-date').textContent = formatDate(bookingData.bookingDate);
+            
+            // Update total amount
+            document.getElementById('total-amount').textContent = bookingData.totalAmount ? `R ${parseFloat(bookingData.totalAmount).toFixed(2)}` : '-';
+            
+            // Update property size
+            document.getElementById('property-size').textContent = formatPropertySize(bookingData.propertySize);
             
             // Update WhatsApp link
+            updateWhatsAppLink(bookingData.bookingRef);
+            
+            console.log('✅ Page updated with booking data:', bookingData);
+        }
+
+        function formatServiceType(serviceType) {
+            const serviceTypes = {
+                'once-off': 'Once-off Cleaning',
+                'recurring': 'Recurring Cleaning',
+                'deep': 'Deep Cleaning',
+                'emergency': 'Emergency Cleaning',
+                'office': 'Office Cleaning'
+            };
+            return serviceTypes[serviceType] || serviceType || '-';
+        }
+
+        function formatPropertySize(size) {
+            const sizes = {
+                '1-bed': '1 Bedroom',
+                '2-bed': '2 Bedrooms',
+                '3-bed': '3 Bedrooms',
+                '4-bed': '4 Bedrooms',
+                '5+bed': '5+ Bedrooms',
+                'office': 'Office Space'
+            };
+            return sizes[size] || size || '-';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-ZA', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function updateWhatsAppLink(bookingRef) {
             const whatsappLink = document.getElementById('whatsapp-link');
-            const whatsappMessage = `Hi, I just completed a booking (Ref: ${bookingRef}) and wanted to confirm details`;
+            const whatsappMessage = `Hi Ngaoyi Cleaning, I just completed a booking (Ref: ${bookingRef}) and wanted to confirm details`;
             const encodedMessage = encodeURIComponent(whatsappMessage);
             whatsappLink.href = `https://wa.me/27707643709?text=${encodedMessage}`;
-            
-            console.log('✅ Page updated with booking reference:', bookingRef);
         }
 
         function copyBookingReference() {
             const bookingRef = document.getElementById('booking-ref-display').textContent;
             const copyBtn = document.getElementById('copy-btn');
+            
+            if (bookingRef === '-') return;
             
             // Copy to clipboard
             navigator.clipboard.writeText(bookingRef).then(() => {
@@ -666,39 +817,21 @@
             });
         }
 
-        function updateBookingDate() {
-            // Try to get booking date from various sources
-            let bookingDate = '';
+        function showError(message) {
+            const errorHtml = `
+                <div class="error-message">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Unable to Load Booking Details</strong>
+                    <p>${message}</p>
+                    <p><small>Please contact support with your checkout ID.</small></p>
+                </div>
+            `;
             
-            try {
-                // Check localStorage for booking data
-                const bookingData = localStorage.getItem('ngaoyi_booking');
-                if (bookingData) {
-                    const parsedData = JSON.parse(bookingData);
-                    if (parsedData.date) {
-                        bookingDate = new Date(parsedData.date).toLocaleDateString('en-ZA', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        });
-                    }
-                }
-            } catch (e) {
-                console.log('Could not retrieve booking date from storage');
-            }
-            
-            // If no date found, use today's date
-            if (!bookingDate) {
-                bookingDate = new Date().toLocaleDateString('en-ZA', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            }
-            
-            document.getElementById('booking-date').textContent = bookingDate;
+            document.getElementById('loading-state').innerHTML = errorHtml;
+        }
+
+        function showBookingDetails() {
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('booking-details').style.display = 'block';
         }
 
         // ============================================
@@ -733,53 +866,60 @@
         // PAGE INITIALIZATION
         // ============================================
 
-        document.addEventListener('DOMContentLoaded', function() {
+        async function initializePage() {
             console.log('🚀 Success page initialized');
             
-            // Get and display booking reference
-            const bookingRef = getBookingReference();
-            updatePageWithBookingReference(bookingRef);
-            updateBookingDate();
-            
-            // Track conversion
-            trackConversion(bookingRef);
-            
-            // Clear booking data from localStorage (keep reference for future use)
             try {
-                // Only clear the main booking data, keep the reference
-                localStorage.removeItem('ngaoyi_booking');
-                console.log('🧹 Booking data cleared from localStorage');
-            } catch (e) {
-                console.log('Could not clear booking data from storage');
-            }
-            
-            // Play success sound (if available)
-            playSuccessSound();
-        });
-
-        function playSuccessSound() {
-            // Simple success sound using Web Audio API
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
+                // Fetch real booking data from Apps Script
+                const bookingData = await getBookingData();
                 
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
+                // Update page with real data
+                updatePageWithBookingData(bookingData);
+                showBookingDetails();
                 
-                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                // Track conversion
+                trackConversion(bookingData.bookingRef);
                 
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                // Store in localStorage for future reference
+                try {
+                    localStorage.setItem('last_booking_ref', bookingData.bookingRef);
+                    localStorage.setItem('last_checkout_id', bookingData.checkoutId);
+                } catch (e) {
+                    console.log('Could not store in localStorage');
+                }
                 
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5);
-            } catch (e) {
-                console.log('Web Audio API not supported');
+                console.log('✅ Success page fully loaded with real data');
+                
+            } catch (error) {
+                console.error('❌ Failed to initialize page:', error);
+                showError(error.message);
+                
+                // Fallback: Try to use localStorage data
+                try {
+                    const lastBookingRef = localStorage.getItem('last_booking_ref');
+                    if (lastBookingRef) {
+                        const fallbackData = {
+                            bookingRef: lastBookingRef,
+                            paymentStatus: 'approved',
+                            serviceType: 'Once-off Cleaning',
+                            bookingDate: new Date().toISOString(),
+                            totalAmount: '350.00',
+                            propertySize: '2 Bedrooms'
+                        };
+                        updatePageWithBookingData(fallbackData);
+                        showBookingDetails();
+                        console.log('🔄 Using fallback data from localStorage');
+                    }
+                } catch (e) {
+                    console.log('Could not use fallback data');
+                }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start loading booking data immediately
+            initializePage();
+        });
 
         // Enable audio on user interaction
         document.addEventListener('click', function() {
