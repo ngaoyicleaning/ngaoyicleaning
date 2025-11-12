@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Your Cleaner - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Maps Places API - REPLACE WITH YOUR ACTUAL API KEY -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZWeCCx1-KVnp-5Yl8suipxxLFhI6JFWY&libraries=places&callback=initAutocomplete" async defer></script>
     <style>
         :root {
             --primary: #003b6f;
@@ -332,31 +330,6 @@
             background: linear-gradient(135deg, var(--primary), var(--accent));
         }
         
-        /* Address Autocomplete */
-        .pac-container {
-            border-radius: 10px;
-            border: 2px solid var(--light-gray);
-            box-shadow: var(--shadow);
-            margin-top: 5px;
-            z-index: 1000;
-        }
-        
-        .pac-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--light-gray);
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .pac-item:hover {
-            background-color: var(--light);
-        }
-        
-        .pac-item-query {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
         .emergency-service-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -647,7 +620,7 @@
                     <li>Parkhurst</li>
                 </ul>
                 <p style="margin-top: 10px; font-size: 0.9rem; color: var(--gray);">
-                    <i class="fas fa-info-circle"></i> Enter your address to check if we serve your area
+                    <i class="fas fa-info-circle"></i> Please enter your full address including suburb
                 </p>
             </div>
 
@@ -669,9 +642,9 @@
 
                 <div class="form-group">
                     <label for="address">Street Address *</label>
-                    <input type="text" id="address" name="address" required placeholder="Start typing your address in Johannesburg...">
+                    <input type="text" id="address" name="address" required placeholder="Enter your full street address and suburb">
                     <small style="margin-top: 5px; color: var(--gray);">
-                        <i class="fas fa-map-marker-alt"></i> We'll automatically suggest your complete address
+                        <i class="fas fa-map-marker-alt"></i> Please include your street address and suburb
                     </small>
                 </div>
 
@@ -760,18 +733,11 @@
         // CONFIGURATION
         // ============================================
         
-        // Service areas in Johannesburg (you can expand this list)
-        const SERVICE_AREAS = [
-            'sandton', 'rosebank', 'randburg', 'fourways', 'midrand', 
-            'bryanston', 'parkhurst', 'morningside', 'illovo', 'melville',
-            'houghton', 'parktown', 'killarney', 'craighall', 'linden'
-        ];
-
-        // Updated Time slots configuration - SPECIFIC TIMES AS REQUESTED
+        // Time slots configuration - Updated to 9am, 11am, 1pm
         const TIME_SLOTS = [
-            { value: '9:00 AM', label: '9:00 AM', description: 'Morning cleaning slot' },
-            { value: '11:00 AM', label: '11:00 AM', description: 'Late morning slot' },
-            { value: '1:00 PM', label: '1:00 PM', description: 'Afternoon slot' }
+            { value: '09:00', label: '9:00 AM', time: '9:00 AM' },
+            { value: '11:00', label: '11:00 AM', time: '11:00 AM' },
+            { value: '13:00', label: '1:00 PM', time: '1:00 PM' }
         ];
 
         // Material option prices based on service type
@@ -793,91 +759,6 @@
                 'we_supply': 150 // Will be calculated based on emergency service type
             }
         };
-
-        // ============================================
-        // GOOGLE PLACES AUTocomplete
-        // ============================================
-        let autocomplete;
-        let addressValid = false;
-
-        function initAutocomplete() {
-            console.log('📍 Initializing Google Places Autocomplete...');
-            
-            autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('address'),
-                {
-                    types: ['address'],
-                    componentRestrictions: {'country': 'za'},
-                    fields: ['address_components', 'formatted_address', 'geometry']
-                }
-            );
-
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                
-                if (!place.geometry) {
-                    console.log('No details available for input: ' + place.name);
-                    showAlert('Please select a valid address from the suggestions', 'error');
-                    addressValid = false;
-                    return;
-                }
-
-                // Check if address is in service area
-                const isInServiceArea = checkServiceArea(place);
-                
-                if (isInServiceArea) {
-                    console.log('✅ Address in service area:', place.formatted_address);
-                    addressValid = true;
-                    showAlert('✓ Great! We serve your area', 'success');
-                } else {
-                    console.log('❌ Address not in service area:', place.formatted_address);
-                    addressValid = false;
-                    showAlert('Sorry, we currently don\'t serve this area. Please check our service areas above.', 'error');
-                }
-            });
-
-            // Add input event listener to clear validation when user types
-            document.getElementById('address').addEventListener('input', function() {
-                addressValid = false;
-                const alertContainer = document.getElementById('alertContainer');
-                const errorAlerts = alertContainer.querySelectorAll('.alert-error');
-                errorAlerts.forEach(alert => alert.remove());
-            });
-        }
-
-        function checkServiceArea(place) {
-            const address = place.formatted_address.toLowerCase();
-            const components = place.address_components;
-            
-            // Check suburb/city from address components
-            let suburb = '';
-            let city = '';
-            
-            components.forEach(component => {
-                const types = component.types;
-                if (types.includes('sublocality') || types.includes('sublocality_level_1')) {
-                    suburb = component.long_name.toLowerCase();
-                }
-                if (types.includes('locality')) {
-                    city = component.long_name.toLowerCase();
-                }
-            });
-
-            console.log('📍 Checking service area for:', { suburb, city, address });
-
-            // Check if suburb is in service areas
-            if (suburb && SERVICE_AREAS.some(area => suburb.includes(area))) {
-                return true;
-            }
-
-            // Check if city is Johannesburg
-            if (city && city.includes('johannesburg')) {
-                // For Johannesburg, check if address contains any service area
-                return SERVICE_AREAS.some(area => address.includes(area));
-            }
-
-            return false;
-        }
 
         // ============================================
         // ALERT SYSTEM
@@ -928,7 +809,7 @@
                 // Clear previous options
                 optionsContainer.innerHTML = '';
                 
-                // Create time slot options with SPECIFIC TIMES
+                // Create time slot options
                 TIME_SLOTS.forEach(slot => {
                     const optionDiv = document.createElement('div');
                     optionDiv.className = 'time-slot-option';
@@ -938,7 +819,7 @@
                     slotTitle.textContent = slot.label;
                     
                     const slotDesc = document.createElement('p');
-                    slotDesc.textContent = slot.description;
+                    slotDesc.textContent = slot.time;
                     
                     optionDiv.appendChild(slotTitle);
                     optionDiv.appendChild(slotDesc);
@@ -1034,9 +915,16 @@
         document.getElementById('clientForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validate address
-            if (!addressValid) {
-                showAlert('Please select a valid address from the suggestions and ensure it\'s in our service area', 'error');
+            // Basic address validation
+            const address = document.getElementById('address').value.trim();
+            if (!address) {
+                showAlert('Please enter your street address', 'error');
+                document.getElementById('address').focus();
+                return;
+            }
+
+            if (address.length < 10) {
+                showAlert('Please enter a complete address including street name and suburb', 'error');
                 document.getElementById('address').focus();
                 return;
             }
@@ -1073,7 +961,7 @@
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
+                address: address,
                 date: date,
                 timeSlot: timeSlot,
                 serviceType: serviceType,
@@ -1155,14 +1043,6 @@
                 }
             }
         });
-
-        // Fallback for Google Places API loading
-        setTimeout(() => {
-            if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
-                console.error('❌ Google Places API failed to load');
-                showAlert('Address suggestions are temporarily unavailable. Please enter your full address manually.', 'info');
-            }
-        }, 5000);
     </script>
 </body>
 </html>
