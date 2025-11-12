@@ -682,10 +682,30 @@
             'emergency': 'Emergency Cleaning'
         };
 
+        // Property size display names
+        const propertySizeNames = {
+            '1-bed': '1 Bedroom',
+            '2-bed': '2 Bedrooms', 
+            '3-bed': '3 Bedrooms',
+            '4-bed': '4 Bedrooms',
+            '5+bed': '5+ Bedrooms',
+            'office': 'Office'
+        };
+
+        // Material option display names
+        const materialOptionNames = {
+            'customer': 'Customer Supplies Materials',
+            'we_supply': 'We Supply Materials'
+        };
+
         // ============================================
-        // PRICE CALCULATION
+        // PRICE CALCULATION - COMPLETE VERSION
         // ============================================
         function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null, emergencyServiceType = null, discountPercent = 0) {
+            console.log('🧮 Calculating price with:', {
+                serviceType, propertySize, date, materialOption, addons, recurringFrequency, emergencyServiceType, discountPercent
+            });
+
             const basePrices = {
                 '1-bed': { 
                     'once-off': 350, 'recurring': 300, 'recurring-weekly': 240,
@@ -722,7 +742,9 @@
             let basePrice = 0;
             let emergencySurcharge = 0;
             
+            // Calculate base price
             if (serviceType === 'emergency' && emergencyServiceType) {
+                console.log('🚨 Emergency service detected:', emergencyServiceType);
                 basePrice = basePrices[propertySize]?.[emergencyServiceType] || 0;
                 emergencySurcharge = Math.round(basePrice * 0.40);
             } else {
@@ -733,36 +755,60 @@
                 basePrice = basePrices[propertySize]?.[priceKey] || basePrices[propertySize]?.[serviceType] || 0;
             }
 
+            console.log('💰 Base price:', basePrice, 'Emergency surcharge:', emergencySurcharge);
+
             let materialsFee = 0;
             let weekendSurcharge = 0;
             let addonsTotal = 0;
 
+            // Calculate materials fee
             if (materialOption === 'we_supply') {
                 if (serviceType !== 'deep' && !(serviceType === 'emergency' && emergencyServiceType === 'deep')) {
                     materialsFee = 150;
                 }
             }
 
-            if (serviceType !== 'recurring' && serviceType !== 'emergency') {
+            console.log('🧽 Materials fee:', materialsFee);
+
+            // Calculate weekend surcharge
+            if (serviceType !== 'recurring' && serviceType !== 'emergency' && date) {
                 const cleaningDate = new Date(date);
                 const dayOfWeek = cleaningDate.getDay();
-                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday (0) or Saturday (6)
                     weekendSurcharge = Math.round(basePrice * 0.5);
+                    console.log('📅 Weekend surcharge applied:', weekendSurcharge);
                 }
             }
 
-            addons.forEach(addonId => {
-                addonsTotal += addonPrices[addonId] || 0;
-            });
+            // Calculate addons total
+            if (addons && addons.length > 0) {
+                addons.forEach(addonId => {
+                    addonsTotal += addonPrices[addonId] || 0;
+                });
+                console.log('➕ Addons total:', addonsTotal);
+            }
 
             const subtotal = basePrice + emergencySurcharge + materialsFee + weekendSurcharge + addonsTotal;
             
             let discountAmount = 0;
             if (discountPercent > 0 && discountPercent <= 100) {
                 discountAmount = Math.round(subtotal * (discountPercent / 100));
+                console.log('🎫 Discount amount:', discountAmount);
             }
             
-            const total = subtotal - discountAmount;
+            const total = Math.max(0, subtotal - discountAmount);
+
+            console.log('🧾 Final calculation:', {
+                base: basePrice,
+                materials: materialsFee,
+                weekendSurcharge: weekendSurcharge,
+                emergencySurcharge: emergencySurcharge,
+                addons: addonsTotal,
+                subtotal: subtotal,
+                discountPercent: discountPercent,
+                discountAmount: discountAmount,
+                total: total
+            });
 
             return {
                 base: basePrice,
@@ -836,12 +882,30 @@
         }
 
         // ============================================
-        // SUMMARY UPDATE
+        // SUMMARY UPDATE - COMPLETE VERSION
         // ============================================
         function updateSummary() {
-            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            console.log('🔄 Updating summary...');
             
-            if (!clientInfo.name) {
+            // Get all booking data from localStorage
+            const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
+            const cleanerInfo = JSON.parse(localStorage.getItem('ngaoyi_cleaner') || '{}');
+            const addonsInfo = JSON.parse(localStorage.getItem('ngaoyi_addons') || '{}');
+            
+            console.log('📋 Client info:', clientInfo);
+            console.log('🧹 Cleaner info:', cleanerInfo);
+            console.log('➕ Addons info:', addonsInfo);
+
+            // Merge all data into bookingData
+            bookingData = {
+                ...clientInfo,
+                ...cleanerInfo,
+                ...addonsInfo
+            };
+
+            console.log('📦 Combined booking data:', bookingData);
+            
+            if (!bookingData.name) {
                 showAlert('Please complete your booking details first', 'error');
                 setTimeout(() => {
                     window.location.href = 'index.html';
@@ -850,91 +914,91 @@
             }
 
             // Update customer information
-            document.getElementById('customer-name').textContent = clientInfo.name || '-';
-            document.getElementById('customer-email').textContent = clientInfo.email || '-';
-            document.getElementById('customer-phone').textContent = clientInfo.phone || '-';
+            document.getElementById('customer-name').textContent = bookingData.name || '-';
+            document.getElementById('customer-email').textContent = bookingData.email || '-';
+            document.getElementById('customer-phone').textContent = bookingData.phone || '-';
 
             // Update booking details
             document.getElementById('summary-service').textContent = 
-                clientInfo.serviceType ? serviceTypeNames[clientInfo.serviceType] || clientInfo.serviceType : '-';
+                bookingData.serviceType ? serviceTypeNames[bookingData.serviceType] || bookingData.serviceType : '-';
             
             document.getElementById('summary-property').textContent = 
-                clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
+                bookingData.propertySize ? propertySizeNames[bookingData.propertySize] || bookingData.propertySize : '-';
             
             document.getElementById('summary-materials').textContent = 
-                clientInfo.materialOption ? formatMaterialOption(clientInfo.materialOption) : '-';
+                bookingData.materialOption ? materialOptionNames[bookingData.materialOption] || bookingData.materialOption : '-';
             
             document.getElementById('summary-date').textContent = 
-                clientInfo.date ? new Date(clientInfo.date).toLocaleDateString('en-ZA', { 
+                bookingData.date ? new Date(bookingData.date).toLocaleDateString('en-ZA', { 
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
                 }) : '-';
             
             document.getElementById('summary-time').textContent = 
-                clientInfo.timeSlot ? timeSlotNames[clientInfo.timeSlot] || clientInfo.timeSlot : '-';
+                bookingData.timeSlot ? timeSlotNames[bookingData.timeSlot] || bookingData.timeSlot : '-';
             
-            document.getElementById('summary-address').textContent = clientInfo.address || '-';
+            document.getElementById('summary-address').textContent = bookingData.address || '-';
 
             // Update cleaner information if available
             const cleanerSummary = document.getElementById('cleaner-summary');
             const summaryCleaner = document.getElementById('summary-cleaner');
-            if (clientInfo.cleaner && clientInfo.cleaner !== 'any') {
+            if (bookingData.cleaner && bookingData.cleaner !== 'any') {
                 cleanerSummary.style.display = 'flex';
-                summaryCleaner.textContent = clientInfo.cleaner;
+                summaryCleaner.textContent = bookingData.cleaner;
             } else {
                 cleanerSummary.style.display = 'none';
             }
 
-            updateAddonsSummary(clientInfo.addons || []);
+            // Update addons summary
+            updateAddonsSummary(bookingData.addons || []);
 
-            if (clientInfo.serviceType && clientInfo.propertySize && clientInfo.date && clientInfo.materialOption) {
+            // Calculate and display prices
+            if (bookingData.serviceType && bookingData.propertySize && bookingData.date && bookingData.materialOption) {
                 const discountPercent = appliedDiscount ? appliedDiscount.percentage : 0;
                 
                 const prices = calculatePrice(
-                    clientInfo.serviceType, 
-                    clientInfo.propertySize, 
-                    clientInfo.date, 
-                    clientInfo.materialOption,
-                    clientInfo.addons || [],
-                    clientInfo.recurringFrequency || null,
-                    clientInfo.emergencyServiceType || null,
+                    bookingData.serviceType, 
+                    bookingData.propertySize, 
+                    bookingData.date, 
+                    bookingData.materialOption,
+                    bookingData.addons || [],
+                    bookingData.recurringFrequency || null,
+                    bookingData.emergencyServiceType || null,
                     discountPercent
                 );
                 
-                updatePriceSummary(prices, clientInfo.addons || []);
+                updatePriceSummary(prices, bookingData.addons || []);
                 
-                clientInfo.totalAmount = prices.total;
-                clientInfo.prices = prices;
+                // Update booking data with calculated prices
+                bookingData.totalAmount = prices.total;
+                bookingData.prices = prices;
                 if (appliedDiscount) {
-                    clientInfo.discountCode = appliedDiscount.code;
-                    clientInfo.discountPercent = appliedDiscount.percentage;
+                    bookingData.discountCode = appliedDiscount.code;
+                    bookingData.discountPercent = appliedDiscount.percentage;
                 }
-                localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
-                bookingData = clientInfo;
+                
+                console.log('✅ Final booking data with prices:', bookingData);
+            } else {
+                console.error('❌ Missing required booking data for price calculation');
+                showAlert('Missing booking information. Please start over.', 'error');
             }
-        }
-
-        function formatMaterialOption(option) {
-            const options = {
-                'customer': 'Customer Supplies Materials',
-                'we_supply': 'We Supply Materials'
-            };
-            return options[option] || option;
         }
 
         function updateAddonsSummary(addons) {
             const container = document.getElementById('addons-summary');
             
-            if (addons.length === 0) {
+            if (!addons || addons.length === 0) {
                 container.innerHTML = '<div class="summary-item"><strong>Add-ons:</strong> <span>None selected</span></div>';
                 return;
             }
 
             let html = '<div class="summary-item"><strong>Additional Services:</strong></div>';
             addons.forEach(addonId => {
+                const addonName = addonNames[addonId] || addonId;
+                const addonPrice = addonPrices[addonId] || 0;
                 html += `
                     <div class="summary-item">
-                        <span>${addonNames[addonId]}</span>
-                        <span>R${addonPrices[addonId]}</span>
+                        <span>${addonName}</span>
+                        <span>R${addonPrice}</span>
                     </div>
                 `;
             });
@@ -942,10 +1006,14 @@
         }
 
         function updatePriceSummary(prices, addons) {
+            console.log('💵 Updating price summary:', prices);
+            
+            // Update base prices
             document.getElementById('base-price').textContent = `R${prices.base}`;
             document.getElementById('total-price').textContent = `R${prices.total}`;
             document.getElementById('pay-amount').textContent = `R${prices.total}`;
 
+            // Show/hide materials fee
             const materialsItem = document.getElementById('materials-item');
             if (prices.materials > 0) {
                 materialsItem.style.display = 'flex';
@@ -954,6 +1022,7 @@
                 materialsItem.style.display = 'none';
             }
 
+            // Show/hide emergency surcharge
             const emergencyElement = document.getElementById('emergency-item');
             if (prices.emergencySurcharge > 0) {
                 emergencyElement.style.display = 'flex';
@@ -962,6 +1031,7 @@
                 emergencyElement.style.display = 'none';
             }
 
+            // Show/hide weekend surcharge
             const weekendElement = document.getElementById('weekend-item');
             if (prices.weekendSurcharge > 0) {
                 weekendElement.style.display = 'flex';
@@ -970,6 +1040,7 @@
                 weekendElement.style.display = 'none';
             }
 
+            // Show/hide discount
             const discountElement = document.getElementById('discount-item');
             if (prices.discountAmount > 0) {
                 discountElement.style.display = 'flex';
@@ -979,14 +1050,17 @@
                 discountElement.style.display = 'none';
             }
 
+            // Update addons prices
             const addonsContainer = document.getElementById('addons-prices');
-            if (addons.length > 0) {
+            if (addons && addons.length > 0) {
                 let addonsHtml = '';
                 addons.forEach(addonId => {
+                    const addonName = addonNames[addonId] || addonId;
+                    const addonPrice = addonPrices[addonId] || 0;
                     addonsHtml += `
                         <div class="price-item">
-                            <span>${addonNames[addonId]}</span>
-                            <span>R${addonPrices[addonId]}</span>
+                            <span>${addonName}</span>
+                            <span>R${addonPrice}</span>
                         </div>
                     `;
                 });
@@ -994,14 +1068,16 @@
             } else {
                 addonsContainer.innerHTML = '';
             }
+
+            console.log('✅ Price summary updated successfully');
         }
 
         // ============================================
-        // PAYMENT PROCESSING - FIXED VERSION
+        // PAYMENT PROCESSING
         // ============================================
         async function processPayment() {
-            if (!bookingData.totalAmount) {
-                showAlert('Please complete all booking details', 'error');
+            if (!bookingData.totalAmount || bookingData.totalAmount < 1) {
+                showAlert('Please complete all booking details and ensure total amount is valid', 'error');
                 return;
             }
 
@@ -1054,25 +1130,25 @@
             }
         }
 
-        async function saveBookingToSheets(clientInfo) {
+        async function saveBookingToSheets(bookingData) {
             const payload = {
                 action: 'saveBooking',
-                name: clientInfo.name,
-                email: clientInfo.email,
-                phone: clientInfo.phone,
-                address: clientInfo.address,
-                date: clientInfo.date,
-                timeSlot: clientInfo.timeSlot,
-                serviceType: clientInfo.serviceType,
-                propertySize: clientInfo.propertySize,
-                materialOption: clientInfo.materialOption,
-                cleaner: clientInfo.cleaner || 'any',
-                addons: clientInfo.addons || [],
-                recurringFrequency: clientInfo.recurringFrequency || null,
-                emergencyServiceType: clientInfo.emergencyServiceType || null,
-                discountCode: clientInfo.discountCode || '',
-                discountPercent: clientInfo.discountPercent || 0,
-                totalAmount: clientInfo.totalAmount
+                name: bookingData.name,
+                email: bookingData.email,
+                phone: bookingData.phone,
+                address: bookingData.address,
+                date: bookingData.date,
+                timeSlot: bookingData.timeSlot,
+                serviceType: bookingData.serviceType,
+                propertySize: bookingData.propertySize,
+                materialOption: bookingData.materialOption,
+                cleaner: bookingData.cleaner || 'any',
+                addons: bookingData.addons || [],
+                recurringFrequency: bookingData.recurringFrequency || null,
+                emergencyServiceType: bookingData.emergencyServiceType || null,
+                discountCode: bookingData.discountCode || '',
+                discountPercent: bookingData.discountPercent || 0,
+                totalAmount: bookingData.totalAmount
             };
 
             console.log('📤 Saving booking with payload:', payload);
@@ -1170,71 +1246,13 @@
         }
 
         // ============================================
-        // CONNECTION TEST
-        // ============================================
-        async function testConnection() {
-            console.log('🧪 Testing connection to:', GOOGLE_SCRIPT_URL);
-            
-            try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=test`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const result = await response.json();
-                console.log('✅ Connection test result:', result);
-                
-                if (result.success) {
-                    console.log('✅ API connection successful!');
-                    return true;
-                } else {
-                    console.error('❌ API returned error:', result.error);
-                    return false;
-                }
-                
-            } catch (error) {
-                console.error('❌ Connection test failed:', error);
-                
-                showAlert(
-                    `Connection failed: ${error.message}\n\n` +
-                    `Please check:\n` +
-                    `1. Your Google Apps Script is deployed as Web App\n` +
-                    `2. Access is set to "Anyone"\n` +
-                    `3. The deployment URL is correct\n\n` +
-                    `Current URL: ${GOOGLE_SCRIPT_URL}`,
-                    'error'
-                );
-                
-                return false;
-            }
-        }
-
-        // ============================================
         // INITIALIZATION
         // ============================================
-        window.addEventListener('load', async function() {
+        window.addEventListener('load', function() {
             console.log('🚀 Initializing payment page...');
-            
             console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
             
-            // Test connection to Google Apps Script
-            console.log('🔌 Testing connection to backend...');
-            const connectionOk = await testConnection();
-            
-            if (!connectionOk) {
-                document.getElementById('payButton').disabled = true;
-                return;
-            }
-            
-            // Update summary
+            // Update summary immediately
             updateSummary();
             
             // Enable Enter key for discount code
