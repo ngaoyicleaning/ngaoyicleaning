@@ -333,9 +333,6 @@
             border-radius: 10px;
             margin-bottom: 20px;
             animation: slideDown 0.3s ease-out;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
         @keyframes slideDown {
@@ -408,82 +405,6 @@
                 font-size: 1.8rem;
             }
         }
-
-        /* Customer Info Section */
-        .customer-section {
-            background: var(--light);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .customer-section h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .customer-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .customer-detail {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .customer-detail strong {
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .customer-detail span {
-            color: var(--gray);
-            font-size: 1rem;
-        }
-
-        /* Payment Processing Modal */
-        .payment-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .payment-modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .payment-modal h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .payment-modal p {
-            margin-bottom: 25px;
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        .payment-modal .btn {
-            margin-top: 15px;
-        }
     </style>
 </head>
 <body>
@@ -505,25 +426,6 @@
             <p class="step-description">Please verify your details and proceed to secure payment</p>
 
             <div id="alertContainer"></div>
-
-            <!-- Customer Information -->
-            <div class="customer-section">
-                <h3><i class="fas fa-user"></i> Customer Information</h3>
-                <div class="customer-details">
-                    <div class="customer-detail">
-                        <strong>Full Name</strong>
-                        <span id="customer-name">-</span>
-                    </div>
-                    <div class="customer-detail">
-                        <strong>Email Address</strong>
-                        <span id="customer-email">-</span>
-                    </div>
-                    <div class="customer-detail">
-                        <strong>Phone Number</strong>
-                        <span id="customer-phone">-</span>
-                    </div>
-                </div>
-            </div>
 
             <div class="summary-container">
                 <div class="booking-summary">
@@ -553,10 +455,6 @@
                         <span id="summary-address">-</span>
                     </div>
                     <div id="addons-summary"></div>
-                    <div class="summary-item" id="cleaner-summary" style="display: none;">
-                        <strong>Preferred Cleaner:</strong>
-                        <span id="summary-cleaner">-</span>
-                    </div>
                 </div>
 
                 <div class="price-summary">
@@ -625,19 +523,9 @@
         </main>
     </div>
 
-    <!-- Payment Processing Modal -->
-    <div class="payment-modal" id="paymentModal">
-        <div class="payment-modal-content">
-            <h3><i class="fas fa-spinner fa-spin"></i> Processing Payment</h3>
-            <p>Please wait while we redirect you to our secure payment gateway. Do not close this window.</p>
-            <div class="spinner" style="width: 40px; height: 40px; margin: 20px auto;"></div>
-            <p><small>You will be redirected to Yoco's secure payment page shortly...</small></p>
-        </div>
-    </div>
-
     <script>
         // ============================================
-        // CONFIGURATION - UPDATED WITH YOUR CORRECT URL
+        // CONFIGURATION
         // ============================================
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIb07qahJv8GkG_OtXwOHvD2vaiPegRD1MGkNXtNbNjEe7Ta4YzUM-gOiMHvsPY5NM/exec';
         
@@ -674,38 +562,10 @@
             'evening': 'Evening (4:00 PM - 8:00 PM)'
         };
 
-        // Service type names
-        const serviceTypeNames = {
-            'once-off': 'Once-off Cleaning',
-            'recurring': 'Recurring Cleaning',
-            'deep': 'Deep Cleaning',
-            'emergency': 'Emergency Cleaning'
-        };
-
-        // Property size display names
-        const propertySizeNames = {
-            '1-bed': '1 Bedroom',
-            '2-bed': '2 Bedrooms', 
-            '3-bed': '3 Bedrooms',
-            '4-bed': '4 Bedrooms',
-            '5+bed': '5+ Bedrooms',
-            'office': 'Office'
-        };
-
-        // Material option display names
-        const materialOptionNames = {
-            'customer': 'Customer Supplies Materials',
-            'we_supply': 'We Supply Materials'
-        };
-
         // ============================================
-        // PRICE CALCULATION - COMPLETE VERSION
+        // PRICE CALCULATION
         // ============================================
         function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null, emergencyServiceType = null, discountPercent = 0) {
-            console.log('🧮 Calculating price with:', {
-                serviceType, propertySize, date, materialOption, addons, recurringFrequency, emergencyServiceType, discountPercent
-            });
-
             const basePrices = {
                 '1-bed': { 
                     'once-off': 350, 'recurring': 300, 'recurring-weekly': 240,
@@ -742,9 +602,7 @@
             let basePrice = 0;
             let emergencySurcharge = 0;
             
-            // Calculate base price
             if (serviceType === 'emergency' && emergencyServiceType) {
-                console.log('🚨 Emergency service detected:', emergencyServiceType);
                 basePrice = basePrices[propertySize]?.[emergencyServiceType] || 0;
                 emergencySurcharge = Math.round(basePrice * 0.40);
             } else {
@@ -755,60 +613,36 @@
                 basePrice = basePrices[propertySize]?.[priceKey] || basePrices[propertySize]?.[serviceType] || 0;
             }
 
-            console.log('💰 Base price:', basePrice, 'Emergency surcharge:', emergencySurcharge);
-
             let materialsFee = 0;
             let weekendSurcharge = 0;
             let addonsTotal = 0;
 
-            // Calculate materials fee
             if (materialOption === 'we_supply') {
                 if (serviceType !== 'deep' && !(serviceType === 'emergency' && emergencyServiceType === 'deep')) {
                     materialsFee = 150;
                 }
             }
 
-            console.log('🧽 Materials fee:', materialsFee);
-
-            // Calculate weekend surcharge
-            if (serviceType !== 'recurring' && serviceType !== 'emergency' && date) {
+            if (serviceType !== 'recurring' && serviceType !== 'emergency') {
                 const cleaningDate = new Date(date);
                 const dayOfWeek = cleaningDate.getDay();
-                if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday (0) or Saturday (6)
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
                     weekendSurcharge = Math.round(basePrice * 0.5);
-                    console.log('📅 Weekend surcharge applied:', weekendSurcharge);
                 }
             }
 
-            // Calculate addons total
-            if (addons && addons.length > 0) {
-                addons.forEach(addonId => {
-                    addonsTotal += addonPrices[addonId] || 0;
-                });
-                console.log('➕ Addons total:', addonsTotal);
-            }
+            addons.forEach(addonId => {
+                addonsTotal += addonPrices[addonId] || 0;
+            });
 
             const subtotal = basePrice + emergencySurcharge + materialsFee + weekendSurcharge + addonsTotal;
             
             let discountAmount = 0;
             if (discountPercent > 0 && discountPercent <= 100) {
                 discountAmount = Math.round(subtotal * (discountPercent / 100));
-                console.log('🎫 Discount amount:', discountAmount);
             }
             
-            const total = Math.max(0, subtotal - discountAmount);
-
-            console.log('🧾 Final calculation:', {
-                base: basePrice,
-                materials: materialsFee,
-                weekendSurcharge: weekendSurcharge,
-                emergencySurcharge: emergencySurcharge,
-                addons: addonsTotal,
-                subtotal: subtotal,
-                discountPercent: discountPercent,
-                discountAmount: discountAmount,
-                total: total
-            });
+            const total = subtotal - discountAmount;
 
             return {
                 base: basePrice,
@@ -882,123 +716,101 @@
         }
 
         // ============================================
-        // SUMMARY UPDATE - COMPLETE VERSION
+        // SUMMARY UPDATE
         // ============================================
         function updateSummary() {
-            console.log('🔄 Updating summary...');
-            
-            // Get all booking data from localStorage
             const clientInfo = JSON.parse(localStorage.getItem('ngaoyi_booking') || '{}');
-            const cleanerInfo = JSON.parse(localStorage.getItem('ngaoyi_cleaner') || '{}');
-            const addonsInfo = JSON.parse(localStorage.getItem('ngaoyi_addons') || '{}');
             
-            console.log('📋 Client info:', clientInfo);
-            console.log('🧹 Cleaner info:', cleanerInfo);
-            console.log('➕ Addons info:', addonsInfo);
-
-            // Merge all data into bookingData
-            bookingData = {
-                ...clientInfo,
-                ...cleanerInfo,
-                ...addonsInfo
-            };
-
-            console.log('📦 Combined booking data:', bookingData);
-            
-            if (!bookingData.name) {
+            if (!clientInfo.name) {
                 showAlert('Please complete your booking details first', 'error');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
                 return;
             }
 
-            // Update customer information
-            document.getElementById('customer-name').textContent = bookingData.name || '-';
-            document.getElementById('customer-email').textContent = bookingData.email || '-';
-            document.getElementById('customer-phone').textContent = bookingData.phone || '-';
-
-            // Update booking details
             document.getElementById('summary-service').textContent = 
-                bookingData.serviceType ? serviceTypeNames[bookingData.serviceType] || bookingData.serviceType : '-';
+                clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
             
             document.getElementById('summary-property').textContent = 
-                bookingData.propertySize ? propertySizeNames[bookingData.propertySize] || bookingData.propertySize : '-';
+                clientInfo.propertySize ? clientInfo.propertySize.replace('-', ' ').toUpperCase() : '-';
             
             document.getElementById('summary-materials').textContent = 
-                bookingData.materialOption ? materialOptionNames[bookingData.materialOption] || bookingData.materialOption : '-';
+                clientInfo.materialOption ? formatMaterialOption(clientInfo.materialOption) : '-';
             
             document.getElementById('summary-date').textContent = 
-                bookingData.date ? new Date(bookingData.date).toLocaleDateString('en-ZA', { 
+                clientInfo.date ? new Date(clientInfo.date).toLocaleDateString('en-ZA', { 
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
                 }) : '-';
             
+            // Display time slot
             document.getElementById('summary-time').textContent = 
-                bookingData.timeSlot ? timeSlotNames[bookingData.timeSlot] || bookingData.timeSlot : '-';
+                clientInfo.timeSlot ? formatTimeSlot(clientInfo.timeSlot) : '-';
             
-            document.getElementById('summary-address').textContent = bookingData.address || '-';
+            document.getElementById('summary-address').textContent = clientInfo.address || '-';
 
-            // Update cleaner information if available
-            const cleanerSummary = document.getElementById('cleaner-summary');
-            const summaryCleaner = document.getElementById('summary-cleaner');
-            if (bookingData.cleaner && bookingData.cleaner !== 'any') {
-                cleanerSummary.style.display = 'flex';
-                summaryCleaner.textContent = bookingData.cleaner;
-            } else {
-                cleanerSummary.style.display = 'none';
-            }
+            updateAddonsSummary(clientInfo.addons || []);
 
-            // Update addons summary
-            updateAddonsSummary(bookingData.addons || []);
-
-            // Calculate and display prices
-            if (bookingData.serviceType && bookingData.propertySize && bookingData.date && bookingData.materialOption) {
+            if (clientInfo.serviceType && clientInfo.propertySize && clientInfo.date && clientInfo.materialOption) {
                 const discountPercent = appliedDiscount ? appliedDiscount.percentage : 0;
                 
                 const prices = calculatePrice(
-                    bookingData.serviceType, 
-                    bookingData.propertySize, 
-                    bookingData.date, 
-                    bookingData.materialOption,
-                    bookingData.addons || [],
-                    bookingData.recurringFrequency || null,
-                    bookingData.emergencyServiceType || null,
+                    clientInfo.serviceType, 
+                    clientInfo.propertySize, 
+                    clientInfo.date, 
+                    clientInfo.materialOption,
+                    clientInfo.addons || [],
+                    clientInfo.recurringFrequency || null,
+                    clientInfo.emergencyServiceType || null,
                     discountPercent
                 );
                 
-                updatePriceSummary(prices, bookingData.addons || []);
+                updatePriceSummary(prices, clientInfo.addons || []);
                 
-                // Update booking data with calculated prices
-                bookingData.totalAmount = prices.total;
-                bookingData.prices = prices;
+                clientInfo.totalAmount = prices.total;
+                clientInfo.prices = prices;
                 if (appliedDiscount) {
-                    bookingData.discountCode = appliedDiscount.code;
-                    bookingData.discountPercent = appliedDiscount.percentage;
+                    clientInfo.discountCode = appliedDiscount.code;
+                    clientInfo.discountPercent = appliedDiscount.percentage;
                 }
-                
-                console.log('✅ Final booking data with prices:', bookingData);
-            } else {
-                console.error('❌ Missing required booking data for price calculation');
-                showAlert('Missing booking information. Please start over.', 'error');
+                localStorage.setItem('ngaoyi_booking', JSON.stringify(clientInfo));
+                bookingData = clientInfo;
             }
+        }
+
+        function formatServiceType(serviceType) {
+            const types = {
+                'once-off': 'Once-off Cleaning',
+                'recurring': 'Recurring Plan',
+                'deep': 'Deep Cleaning',
+                'emergency': 'Emergency Cleaning'
+            };
+            return types[serviceType] || serviceType;
+        }
+
+        function formatMaterialOption(option) {
+            const options = {
+                'customer': 'Customer Supplies Materials',
+                'we_supply': 'We Supply Materials'
+            };
+            return options[option] || option;
+        }
+
+        function formatTimeSlot(timeSlot) {
+            return timeSlotNames[timeSlot] || timeSlot;
         }
 
         function updateAddonsSummary(addons) {
             const container = document.getElementById('addons-summary');
             
-            if (!addons || addons.length === 0) {
+            if (addons.length === 0) {
                 container.innerHTML = '<div class="summary-item"><strong>Add-ons:</strong> <span>None selected</span></div>';
                 return;
             }
 
             let html = '<div class="summary-item"><strong>Additional Services:</strong></div>';
             addons.forEach(addonId => {
-                const addonName = addonNames[addonId] || addonId;
-                const addonPrice = addonPrices[addonId] || 0;
                 html += `
                     <div class="summary-item">
-                        <span>${addonName}</span>
-                        <span>R${addonPrice}</span>
+                        <span>${addonNames[addonId]}</span>
+                        <span>R${addonPrices[addonId]}</span>
                     </div>
                 `;
             });
@@ -1006,14 +818,10 @@
         }
 
         function updatePriceSummary(prices, addons) {
-            console.log('💵 Updating price summary:', prices);
-            
-            // Update base prices
             document.getElementById('base-price').textContent = `R${prices.base}`;
             document.getElementById('total-price').textContent = `R${prices.total}`;
             document.getElementById('pay-amount').textContent = `R${prices.total}`;
 
-            // Show/hide materials fee
             const materialsItem = document.getElementById('materials-item');
             if (prices.materials > 0) {
                 materialsItem.style.display = 'flex';
@@ -1022,7 +830,6 @@
                 materialsItem.style.display = 'none';
             }
 
-            // Show/hide emergency surcharge
             const emergencyElement = document.getElementById('emergency-item');
             if (prices.emergencySurcharge > 0) {
                 emergencyElement.style.display = 'flex';
@@ -1031,7 +838,6 @@
                 emergencyElement.style.display = 'none';
             }
 
-            // Show/hide weekend surcharge
             const weekendElement = document.getElementById('weekend-item');
             if (prices.weekendSurcharge > 0) {
                 weekendElement.style.display = 'flex';
@@ -1040,7 +846,6 @@
                 weekendElement.style.display = 'none';
             }
 
-            // Show/hide discount
             const discountElement = document.getElementById('discount-item');
             if (prices.discountAmount > 0) {
                 discountElement.style.display = 'flex';
@@ -1050,17 +855,14 @@
                 discountElement.style.display = 'none';
             }
 
-            // Update addons prices
             const addonsContainer = document.getElementById('addons-prices');
-            if (addons && addons.length > 0) {
+            if (addons.length > 0) {
                 let addonsHtml = '';
                 addons.forEach(addonId => {
-                    const addonName = addonNames[addonId] || addonId;
-                    const addonPrice = addonPrices[addonId] || 0;
                     addonsHtml += `
                         <div class="price-item">
-                            <span>${addonName}</span>
-                            <span>R${addonPrice}</span>
+                            <span>${addonNames[addonId]}</span>
+                            <span>R${addonPrices[addonId]}</span>
                         </div>
                     `;
                 });
@@ -1068,16 +870,14 @@
             } else {
                 addonsContainer.innerHTML = '';
             }
-
-            console.log('✅ Price summary updated successfully');
         }
 
         // ============================================
-        // PAYMENT PROCESSING
+        // PAYMENT PROCESSING - SIMPLE REDIRECT FLOW
         // ============================================
         async function processPayment() {
-            if (!bookingData.totalAmount || bookingData.totalAmount < 1) {
-                showAlert('Please complete all booking details and ensure total amount is valid', 'error');
+            if (!bookingData.totalAmount) {
+                showAlert('Please complete all booking details', 'error');
                 return;
             }
 
@@ -1094,10 +894,6 @@
 
             try {
                 console.log('🛒 Creating checkout session...');
-                console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
-                
-                // Show processing modal
-                document.getElementById('paymentModal').style.display = 'flex';
                 
                 // Save booking and get redirect URL
                 const bookingResponse = await saveBookingToSheets(bookingData);
@@ -1108,13 +904,10 @@
                     // Show success message
                     showAlert('Redirecting to secure payment page...', 'success');
                     
-                    // Store booking reference for success page
-                    localStorage.setItem('last_booking_ref', bookingResponse.bookingRef);
-                    
                     // Wait a moment then redirect
                     setTimeout(() => {
                         window.location.href = bookingResponse.redirectUrl;
-                    }, 2000);
+                    }, 1000);
                     
                 } else {
                     throw new Error(bookingResponse.error || 'Failed to create payment session');
@@ -1122,33 +915,31 @@
                 
             } catch (error) {
                 console.error('💥 Payment error:', error);
-                // Hide modal
-                document.getElementById('paymentModal').style.display = 'none';
                 payButton.innerHTML = originalButtonHTML;
                 payButton.disabled = false;
                 showAlert('Payment failed: ' + error.message, 'error');
             }
         }
 
-        async function saveBookingToSheets(bookingData) {
+        async function saveBookingToSheets(clientInfo) {
             const payload = {
-                action: 'saveBooking',
-                name: bookingData.name,
-                email: bookingData.email,
-                phone: bookingData.phone,
-                address: bookingData.address,
-                date: bookingData.date,
-                timeSlot: bookingData.timeSlot,
-                serviceType: bookingData.serviceType,
-                propertySize: bookingData.propertySize,
-                materialOption: bookingData.materialOption,
-                cleaner: bookingData.cleaner || 'any',
-                addons: bookingData.addons || [],
-                recurringFrequency: bookingData.recurringFrequency || null,
-                emergencyServiceType: bookingData.emergencyServiceType || null,
-                discountCode: bookingData.discountCode || '',
-                discountPercent: bookingData.discountPercent || 0,
-                totalAmount: bookingData.totalAmount
+                name: clientInfo.name,
+                email: clientInfo.email,
+                phone: clientInfo.phone,
+                address: clientInfo.address,
+                date: clientInfo.date,
+                timeSlot: clientInfo.timeSlot, // Include time slot
+                serviceType: clientInfo.serviceType,
+                propertySize: clientInfo.propertySize,
+                materialOption: clientInfo.materialOption,
+                cleaner: clientInfo.cleaner || 'any',
+                addons: clientInfo.addons || [],
+                recurringFrequency: clientInfo.recurringFrequency || null,
+                emergencyServiceType: clientInfo.emergencyServiceType || null,
+                discountCode: clientInfo.discountCode || '',
+                discountPercent: clientInfo.discountPercent || 0,
+                totalAmount: clientInfo.totalAmount,
+                action: 'saveBooking'
             };
 
             console.log('📤 Saving booking with payload:', payload);
@@ -1156,12 +947,12 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
                 
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'text/plain;charset=utf-8'
                     },
                     body: JSON.stringify(payload),
                     signal: controller.signal
@@ -1246,13 +1037,71 @@
         }
 
         // ============================================
+        // CONNECTION TEST
+        // ============================================
+        async function testConnection() {
+            console.log('🧪 Testing connection to:', GOOGLE_SCRIPT_URL);
+            
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=test`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Connection test result:', result);
+                
+                if (result.success) {
+                    console.log('✅ API connection successful!');
+                    return true;
+                } else {
+                    console.error('❌ API returned error:', result.error);
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('❌ Connection test failed:', error);
+                
+                showAlert(
+                    `Connection failed: ${error.message}\n\n` +
+                    `Please check:\n` +
+                    `1. Your Google Apps Script is deployed as Web App\n` +
+                    `2. Access is set to "Anyone"\n` +
+                    `3. The deployment URL is correct\n\n` +
+                    `Current URL: ${GOOGLE_SCRIPT_URL}`,
+                    'error'
+                );
+                
+                return false;
+            }
+        }
+
+        // ============================================
         // INITIALIZATION
         // ============================================
-        window.addEventListener('load', function() {
+        window.addEventListener('load', async function() {
             console.log('🚀 Initializing payment page...');
+            
             console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
             
-            // Update summary immediately
+            // Test connection to Google Apps Script
+            console.log('🔌 Testing connection to backend...');
+            const connectionOk = await testConnection();
+            
+            if (!connectionOk) {
+                document.getElementById('payButton').disabled = true;
+                return;
+            }
+            
+            // Update summary
             updateSummary();
             
             // Enable Enter key for discount code
