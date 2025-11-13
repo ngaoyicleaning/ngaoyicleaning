@@ -6,6 +6,7 @@
     <title>Booking Confirmed - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Your existing CSS remains the same */
         :root {
             --primary: #003b6f;
             --primary-light: #0056a3;
@@ -47,18 +48,6 @@
             border-radius: 20px;
             box-shadow: var(--shadow);
             border: 1px solid var(--light-gray);
-            animation: slideUp 0.6s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         .logo {
@@ -67,14 +56,6 @@
             justify-content: center;
             gap: 15px;
             margin-bottom: 40px;
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 0.2s forwards;
-        }
-        
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
         }
         
         .logo-icon {
@@ -88,12 +69,6 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-        }
-        
-        .logo-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
         
         .logo h1 {
@@ -113,79 +88,6 @@
             margin: 0 auto 40px;
             color: white;
             font-size: 3rem;
-            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
-            position: relative;
-            animation: scaleIn 2s ease-out 0.4s backwards;
-        }
-        
-        @keyframes scaleIn {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            20% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            40% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        .success-icon::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: var(--success);
-            opacity: 0.3;
-            animation: pulse 2s ease-out infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 0;
-            }
-        }
-        
-        .success-icon i {
-            position: relative;
-            z-index: 1;
-            animation: checkmark 2s ease-out 0.6s backwards;
-        }
-        
-        @keyframes checkmark {
-            0% {
-                transform: scale(0) rotate(-45deg);
-                opacity: 0;
-            }
-            20% {
-                transform: scale(1.2) rotate(10deg);
-                opacity: 1;
-            }
-            40% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
         }
         
         .thank-you-container h1 {
@@ -193,17 +95,6 @@
             margin-bottom: 20px;
             font-size: 2.5rem;
             font-weight: 700;
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 2.8s forwards;
-        }
-        
-        .thank-you-container > p {
-            color: var(--gray);
-            margin-bottom: 30px;
-            font-size: 1.2rem;
-            line-height: 1.7;
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 3s forwards;
         }
         
         .confirmation-details {
@@ -212,8 +103,6 @@
             border-radius: 15px;
             margin: 40px 0;
             border-left: 4px solid var(--accent);
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 3.2s forwards;
         }
         
         .confirmation-details h3 {
@@ -248,81 +137,11 @@
             border-radius: 25px;
             font-weight: 700;
             font-size: 1.1rem;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 12px rgba(0, 59, 111, 0.3);
         }
         
         .payment-status {
             color: var(--success);
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .payment-status i {
-            font-size: 1.1rem;
-        }
-        
-        .next-steps {
-            background: var(--light);
-            padding: 35px;
-            border-radius: 15px;
-            margin: 40px 0;
-            text-align: left;
-            border: 1px solid var(--light-gray);
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 3.4s forwards;
-        }
-        
-        .next-steps h3 {
-            color: var(--primary);
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-            font-weight: 700;
-            text-align: center;
-        }
-        
-        .next-steps ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .next-steps li {
-            padding: 15px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            border-bottom: 1px solid rgba(108, 108, 108, 0.1);
-            opacity: 0;
-            animation: slideInLeft 0.4s ease-out forwards;
-        }
-        
-        .next-steps li:nth-child(1) { animation-delay: 3.6s; }
-        .next-steps li:nth-child(2) { animation-delay: 3.7s; }
-        .next-steps li:nth-child(3) { animation-delay: 3.8s; }
-        .next-steps li:nth-child(4) { animation-delay: 3.9s; }
-        
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .next-steps li:last-child {
-            border-bottom: none;
-        }
-        
-        .next-steps li i {
-            color: var(--success);
-            font-size: 1.2rem;
-            margin-top: 2px;
-            flex-shrink: 0;
         }
         
         .action-buttons {
@@ -331,8 +150,6 @@
             justify-content: center;
             flex-wrap: wrap;
             margin-top: 40px;
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 4s forwards;
         }
         
         .btn {
@@ -347,103 +164,22 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
-            font-size: 1.1rem;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 59, 111, 0.4);
         }
         
         .btn-whatsapp {
             background: linear-gradient(135deg, #25D366, #128C7E);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-        }
-        
-        .btn-whatsapp:hover {
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
         }
         
         .btn-outline {
             background: white;
             color: var(--primary);
             border: 2px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.1);
         }
         
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .contact-info {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--light-gray);
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out 4.2s forwards;
-        }
-        
-        .contact-info p {
-            color: var(--gray);
-            margin-bottom: 10px;
-        }
-        
-        .contact-info a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-        
-        .contact-info a:hover {
-            color: var(--accent);
-        }
-
-        /* Copy reference button */
-        .copy-reference {
-            background: var(--light);
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-left: 10px;
-            transition: var(--transition);
-        }
-
-        .copy-reference:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .copy-reference.copied {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-
-        /* Loading state */
         .loading {
             opacity: 0.7;
-            pointer-events: none;
         }
-
-        .loading::after {
-            content: '...';
-            animation: loadingDots 1.5s infinite;
-        }
-
-        @keyframes loadingDots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-
-        /* Error state */
+        
         .error-message {
             background: #ffebee;
             color: #c62828;
@@ -451,56 +187,15 @@
             border-radius: 10px;
             border-left: 4px solid #c62828;
             margin: 20px 0;
-            text-align: left;
         }
-
-        /* Responsive */
+        
         @media (max-width: 768px) {
-            .thank-you-container {
-                padding: 40px 25px;
-            }
-            
             .details-grid {
                 grid-template-columns: 1fr;
             }
             
             .action-buttons {
                 flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-            
-            .logo h1 {
-                font-size: 1.6rem;
-            }
-            
-            .thank-you-container h1 {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .thank-you-container {
-                padding: 30px 20px;
-            }
-            
-            .success-icon {
-                width: 100px;
-                height: 100px;
-                font-size: 2.5rem;
-            }
-            
-            .next-steps {
-                padding: 25px 20px;
-            }
-            
-            .confirmation-details {
-                padding: 25px 20px;
             }
         }
     </style>
@@ -519,119 +214,46 @@
         </div>
         
         <h1>Booking Confirmed!</h1>
-        <p>Thank you for choosing Ngaoyi Cleaning. Your booking has been successfully confirmed and payment received.</p>
+        <p>Thank you for choosing Ngaoyi Cleaning. We're processing your booking details...</p>
         
-        <!-- Loading State -->
-        <div id="loading-state" class="confirmation-details">
-            <h3>Loading Booking Details</h3>
+        <div id="booking-details" class="confirmation-details">
+            <h3>Order Summary</h3>
             <div class="details-grid">
                 <div class="detail-item">
-                    <strong>Booking Reference:</strong>
-                    <span class="loading">Loading</span>
+                    <strong>Customer Name:</strong>
+                    <span id="customer-name">Loading...</span>
                 </div>
                 <div class="detail-item">
-                    <strong>Payment Status:</strong>
-                    <span class="loading">Loading</span>
+                    <strong>Email:</strong>
+                    <span id="customer-email">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Phone:</strong>
+                    <span id="customer-phone">Loading...</span>
                 </div>
                 <div class="detail-item">
                     <strong>Service Type:</strong>
-                    <span class="loading">Loading</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Booking Date:</strong>
-                    <span class="loading">Loading</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Total Amount:</strong>
-                    <span class="loading">Loading</span>
+                    <span id="service-type">Loading...</span>
                 </div>
                 <div class="detail-item">
                     <strong>Property Size:</strong>
-                    <span class="loading">Loading</span>
+                    <span id="property-size">Loading...</span>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Actual Booking Details (hidden initially) -->
-        <div id="booking-details" class="confirmation-details" style="display: none;">
-            <h3>Booking Summary</h3>
-            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Total Amount:</strong>
+                    <span id="total-amount">Loading...</span>
+                </div>
                 <div class="detail-item">
                     <strong>Booking Reference:</strong>
-                    <span>
-                        <span class="booking-reference" id="booking-ref-display">-</span>
-                        <button class="copy-reference" onclick="copyBookingReference()" id="copy-btn">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
-                    </span>
+                    <span class="booking-reference" id="booking-ref">Loading...</span>
                 </div>
                 <div class="detail-item">
                     <strong>Payment Status:</strong>
-                    <span class="payment-status">
-                        <i class="fas fa-check-circle"></i> <span id="payment-status-text">Paid</span>
-                    </span>
-                </div>
-                <div class="detail-item">
-                    <strong>Service Type:</strong>
-                    <span id="service-type">-</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Booking Date:</strong>
-                    <span id="booking-date">-</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Total Amount:</strong>
-                    <span id="total-amount">-</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Property Size:</strong>
-                    <span id="property-size">-</span>
+                    <span class="payment-status" id="payment-status">Loading...</span>
                 </div>
             </div>
         </div>
-        
-        <div class="next-steps">
-            <h3>What Happens Next?</h3>
-            <ul>
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>Confirmation Email</strong><br>
-                        <span>You'll receive a confirmation email with all booking details</span>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>Team Contact</strong><br>
-                        <span>Our team will contact you within 24 hours to confirm cleaning specifics</span>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>Cleaner Assignment</strong><br>
-                        <span>Your assigned cleaner will arrive at the scheduled time with all equipment</span>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>Service Reminder</strong><br>
-                        <span>We'll send a reminder 24 hours before your scheduled cleaning</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        
-        <div class="contact-info">
-            <p><strong>Need to make changes to your booking?</strong></p>
-            <p>Contact us at <a href="tel:+27707643709">070 764 3709</a> or <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a></p>
-            <p style="margin-top: 10px; font-size: 0.9rem;">
-                Please have your booking reference ready: <strong id="reference-for-contact">-</strong>
-            </p>
-        </div>
-        
+
         <div class="action-buttons">
             <a href="/" class="btn">
                 <i class="fas fa-home"></i> Back to Homepage
@@ -639,117 +261,106 @@
             <a href="#" class="btn btn-whatsapp" id="whatsapp-link">
                 <i class="fab fa-whatsapp"></i> Message on WhatsApp
             </a>
-            <a href="/booking/index.html" class="btn btn-outline">
-                <i class="fas fa-plus"></i> Book Another Service
-            </a>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // CONFIGURATION
-        // ============================================
+        // CONFIG - UPDATE THIS WITH YOUR ACTUAL APPS SCRIPT URL
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIb07qahJv8GkG_OtXwOHvD2vaiPegRD1MGkNXtNbNjEe7Ta4YzUM-gOiMHvsPY5NM/exec';
 
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // Replace with your actual Apps Script URL
-
-        // ============================================
-        // BOOKING DATA FETCHING
-        // ============================================
-
-        async function fetchBookingData(checkoutId) {
+        async function loadBookingData() {
             try {
-                console.log('🔍 Fetching booking data for checkout:', checkoutId);
+                // Get booking reference from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookingRef = urlParams.get('bookingRef');
                 
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkPayment&checkoutId=${checkoutId}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                if (!bookingRef) {
+                    throw new Error('No booking reference found. Please contact support.');
                 }
-                
+
+                // Store in localStorage for backup
+                localStorage.setItem('last_booking_ref', bookingRef);
+
+                // Fetch booking data
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=getBooking&bookingRef=${bookingRef}`);
                 const data = await response.json();
-                console.log('📦 Received booking data:', data);
-                
-                return data;
+
+                if (data.success && data.booking) {
+                    updatePageWithData(data.booking);
+                    
+                    // Check payment status and trigger emails
+                    await checkPaymentStatus(bookingRef);
+                    
+                } else {
+                    throw new Error(data.error || 'Failed to load booking data');
+                }
+
             } catch (error) {
-                console.error('❌ Error fetching booking data:', error);
-                throw error;
+                showError(error.message);
             }
         }
 
-        async function getBookingData() {
-            // Get checkout ID from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const checkoutId = urlParams.get('checkoutId');
-            
-            if (!checkoutId) {
-                throw new Error('No checkout ID found in URL parameters');
-            }
-            
-            // Try to fetch from Apps Script API
-            const response = await fetchBookingData(checkoutId);
-            
-            if (response.success && response.bookingRef) {
-                return {
-                    bookingRef: response.bookingRef,
-                    paymentStatus: response.paymentStatus,
-                    checkoutId: checkoutId,
-                    // Additional data would come from your spreadsheet
-                    serviceType: 'Loading...',
-                    bookingDate: 'Loading...',
-                    totalAmount: 'Loading...',
-                    propertySize: 'Loading...'
-                };
-            } else {
-                throw new Error(response.error || 'Failed to fetch booking data');
+        async function checkPaymentStatus(bookingRef) {
+            try {
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkPayment&bookingRef=${bookingRef}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update payment status
+                    if (data.paymentStatus === 'approved') {
+                        document.getElementById('payment-status').textContent = 'Paid ✅';
+                        document.getElementById('payment-status').style.color = '#28a745';
+                        
+                        // Show success message
+                        document.querySelector('.thank-you-container p').textContent = 
+                            'Thank you for choosing Ngaoyi Cleaning. Your payment has been confirmed and confirmation emails have been sent!';
+                    } else {
+                        document.getElementById('payment-status').textContent = data.paymentStatus || 'Processing';
+                    }
+                    
+                    // Update with any new booking data
+                    if (data.booking) {
+                        updatePageWithData(data.booking);
+                    }
+                }
+            } catch (error) {
+                console.error('Payment check failed:', error);
             }
         }
 
-        // ============================================
-        // PAGE UPDATING FUNCTIONS
-        // ============================================
+        function updatePageWithData(booking) {
+            document.getElementById('customer-name').textContent = booking.customerName || '-';
+            document.getElementById('customer-email').textContent = booking.customerEmail || '-';
+            document.getElementById('customer-phone').textContent = booking.customerPhone || '-';
+            document.getElementById('service-type').textContent = formatServiceType(booking.serviceType);
+            document.getElementById('property-size').textContent = formatPropertySize(booking.propertySize);
+            document.getElementById('total-amount').textContent = booking.totalAmount ? `R ${booking.totalAmount}` : '-';
+            document.getElementById('booking-ref').textContent = booking.bookingRef || '-';
 
-        function updatePageWithBookingData(bookingData) {
-            // Update the main booking reference display
-            document.getElementById('booking-ref-display').textContent = bookingData.bookingRef;
-            document.getElementById('reference-for-contact').textContent = bookingData.bookingRef;
-            
-            // Update payment status
-            document.getElementById('payment-status-text').textContent = bookingData.paymentStatus === 'approved' ? 'Paid' : bookingData.paymentStatus;
-            
-            // Update service type
-            document.getElementById('service-type').textContent = formatServiceType(bookingData.serviceType);
-            
-            // Update booking date
-            document.getElementById('booking-date').textContent = formatDate(bookingData.bookingDate);
-            
-            // Update total amount
-            document.getElementById('total-amount').textContent = bookingData.totalAmount ? `R ${parseFloat(bookingData.totalAmount).toFixed(2)}` : '-';
-            
-            // Update property size
-            document.getElementById('property-size').textContent = formatPropertySize(bookingData.propertySize);
-            
             // Update WhatsApp link
-            updateWhatsAppLink(bookingData.bookingRef);
-            
-            console.log('✅ Page updated with booking data:', bookingData);
+            if (booking.bookingRef) {
+                const message = `Hi Ngaoyi Cleaning! I just booked a cleaning service (Ref: ${booking.bookingRef}).`;
+                document.getElementById('whatsapp-link').href = 
+                    `https://wa.me/27707643709?text=${encodeURIComponent(message)}`;
+            }
         }
 
-        function formatServiceType(serviceType) {
-            const serviceTypes = {
+        function formatServiceType(type) {
+            const types = {
                 'once-off': 'Once-off Cleaning',
-                'recurring': 'Recurring Cleaning',
+                'recurring': 'Recurring Cleaning', 
                 'deep': 'Deep Cleaning',
                 'emergency': 'Emergency Cleaning',
                 'office': 'Office Cleaning'
             };
-            return serviceTypes[serviceType] || serviceType || '-';
+            return types[type] || type || '-';
         }
 
         function formatPropertySize(size) {
             const sizes = {
                 '1-bed': '1 Bedroom',
                 '2-bed': '2 Bedrooms',
-                '3-bed': '3 Bedrooms',
+                '3-bed': '3 Bedrooms', 
                 '4-bed': '4 Bedrooms',
                 '5+bed': '5+ Bedrooms',
                 'office': 'Office Space'
@@ -757,174 +368,18 @@
             return sizes[size] || size || '-';
         }
 
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-ZA', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            } catch (e) {
-                return dateString;
-            }
-        }
-
-        function updateWhatsAppLink(bookingRef) {
-            const whatsappLink = document.getElementById('whatsapp-link');
-            const whatsappMessage = `Hi Ngaoyi Cleaning, I just completed a booking (Ref: ${bookingRef}) and wanted to confirm details`;
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            whatsappLink.href = `https://wa.me/27707643709?text=${encodedMessage}`;
-        }
-
-        function copyBookingReference() {
-            const bookingRef = document.getElementById('booking-ref-display').textContent;
-            const copyBtn = document.getElementById('copy-btn');
-            
-            if (bookingRef === '-') return;
-            
-            // Copy to clipboard
-            navigator.clipboard.writeText(bookingRef).then(() => {
-                // Show success state
-                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                copyBtn.classList.add('copied');
-                
-                // Revert after 2 seconds
-                setTimeout(() => {
-                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = bookingRef;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                copyBtn.classList.add('copied');
-                
-                setTimeout(() => {
-                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            });
-        }
-
         function showError(message) {
-            const errorHtml = `
+            document.getElementById('booking-details').innerHTML = `
                 <div class="error-message">
-                    <strong><i class="fas fa-exclamation-triangle"></i> Unable to Load Booking Details</strong>
+                    <strong><i class="fas fa-exclamation-triangle"></i> Error Loading Booking</strong>
                     <p>${message}</p>
-                    <p><small>Please contact support with your checkout ID.</small></p>
+                    <p>Please contact support at <strong>070 764 3709</strong> with your booking reference.</p>
                 </div>
             `;
-            
-            document.getElementById('loading-state').innerHTML = errorHtml;
         }
 
-        function showBookingDetails() {
-            document.getElementById('loading-state').style.display = 'none';
-            document.getElementById('booking-details').style.display = 'block';
-        }
-
-        // ============================================
-        // ANALYTICS AND TRACKING
-        // ============================================
-
-        function trackConversion(bookingRef) {
-            // Track conversion in Google Analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'conversion', {
-                    'send_to': 'G-5V9NJTNT1N',
-                    'value': 1.0,
-                    'currency': 'ZAR',
-                    'transaction_id': bookingRef
-                });
-            }
-            
-            // Track in Facebook Pixel if available
-            if (typeof fbq !== 'undefined') {
-                fbq('track', 'Purchase', {
-                    value: 1.0,
-                    currency: 'ZAR',
-                    content_ids: [bookingRef],
-                    content_type: 'product'
-                });
-            }
-            
-            console.log('📊 Conversion tracked for booking:', bookingRef);
-        }
-
-        // ============================================
-        // PAGE INITIALIZATION
-        // ============================================
-
-        async function initializePage() {
-            console.log('🚀 Success page initialized');
-            
-            try {
-                // Fetch real booking data from Apps Script
-                const bookingData = await getBookingData();
-                
-                // Update page with real data
-                updatePageWithBookingData(bookingData);
-                showBookingDetails();
-                
-                // Track conversion
-                trackConversion(bookingData.bookingRef);
-                
-                // Store in localStorage for future reference
-                try {
-                    localStorage.setItem('last_booking_ref', bookingData.bookingRef);
-                    localStorage.setItem('last_checkout_id', bookingData.checkoutId);
-                } catch (e) {
-                    console.log('Could not store in localStorage');
-                }
-                
-                console.log('✅ Success page fully loaded with real data');
-                
-            } catch (error) {
-                console.error('❌ Failed to initialize page:', error);
-                showError(error.message);
-                
-                // Fallback: Try to use localStorage data
-                try {
-                    const lastBookingRef = localStorage.getItem('last_booking_ref');
-                    if (lastBookingRef) {
-                        const fallbackData = {
-                            bookingRef: lastBookingRef,
-                            paymentStatus: 'approved',
-                            serviceType: 'Once-off Cleaning',
-                            bookingDate: new Date().toISOString(),
-                            totalAmount: '350.00',
-                            propertySize: '2 Bedrooms'
-                        };
-                        updatePageWithBookingData(fallbackData);
-                        showBookingDetails();
-                        console.log('🔄 Using fallback data from localStorage');
-                    }
-                } catch (e) {
-                    console.log('Could not use fallback data');
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Start loading booking data immediately
-            initializePage();
-        });
-
-        // Enable audio on user interaction
-        document.addEventListener('click', function() {
-            // This ensures audio can play on subsequent interactions
-        });
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', loadBookingData);
     </script>
 </body>
 </html>
