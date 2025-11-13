@@ -120,6 +120,41 @@
             line-height: 1.7;
         }
         
+        /* Customer Info Section */
+        .customer-info-section {
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent);
+        }
+        
+        .customer-info-section h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .customer-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .customer-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 59, 111, 0.1);
+        }
+        
+        .customer-detail-item strong {
+            color: var(--primary);
+        }
+        
         /* Summary Container */
         .summary-container {
             display: grid;
@@ -401,6 +436,10 @@
                 gap: 30px;
             }
             
+            .customer-details {
+                grid-template-columns: 1fr;
+            }
+            
             .booking-main h2 {
                 font-size: 1.8rem;
             }
@@ -427,6 +466,29 @@
 
             <div id="alertContainer"></div>
 
+            <!-- Customer Information Section -->
+            <div class="customer-info-section">
+                <h3><i class="fas fa-user"></i> Customer Information</h3>
+                <div class="customer-details">
+                    <div class="customer-detail-item">
+                        <strong>Full Name:</strong>
+                        <span id="customer-name-display">-</span>
+                    </div>
+                    <div class="customer-detail-item">
+                        <strong>Phone Number:</strong>
+                        <span id="customer-phone-display">-</span>
+                    </div>
+                    <div class="customer-detail-item">
+                        <strong>Email:</strong>
+                        <span id="customer-email-display">-</span>
+                    </div>
+                    <div class="customer-detail-item">
+                        <strong>Service Address:</strong>
+                        <span id="customer-address-display">-</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="summary-container">
                 <div class="booking-summary">
                     <h3>Booking Details</h3>
@@ -449,10 +511,6 @@
                     <div class="summary-item">
                         <strong>Time Slot:</strong>
                         <span id="summary-time">-</span>
-                    </div>
-                    <div class="summary-item">
-                        <strong>Address:</strong>
-                        <span id="summary-address">-</span>
                     </div>
                     <div id="addons-summary"></div>
                 </div>
@@ -726,6 +784,13 @@
                 return;
             }
 
+            // Update Customer Information
+            document.getElementById('customer-name-display').textContent = clientInfo.name || '-';
+            document.getElementById('customer-phone-display').textContent = clientInfo.phone || '-';
+            document.getElementById('customer-email-display').textContent = clientInfo.email || '-';
+            document.getElementById('customer-address-display').textContent = clientInfo.address || '-';
+
+            // Update Booking Details
             document.getElementById('summary-service').textContent = 
                 clientInfo.serviceType ? formatServiceType(clientInfo.serviceType) : '-';
             
@@ -743,8 +808,6 @@
             // Display time slot
             document.getElementById('summary-time').textContent = 
                 clientInfo.timeSlot ? formatTimeSlot(clientInfo.timeSlot) : '-';
-            
-            document.getElementById('summary-address').textContent = clientInfo.address || '-';
 
             updateAddonsSummary(clientInfo.addons || []);
 
@@ -928,7 +991,7 @@
                 phone: clientInfo.phone,
                 address: clientInfo.address,
                 date: clientInfo.date,
-                timeSlot: clientInfo.timeSlot, // Include time slot
+                timeSlot: clientInfo.timeSlot,
                 serviceType: clientInfo.serviceType,
                 propertySize: clientInfo.propertySize,
                 materialOption: clientInfo.materialOption,
