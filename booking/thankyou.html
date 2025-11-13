@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Receipt - Ngaoyi Cleaning</title>
+    <title>Booking Confirmed - Ngaoyi Cleaning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #003b6f;
+            --primary-light: #0056a3;
+            --accent: #00c6ff;
+            --text: #6c6c6c;
+            --light: #f8f9fa;
+            --dark: #00264d;
+            --gray: #6c6c6c;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +28,8 @@
         }
         
         body {
-            background: #f8f9fa;
-            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
@@ -24,20 +38,27 @@
             padding: 20px;
         }
         
-        .receipt-container {
-            max-width: 600px;
+        .thank-you-container {
+            max-width: 800px;
             width: 100%;
+            padding: 60px 40px;
+            text-align: center;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
+            animation: slideUp 0.6s ease-out;
         }
         
-        .header {
-            background: linear-gradient(135deg, #003b6f, #0056a3);
-            color: white;
-            padding: 30px;
-            text-align: center;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .logo {
@@ -45,370 +66,781 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.2s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .logo h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
+            color: var(--primary);
             font-weight: 700;
         }
         
         .success-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        
-        .header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .receipt-body {
-            padding: 30px;
-        }
-        
-        .booking-ref {
-            background: #28a745;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--success), #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
             color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+            position: relative;
+            animation: scaleIn 2s ease-out 0.4s backwards;
+        }
+        
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            20% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .success-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--success);
+            opacity: 0.3;
+            animation: pulse 2s ease-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .success-icon i {
+            position: relative;
+            z-index: 1;
+            animation: checkmark 2s ease-out 0.6s backwards;
+        }
+        
+        @keyframes checkmark {
+            0% {
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+            20% {
+                transform: scale(1.2) rotate(10deg);
+                opacity: 1;
+            }
+            40% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        .thank-you-container h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 2.8s forwards;
+        }
+        
+        .thank-you-container > p {
+            color: var(--gray);
+            margin-bottom: 30px;
             font-size: 1.2rem;
-            text-align: center;
-            margin-bottom: 25px;
-            display: inline-block;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 3s forwards;
         }
         
-        .receipt-details {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            border-left: 4px solid #003b6f;
-            margin-bottom: 25px;
+        .confirmation-details {
+            background: linear-gradient(135deg, rgba(0, 59, 111, 0.05), rgba(0, 198, 255, 0.05));
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border-left: 4px solid var(--accent);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 3.2s forwards;
         }
         
-        .detail-row {
+        .confirmation-details h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+        }
+        
+        .detail-item {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid rgba(0, 59, 111, 0.1);
         }
         
-        .detail-row:last-child {
+        .detail-item strong {
+            color: var(--primary);
+        }
+        
+        .booking-reference {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 59, 111, 0.3);
+        }
+        
+        .payment-status {
+            color: var(--success);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .payment-status i {
+            font-size: 1.1rem;
+        }
+        
+        .next-steps {
+            background: var(--light);
+            padding: 35px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: left;
+            border: 1px solid var(--light-gray);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 3.4s forwards;
+        }
+        
+        .next-steps h3 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .next-steps li {
+            padding: 15px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            border-bottom: 1px solid rgba(108, 108, 108, 0.1);
+            opacity: 0;
+            animation: slideInLeft 0.4s ease-out forwards;
+        }
+        
+        .next-steps li:nth-child(1) { animation-delay: 3.6s; }
+        .next-steps li:nth-child(2) { animation-delay: 3.7s; }
+        .next-steps li:nth-child(3) { animation-delay: 3.8s; }
+        .next-steps li:nth-child(4) { animation-delay: 3.9s; }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .next-steps li:last-child {
             border-bottom: none;
         }
         
-        .detail-label {
-            font-weight: 600;
-            color: #003b6f;
+        .next-steps li i {
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
         
-        .detail-value {
-            text-align: right;
-        }
-        
-        .total-amount {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #28a745;
-        }
-        
-        .status-badge {
-            background: #28a745;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .actions {
+        .action-buttons {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 30px;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 4s forwards;
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 25px;
-            border-radius: 25px;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 18px 35px;
+            border-radius: 50px;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: 700;
             border: none;
             cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.3);
+            font-size: 1.1rem;
         }
         
-        .btn-primary {
-            background: #003b6f;
-            color: white;
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 59, 111, 0.4);
         }
         
         .btn-whatsapp {
-            background: #25D366;
-            color: white;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .btn-whatsapp:hover {
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
         }
         
         .btn-outline {
             background: white;
-            color: #003b6f;
-            border: 2px solid #003b6f;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 59, 111, 0.1);
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        
-        .error {
-            text-align: center;
-            padding: 40px;
-            color: #dc3545;
-            background: #ffebee;
-            border-radius: 10px;
-            margin: 20px;
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
         
         .contact-info {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            color: #666;
-            font-size: 0.9rem;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 4.2s forwards;
+        }
+        
+        .contact-info p {
+            color: var(--gray);
+            margin-bottom: 10px;
         }
         
         .contact-info a {
-            color: #003b6f;
+            color: var(--primary);
             text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
         }
         
+        .contact-info a:hover {
+            color: var(--accent);
+        }
+
+        /* Copy reference button */
+        .copy-reference {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            transition: var(--transition);
+        }
+
+        .copy-reference:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .copy-reference.copied {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        @keyframes loadingDots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Error state */
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #c62828;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .actions {
+            .thank-you-container {
+                padding: 40px 25px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
                 flex-direction: column;
+                align-items: center;
             }
             
             .btn {
                 width: 100%;
+                max-width: 300px;
                 justify-content: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .thank-you-container h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .thank-you-container {
+                padding: 30px 20px;
+            }
+            
+            .success-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+            
+            .next-steps {
+                padding: 25px 20px;
+            }
+            
+            .confirmation-details {
+                padding: 25px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="receipt-container">
-        <div class="header">
-            <div class="logo">
-                <h1>Ngaoyi Cleaning</h1>
+    <div class="thank-you-container">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="https://raw.githubusercontent.com/ngaoyicleaning/ngaoyicleaning/main/assets/logo.png" alt="Ngaoyi Cleaning">
             </div>
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2>Booking Confirmed!</h2>
-            <p>Thank you for your payment</p>
+            <h1>Ngaoyi Cleaning</h1>
         </div>
         
-        <div class="receipt-body">
-            <div id="loading" class="loading">
-                <i class="fas fa-spinner fa-spin"></i><br>
-                <p>Loading your booking details...</p>
-            </div>
-            
-            <div id="receipt-content" style="display: none;">
-                <div class="booking-ref" id="booking-ref-display">NGY123456</div>
-                
-                <div class="receipt-details">
-                    <div class="detail-row">
-                        <span class="detail-label">Booking Reference:</span>
-                        <span class="detail-value" id="ref-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Customer Name:</span>
-                        <span class="detail-value" id="name-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Email:</span>
-                        <span class="detail-value" id="email-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Phone:</span>
-                        <span class="detail-value" id="phone-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Service Type:</span>
-                        <span class="detail-value" id="service-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Property Size:</span>
-                        <span class="detail-value" id="size-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Service Date:</span>
-                        <span class="detail-value" id="date-value">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Payment Status:</span>
-                        <span class="detail-value">
-                            <span class="status-badge" id="status-value">Processing</span>
-                        </span>
-                    </div>
-                    <div class="detail-row total-amount">
-                        <span class="detail-label">Total Amount:</span>
-                        <span class="detail-value" id="amount-value">R 0.00</span>
-                    </div>
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1>Booking Confirmed!</h1>
+        <p>Thank you for choosing Ngaoyi Cleaning. Your booking has been successfully confirmed and payment received.</p>
+        
+        <div class="confirmation-details">
+            <h3>Booking Summary</h3>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Booking Reference:</strong>
+                    <span>
+                        <span class="booking-reference" id="booking-ref-display">Loading<span class="loading"></span></span>
+                        <button class="copy-reference" onclick="copyBookingReference()" id="copy-btn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </span>
                 </div>
-                
-                <div class="actions">
-                    <button class="btn btn-primary" onclick="printReceipt()">
-                        <i class="fas fa-print"></i> Print Receipt
-                    </button>
-                    <a href="#" class="btn btn-whatsapp" id="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i> WhatsApp Us
-                    </a>
-                    <a href="/" class="btn btn-outline">
-                        <i class="fas fa-home"></i> Homepage
-                    </a>
+                <div class="detail-item">
+                    <strong>Payment Status:</strong>
+                    <span class="payment-status">
+                        <i class="fas fa-check-circle"></i> <span id="payment-status-text">Loading<span class="loading"></span></span>
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <strong>Customer Name:</strong>
+                    <span id="customer-name">Loading<span class="loading"></span></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Email:</strong>
+                    <span id="customer-email">Loading<span class="loading"></span></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Phone:</strong>
+                    <span id="customer-phone">Loading<span class="loading"></span></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Service Type:</strong>
+                    <span id="service-type">Loading<span class="loading"></span></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Property Size:</strong>
+                    <span id="property-size">Loading<span class="loading"></span></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Booking Date:</strong>
+                    <span id="booking-date">Loading<span class="loading"></span></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Total Amount:</strong>
+                    <span id="total-amount">Loading<span class="loading"></span></span>
                 </div>
             </div>
-            
-            <div id="error-message" class="error" style="display: none;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Unable to Load Receipt</h3>
-                <p id="error-text">Please contact support with your payment details</p>
-            </div>
+        </div>
+        
+        <div id="status-message"></div>
+        
+        <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <ul>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Confirmation Email</strong><br>
+                        <span>You'll receive a confirmation email within 5 minutes with all booking details</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Team Contact</strong><br>
+                        <span>Our team will contact you within 24 hours to confirm cleaning specifics</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Cleaner Assignment</strong><br>
+                        <span>Your assigned cleaner will arrive at the scheduled time with all equipment</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Service Reminder</strong><br>
+                        <span>We'll send a reminder 24 hours before your scheduled cleaning</span>
+                    </div>
+                </li>
+            </ul>
         </div>
         
         <div class="contact-info">
-            <p><strong>Need help?</strong> Contact us: 
-                <a href="tel:+27707643709">070 764 3709</a> | 
-                <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a>
+            <p><strong>Need to make changes to your booking?</strong></p>
+            <p>Contact us at <a href="tel:+27707643709">070 764 3709</a> or <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a></p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Please have your booking reference ready: <strong id="reference-for-contact">Loading<span class="loading"></span></strong>
             </p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">
+                <i class="fas fa-home"></i> Back to Homepage
+            </a>
+            <a href="#" class="btn btn-whatsapp" id="whatsapp-link">
+                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+            </a>
+            <a href="/booking/index.html" class="btn btn-outline">
+                <i class="fas fa-plus"></i> Book Another Service
+            </a>
         </div>
     </div>
 
     <script>
-        // Your Google Apps Script URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIb07qahJv8GkG_OtXwOHvD2vaiPegRD1MGkNXtNbNjEe7Ta4YzUM-gOiMHvsPY5NM/exec';
-        
-        async function loadReceipt() {
+        // CONFIG - YOUR GOOGLE APPS SCRIPT URL
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIb07qahJv8GkG_OtXwOHvD2vaiPegRD1MGkNXtNbNjEe7Ta4YzUM-gOiMHvsPY5NM/exec';
+
+        async function loadBookingData() {
             try {
+                console.log('🔄 Loading booking data...');
+                
                 // Get checkout ID from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const checkoutId = urlParams.get('checkoutId');
                 
+                console.log('📋 Checkout ID from URL:', checkoutId);
+                
                 if (!checkoutId) {
-                    throw new Error('No checkout ID found. Please contact support with your payment details.');
+                    throw new Error('No checkout ID found in URL. Please contact support with your payment details.');
                 }
-                
-                console.log('Fetching booking for checkout:', checkoutId);
-                
+
                 // Fetch booking data
-                const response = await fetch(`${SCRIPT_URL}?action=getBooking&checkoutId=${checkoutId}`);
-                const data = await response.json();
-                
-                console.log('API Response:', data);
-                
-                if (data.success && data.booking) {
-                    displayReceipt(data.booking);
+                console.log('📡 Fetching booking data from API...');
+                const bookingResponse = await fetch(`${APPS_SCRIPT_URL}?action=getBooking&checkoutId=${checkoutId}`);
+                const bookingData = await bookingResponse.json();
+
+                console.log('📦 Booking API response:', bookingData);
+
+                if (bookingData.success && bookingData.booking) {
+                    console.log('✅ Booking data received:', bookingData.booking);
+                    updatePageWithData(bookingData.booking);
+                    
+                    // Check payment status
+                    console.log('💰 Checking payment status...');
+                    await checkPaymentStatus(checkoutId);
+                    
                 } else {
-                    throw new Error(data.error || 'Booking not found');
+                    throw new Error(bookingData.error || 'Booking not found. Please contact support.');
                 }
-                
+
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Error loading booking data:', error);
                 showError(error.message);
             }
         }
-        
-        function displayReceipt(booking) {
-            // Hide loading, show receipt
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('receipt-content').style.display = 'block';
-            
-            // Update all fields
-            document.getElementById('ref-value').textContent = booking.bookingRef;
-            document.getElementById('booking-ref-display').textContent = booking.bookingRef;
-            document.getElementById('name-value').textContent = booking.customerName;
-            document.getElementById('email-value').textContent = booking.customerEmail;
-            document.getElementById('phone-value').textContent = booking.customerPhone;
-            document.getElementById('service-value').textContent = formatServiceType(booking.serviceType);
-            document.getElementById('size-value').textContent = formatPropertySize(booking.propertySize);
-            document.getElementById('date-value').textContent = formatDate(booking.serviceDate);
-            document.getElementById('amount-value').textContent = `R ${parseFloat(booking.totalAmount || 0).toFixed(2)}`;
-            
-            // Update payment status
-            const statusElement = document.getElementById('status-value');
-            if (booking.paymentStatus === 'Paid') {
-                statusElement.textContent = 'Paid ✅';
-                statusElement.style.background = '#28a745';
-            } else {
-                statusElement.textContent = booking.paymentStatus || 'Processing';
-                statusElement.style.background = '#ffc107';
-                statusElement.style.color = '#000';
+
+        async function checkPaymentStatus(checkoutId) {
+            try {
+                console.log('🔍 Checking payment status for:', checkoutId);
+                
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkPayment&checkoutId=${checkoutId}`);
+                const data = await response.json();
+                
+                console.log('💳 Payment status response:', data);
+                
+                if (data.success) {
+                    // Update payment status
+                    const statusText = data.paymentStatus === 'approved' ? 'Paid' : 
+                                     data.paymentStatus === 'pending' ? 'Processing' : 
+                                     data.paymentStatus || 'Processing';
+                    
+                    document.getElementById('payment-status-text').textContent = statusText;
+                    
+                    // If we got updated booking data, refresh the page
+                    if (data.booking) {
+                        console.log('🔄 Refreshing with updated booking data');
+                        updatePageWithData(data.booking);
+                    }
+                    
+                    // Show status message
+                    if (data.paymentStatus === 'approved') {
+                        showSuccess('Payment confirmed! Confirmation emails have been sent to your email address.');
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Payment check failed:', error);
             }
-            
-            // Update WhatsApp link
-            const whatsappBtn = document.getElementById('whatsapp-btn');
-            const message = `Hi Ngaoyi Cleaning! I just completed booking ${booking.bookingRef}. Can you confirm receipt?`;
-            whatsappBtn.href = `https://wa.me/27707643709?text=${encodeURIComponent(message)}`;
-            
-            console.log('Receipt displayed for booking:', booking.bookingRef);
         }
-        
-        function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error-message').style.display = 'block';
-            document.getElementById('error-text').textContent = message;
+
+        function updatePageWithData(booking) {
+            console.log('🎨 Updating page with booking data:', booking);
+            
+            // Remove loading animations
+            document.querySelectorAll('.loading').forEach(el => el.remove());
+            
+            // Update all fields with actual data
+            document.getElementById('booking-ref-display').textContent = booking.bookingRef || 'Not assigned';
+            document.getElementById('reference-for-contact').textContent = booking.bookingRef || 'Not assigned';
+            document.getElementById('customer-name').textContent = booking.customerName || 'Not provided';
+            document.getElementById('customer-email').textContent = booking.customerEmail || 'Not provided';
+            document.getElementById('customer-phone').textContent = booking.customerPhone || 'Not provided';
+            document.getElementById('service-type').textContent = formatServiceType(booking.serviceType);
+            document.getElementById('property-size').textContent = formatPropertySize(booking.propertySize);
+            document.getElementById('booking-date').textContent = formatDate(booking.serviceDate);
+            document.getElementById('total-amount').textContent = booking.totalAmount ? `R ${parseFloat(booking.totalAmount).toFixed(2)}` : 'R 0.00';
+            document.getElementById('payment-status-text').textContent = booking.paymentStatus === 'Paid' ? 'Paid' : booking.paymentStatus || 'Processing';
+
+            // Update WhatsApp link with actual booking reference
+            if (booking.bookingRef) {
+                const message = `Hi Ngaoyi Cleaning! I just booked a cleaning service (Ref: ${booking.bookingRef}). Can you confirm the details?`;
+                document.getElementById('whatsapp-link').href = 
+                    `https://wa.me/27707643709?text=${encodeURIComponent(message)}`;
+                
+                console.log('📱 WhatsApp link updated with reference:', booking.bookingRef);
+            }
         }
-        
+
         function formatServiceType(type) {
             const types = {
                 'once-off': 'Once-off Cleaning',
-                'recurring': 'Recurring Cleaning',
+                'recurring': 'Recurring Cleaning', 
                 'deep': 'Deep Cleaning',
                 'emergency': 'Emergency Cleaning',
                 'office': 'Office Cleaning'
             };
-            return types[type] || type || 'Cleaning Service';
+            return types[type] || type || 'Standard Cleaning';
         }
-        
+
         function formatPropertySize(size) {
             const sizes = {
                 '1-bed': '1 Bedroom',
                 '2-bed': '2 Bedrooms',
-                '3-bed': '3 Bedrooms',
+                '3-bed': '3 Bedrooms', 
                 '4-bed': '4 Bedrooms',
                 '5+bed': '5+ Bedrooms',
                 'office': 'Office Space'
             };
-            return sizes[size] || size || 'Standard';
+            return sizes[size] || size || 'Standard Size';
         }
-        
+
         function formatDate(dateString) {
             if (!dateString || dateString === 'N/A') return 'To be scheduled';
             try {
-                return new Date(dateString).toLocaleDateString('en-ZA');
+                return new Date(dateString).toLocaleDateString('en-ZA', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
             } catch (e) {
                 return dateString;
             }
         }
-        
-        function printReceipt() {
-            window.print();
+
+        function copyBookingReference() {
+            const bookingRef = document.getElementById('booking-ref-display').textContent;
+            const copyBtn = document.getElementById('copy-btn');
+            
+            if (bookingRef === 'Loading' || bookingRef === 'Not assigned') {
+                return;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(bookingRef).then(() => {
+                // Show success state
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+                
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = bookingRef;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
         }
-        
-        // Load receipt when page opens
-        document.addEventListener('DOMContentLoaded', loadReceipt);
+
+        function showError(message) {
+            document.getElementById('status-message').innerHTML = `
+                <div class="error-message">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Unable to Load Booking Details</strong>
+                    <p>${message}</p>
+                    <p><strong>Please contact support:</strong></p>
+                    <p>📞 Phone: <a href="tel:+27707643709">070 764 3709</a></p>
+                    <p>📧 Email: <a href="mailto:ngaoyicleaning@gmail.com">ngaoyicleaning@gmail.com</a></p>
+                </div>
+            `;
+            
+            // Remove loading animations and show error state
+            document.querySelectorAll('.loading').forEach(el => el.remove());
+            document.querySelectorAll('#booking-details span').forEach(span => {
+                if (span.textContent.includes('Loading')) {
+                    span.textContent = 'Not available';
+                }
+            });
+        }
+
+        function showSuccess(message) {
+            document.getElementById('status-message').innerHTML = `
+                <div class="success-message" style="background: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 10px; border-left: 4px solid #2e7d32; margin: 20px 0;">
+                    <strong><i class="fas fa-check-circle"></i> Success!</strong>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Success page initialized');
+            loadBookingData();
+        });
     </script>
 </body>
 </html>
