@@ -936,7 +936,7 @@
         }
 
         // ============================================
-        // PAYMENT PROCESSING - SIMPLE REDIRECT FLOW
+        // PAYMENT PROCESSING - UPDATED FOR INSTANT VERIFICATION
         // ============================================
         async function processPayment() {
             if (!bookingData.totalAmount) {
@@ -963,6 +963,12 @@
                 
                 if (bookingResponse.success && bookingResponse.redirectUrl) {
                     console.log('✅ Checkout created, redirecting to:', bookingResponse.redirectUrl);
+                    
+                    // ✅ CRITICAL: Store checkoutId for instant verification
+                    if (bookingResponse.checkoutId) {
+                        localStorage.setItem('lastCheckoutId', bookingResponse.checkoutId);
+                        console.log('💾 Stored checkoutId for verification:', bookingResponse.checkoutId);
+                    }
                     
                     // Show success message
                     showAlert('Redirecting to secure payment page...', 'success');
@@ -1041,12 +1047,16 @@
                 
                 console.log('📥 Parsed result:', result);
                 
-                if (result.success && result.redirectUrl) {
-                    console.log('✅ Booking saved successfully, redirect URL:', result.redirectUrl);
+                if (result.success && result.redirectUrl && result.checkoutId) {
+                    console.log('✅ Booking saved successfully');
+                    console.log('🔗 Redirect URL:', result.redirectUrl);
+                    console.log('🆔 Checkout ID:', result.checkoutId);
+                    
                     return {
                         success: true,
                         redirectUrl: result.redirectUrl,
-                        bookingRef: result.bookingRef
+                        bookingRef: result.bookingRef,
+                        checkoutId: result.checkoutId  // ✅ This is critical for instant verification
                     };
                 } else {
                     throw new Error(result.error || 'Failed to create payment session');
