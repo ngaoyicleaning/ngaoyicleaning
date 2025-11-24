@@ -583,9 +583,9 @@
 
     <script>
         // ============================================
-        // CONFIGURATION
+        // CONFIGURATION - UPDATED FOR CLOUD RUN
         // ============================================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx70B3Ec-XNzCYbCITVbRrdnV8QVEAgecmNP7OaV5Zi7ubVE7UepCHQcVnlore3U603/exec';
+        const CLOUD_RUN_API_URL = 'https://ngaoyi-cleaning-api-255989589714.europe-west1.run.app';
         
         // ============================================
         // GLOBAL VARIABLES
@@ -716,7 +716,7 @@
         }
 
         // ============================================
-        // DISCOUNT CODE HANDLING
+        // DISCOUNT CODE HANDLING - UPDATED FOR CLOUD RUN
         // ============================================
         async function applyDiscount() {
             const codeInput = document.getElementById('discount-code-input');
@@ -732,7 +732,7 @@
             applyBtn.innerHTML = '<span class="spinner"></span> Checking...';
             
             try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=validateDiscount&code=${encodeURIComponent(code)}`);
+                const response = await fetch(`${CLOUD_RUN_API_URL}/api/validate-discount?code=${encodeURIComponent(code)}`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
@@ -746,7 +746,7 @@
                         percentage: result.percentage
                     };
                     
-                    showDiscountMessage(`✓ ${result.message}`, 'success');
+                    showDiscountMessage(`✓ Discount applied! ${result.percentage}% off`, 'success');
                     codeInput.disabled = true;
                     applyBtn.innerHTML = '<i class="fas fa-check"></i> Applied';
                     
@@ -936,7 +936,7 @@
         }
 
         // ============================================
-        // PAYMENT PROCESSING - UPDATED FOR INSTANT VERIFICATION
+        // PAYMENT PROCESSING - UPDATED FOR CLOUD RUN
         // ============================================
         async function processPayment() {
             if (!bookingData.totalAmount) {
@@ -956,10 +956,10 @@
             payButton.disabled = true;
 
             try {
-                console.log('🛒 Creating checkout session...');
+                console.log('🛒 Creating checkout session via Cloud Run...');
                 
-                // Save booking and get redirect URL
-                const bookingResponse = await saveBookingToSheets(bookingData);
+                // Create booking and get redirect URL
+                const bookingResponse = await saveBookingToCloudRun(bookingData);
                 
                 if (bookingResponse.success && bookingResponse.redirectUrl) {
                     console.log('✅ Checkout created, redirecting to:', bookingResponse.redirectUrl);
@@ -990,7 +990,7 @@
             }
         }
 
-        async function saveBookingToSheets(clientInfo) {
+        async function saveBookingToCloudRun(clientInfo) {
             const payload = {
                 name: clientInfo.name,
                 email: clientInfo.email,
@@ -1007,21 +1007,20 @@
                 emergencyServiceType: clientInfo.emergencyServiceType || null,
                 discountCode: clientInfo.discountCode || '',
                 discountPercent: clientInfo.discountPercent || 0,
-                totalAmount: clientInfo.totalAmount,
-                action: 'saveBooking'
+                totalAmount: clientInfo.totalAmount
             };
 
-            console.log('📤 Saving booking with payload:', payload);
-            console.log('📍 Sending to URL:', GOOGLE_SCRIPT_URL);
+            console.log('📤 Saving booking to Cloud Run with payload:', payload);
+            console.log('📍 Sending to URL:', `${CLOUD_RUN_API_URL}/api/bookings`);
 
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                const response = await fetch(`${CLOUD_RUN_API_URL}/api/bookings`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'text/plain;charset=utf-8'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload),
                     signal: controller.signal
@@ -1031,24 +1030,16 @@
                 
                 console.log('📥 Response status:', response.status);
                 
-                let result;
-                const contentType = response.headers.get('content-type');
-                
-                if (contentType && contentType.includes('application/json')) {
-                    result = await response.json();
-                } else {
-                    const text = await response.text();
-                    try {
-                        result = JSON.parse(text);
-                    } catch (e) {
-                        throw new Error('Invalid response format from server');
-                    }
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
                 }
                 
+                const result = await response.json();
                 console.log('📥 Parsed result:', result);
                 
                 if (result.success && result.redirectUrl && result.checkoutId) {
-                    console.log('✅ Booking saved successfully');
+                    console.log('✅ Booking saved successfully to Cloud Run');
                     console.log('🔗 Redirect URL:', result.redirectUrl);
                     console.log('🆔 Checkout ID:', result.checkoutId);
                     
@@ -1063,7 +1054,7 @@
                 }
                 
             } catch (error) {
-                console.error('❌ Booking save error:', error);
+                console.error('❌ Cloud Run booking save error:', error);
                 
                 if (error.name === 'AbortError') {
                     throw new Error('Request timed out. Please check your internet connection and try again.');
@@ -1071,11 +1062,11 @@
                 
                 if (error.message.includes('Failed to fetch')) {
                     throw new Error(
-                        'Cannot connect to server. Please verify:\n' +
-                        '1. Google Apps Script is deployed as Web App\n' +
-                        '2. Access is set to "Anyone"\n' +
-                        '3. The deployment URL is correct\n\n' +
-                        'URL: ' + GOOGLE_SCRIPT_URL
+                        'Cannot connect to Cloud Run service. Please verify:\n' +
+                        '1. Cloud Run service is deployed and running\n' +
+                        '2. Service URL is correct\n' +
+                        '3. CORS is properly configured\n\n' +
+                        'Current URL: ' + CLOUD_RUN_API_URL
                     );
                 }
                 
@@ -1110,13 +1101,13 @@
         }
 
         // ============================================
-        // CONNECTION TEST
+        // CONNECTION TEST - UPDATED FOR CLOUD RUN
         // ============================================
         async function testConnection() {
-            console.log('🧪 Testing connection to:', GOOGLE_SCRIPT_URL);
+            console.log('🧪 Testing connection to Cloud Run:', CLOUD_RUN_API_URL);
             
             try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=test`, {
+                const response = await fetch(`${CLOUD_RUN_API_URL}/`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
@@ -1130,26 +1121,26 @@
                 }
                 
                 const result = await response.json();
-                console.log('✅ Connection test result:', result);
+                console.log('✅ Cloud Run connection test result:', result);
                 
-                if (result.success) {
-                    console.log('✅ API connection successful!');
+                if (result.status === 'healthy') {
+                    console.log('✅ Cloud Run API connection successful!');
                     return true;
                 } else {
-                    console.error('❌ API returned error:', result.error);
+                    console.error('❌ Cloud Run returned error:', result.error);
                     return false;
                 }
                 
             } catch (error) {
-                console.error('❌ Connection test failed:', error);
+                console.error('❌ Cloud Run connection test failed:', error);
                 
                 showAlert(
-                    `Connection failed: ${error.message}\n\n` +
+                    `Cloud Run connection failed: ${error.message}\n\n` +
                     `Please check:\n` +
-                    `1. Your Google Apps Script is deployed as Web App\n` +
-                    `2. Access is set to "Anyone"\n` +
-                    `3. The deployment URL is correct\n\n` +
-                    `Current URL: ${GOOGLE_SCRIPT_URL}`,
+                    `1. Cloud Run service is deployed and running\n` +
+                    `2. Service URL is correct\n` +
+                    `3. Service allows public access\n\n` +
+                    `Current URL: ${CLOUD_RUN_API_URL}`,
                     'error'
                 );
                 
@@ -1161,12 +1152,12 @@
         // INITIALIZATION
         // ============================================
         window.addEventListener('load', async function() {
-            console.log('🚀 Initializing payment page...');
+            console.log('🚀 Initializing payment page with Cloud Run...');
             
-            console.log('📍 Using Google Script URL:', GOOGLE_SCRIPT_URL);
+            console.log('📍 Using Cloud Run URL:', CLOUD_RUN_API_URL);
             
-            // Test connection to Google Apps Script
-            console.log('🔌 Testing connection to backend...');
+            // Test connection to Cloud Run
+            console.log('🔌 Testing connection to Cloud Run...');
             const connectionOk = await testConnection();
             
             if (!connectionOk) {
@@ -1184,7 +1175,7 @@
                 }
             });
             
-            console.log('✅ Payment page initialized successfully');
+            console.log('✅ Payment page initialized successfully with Cloud Run');
         });
     </script>
 </body>
