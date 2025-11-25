@@ -621,6 +621,67 @@
         };
 
         // ============================================
+        // EFFICIENT FETCH UTILITIES
+        // ============================================
+        class FetchUtils {
+            static async fetchWithTimeout(url, options = {}, timeout = 15000) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                try {
+                    const response = await fetch(url, {
+                        ...options,
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    return response;
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    throw error;
+                }
+            }
+
+            static async parseResponse(response) {
+                const contentType = response.headers.get('content-type') || '';
+                
+                if (contentType.includes('application/json')) {
+                    return await response.json();
+                } else {
+                    const text = await response.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch {
+                        return { success: false, error: 'Invalid response format' };
+                    }
+                }
+            }
+
+            static async handleApiCall(url, options = {}, timeout = 15000) {
+                try {
+                    const response = await this.fetchWithTimeout(url, options, timeout);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    return await this.parseResponse(response);
+                } catch (error) {
+                    console.error('API call failed:', error);
+                    
+                    if (error.name === 'AbortError') {
+                        throw new Error('Request timed out. Please check your internet connection.');
+                    }
+                    
+                    if (error.message.includes('Failed to fetch')) {
+                        throw new Error('Cannot connect to server. Please check your internet connection.');
+                    }
+                    
+                    throw error;
+                }
+            }
+        }
+
+        // ============================================
         // PRICE CALCULATION
         // ============================================
         function calculatePrice(serviceType, propertySize, date, materialOption, addons = [], recurringFrequency = null, emergencyServiceType = null, discountPercent = 0) {
@@ -716,7 +777,7 @@
         }
 
         // ============================================
-        // DISCOUNT CODE HANDLING
+        // DISCOUNT CODE HANDLING - EFFICIENT
         // ============================================
         async function applyDiscount() {
             const codeInput = document.getElementById('discount-code-input');
@@ -732,13 +793,9 @@
             applyBtn.innerHTML = '<span class="spinner"></span> Checking...';
             
             try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=validateDiscount&code=${encodeURIComponent(code)}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const result = await response.json();
+                const result = await FetchUtils.handleApiCall(
+                    `${GOOGLE_SCRIPT_URL}?action=validateDiscount&code=${encodeURIComponent(code)}`
+                );
                 
                 if (result.success) {
                     appliedDiscount = {
@@ -746,7 +803,7 @@
                         percentage: result.percentage
                     };
                     
-                    showDiscountMessage(`✓ ${result.message}`, 'success');
+                    showDiscountMessage(`✓ Discount applied! ${result.percentage}% off`, 'success');
                     codeInput.disabled = true;
                     applyBtn.innerHTML = '<i class="fas fa-check"></i> Applied';
                     
@@ -936,7 +993,7 @@
         }
 
         // ============================================
-        // PAYMENT PROCESSING - UPDATED FOR INSTANT VERIFICATION
+        // PAYMENT PROCESSING - EFFICIENT
         // ============================================
         async function processPayment() {
             if (!bookingData.totalAmount) {
@@ -1015,35 +1072,13 @@
             console.log('📍 Sending to URL:', GOOGLE_SCRIPT_URL);
 
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-                
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                const result = await FetchUtils.handleApiCall(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'text/plain;charset=utf-8'
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(payload),
-                    signal: controller.signal
-                });
-
-                clearTimeout(timeoutId);
-                
-                console.log('📥 Response status:', response.status);
-                
-                let result;
-                const contentType = response.headers.get('content-type');
-                
-                if (contentType && contentType.includes('application/json')) {
-                    result = await response.json();
-                } else {
-                    const text = await response.text();
-                    try {
-                        result = JSON.parse(text);
-                    } catch (e) {
-                        throw new Error('Invalid response format from server');
-                    }
-                }
+                    body: JSON.stringify(payload)
+                }, 20000); // 20 second timeout for payment processing
                 
                 console.log('📥 Parsed result:', result);
                 
@@ -1056,7 +1091,7 @@
                         success: true,
                         redirectUrl: result.redirectUrl,
                         bookingRef: result.bookingRef,
-                        checkoutId: result.checkoutId  // ✅ This is critical for instant verification
+                        checkoutId: result.checkoutId
                     };
                 } else {
                     throw new Error(result.error || 'Failed to create payment session');
@@ -1064,22 +1099,7 @@
                 
             } catch (error) {
                 console.error('❌ Booking save error:', error);
-                
-                if (error.name === 'AbortError') {
-                    throw new Error('Request timed out. Please check your internet connection and try again.');
-                }
-                
-                if (error.message.includes('Failed to fetch')) {
-                    throw new Error(
-                        'Cannot connect to server. Please verify:\n' +
-                        '1. Google Apps Script is deployed as Web App\n' +
-                        '2. Access is set to "Anyone"\n' +
-                        '3. The deployment URL is correct\n\n' +
-                        'URL: ' + GOOGLE_SCRIPT_URL
-                    );
-                }
-                
-                throw new Error(error.message || 'Failed to create payment session');
+                throw error;
             }
         }
 
@@ -1110,29 +1130,21 @@
         }
 
         // ============================================
-        // CONNECTION TEST
+        // CONNECTION TEST - EFFICIENT
         // ============================================
         async function testConnection() {
             console.log('🧪 Testing connection to:', GOOGLE_SCRIPT_URL);
             
             try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=test`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
+                const result = await FetchUtils.handleApiCall(
+                    `${GOOGLE_SCRIPT_URL}?action=health`,
+                    { method: 'GET' },
+                    10000 // 10 second timeout for health check
+                );
                 
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const result = await response.json();
                 console.log('✅ Connection test result:', result);
                 
-                if (result.success) {
+                if (result.success || result.status === 'healthy') {
                     console.log('✅ API connection successful!');
                     return true;
                 } else {
